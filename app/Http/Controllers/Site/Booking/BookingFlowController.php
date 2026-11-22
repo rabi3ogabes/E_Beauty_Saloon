@@ -76,11 +76,17 @@ class BookingFlowController extends Controller
     }
 
     /** Back from the hosted payment page: hand over to the core payment-return flow (re-checks with the provider). */
-    public function paymentReturn(string $reference)
+    public function paymentReturn(Request $request, string $reference)
     {
-        $booking = Booking::query()->where('reference', $reference)->firstOrFail();
-        $payment = Payment::query()->where('payable_type', $booking->getMorphClass())->where('payable_id', $booking->id)->where('amount', '>', 0)->latest('id')->first();
+        $booking = Booking::query()->where('reference', strtoupper($reference))->firstOrFail();
+        $payment = Payment::query()->where('payable_type', $booking->getMorphClass())->where('payable_id', $booking->id)->where('amount', '>', 0)->latest('id')->firstOrFail();
 
-        return $payment ? redirect()->route('payments.return', $payment->idempotency_key) : redirect(BookingLinks::confirmation($booking));
+        // Same browser that checked out → full confirmation page. Otherwise (e.g. paid on another device)
+        // only the neutral payment status is shown; the webhook settles the booking either way.
+        if (! $request->session()->get('booking_access.'.$booking->reference)) {
+            return view('payments.result', ['payment' => $payment]);
+        }
+
+        return redirect()->route('payments.return', $payment->idempotency_key);
     }
 }

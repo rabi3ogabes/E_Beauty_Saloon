@@ -21,3 +21,20 @@ Append-only log. Newest last.
    (Caddy on-demand TLS "ask" endpoint, or Cloudflare for SaaS custom hostnames).
 10. **Modular route/seed/lang/provider discovery** (`routes/{tenant,central,api,schedules}/*.php`,
     `database/seeders/Demo/*`, `app/Domain/*/*ServiceProvider.php`) so modules never edit shared files.
+11. **Booking availability engine** (`App\Domain\Booking\Availability\AvailabilityEngine`): pure, deterministic, works in
+    UTC unix seconds and converts branch-local hours/schedules with the branch timezone. Multi-service requests are
+    chained back-to-back, first trying one staff member for every service, then greedily preferring whoever did the
+    previous service. Resource types are checked by *count* (concurrent usage vs. capacity of active resources of that
+    type), because `booking_items` stores a single `resource_id`. Staff without any schedule row follow branch hours.
+    Cached per (tenant, branch, date, request hash) under a per-branch **version key** bumped by model events
+    (bookings, items, holds, schedules, time off, holidays, resources, services) — no cache tags needed.
+12. **Booking writes are serialised per tenant** with `Cache::lock` (re-entrant in-process) + a fresh engine re-check
+    inside a DB transaction (`HoldSlot`, `CreateBooking`, `RescheduleBooking`). Tenant granularity because staff can
+    work at several branches.
+13. **Booking payments without changing the shared model**: `PayableBooking` (a `Payable` subclass keeping the
+    `Booking` morph class) is passed to `CreateOnlinePayment`; settlement is applied by listeners on
+    `PaymentSucceeded` / `PaymentFailed` (`ApplyBookingPayment` recomputes `amount_paid` idempotently from settled
+    payments minus refunds and confirms pending bookings; failure cancels the unpaid booking to free the time).
+    Late-cancel / no-show fees are percentages of the money collected online (deposit or prepayment).
+14. **Staff calendar is a custom CSS-grid Livewire + Alpine page** (FullCalendar's resource-timegrid is a premium
+    plugin). Realtime: broadcast-ready `BookingCalendarUpdated` on `private-tenant.{id}.bookings` + 20 s polling.

@@ -380,7 +380,7 @@
                     async chooseSlot(slot) {
                         this.holding = true; this.selectedSlot = slot;
                         try {
-                            this.hold = await this.api(this.routes.hold, { branch: this.branchId, items: this.items(), starts_at: slot.starts_at, replace_token: this.hold?.token || null });
+                            this.hold = await this.api(this.routes.hold, { branch: this.branchId, items: this.items(), starts_at: slot.starts_at });
                             this.payment = this.hold.payment_options[0]?.key || 'pay_at_salon';
                             this.go('details');
                         } catch (e) { this.error = e.message; this.selectedSlot = null; this.chooseDate(this.date); }

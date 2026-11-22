@@ -69,11 +69,7 @@ class CreateBooking
             }
 
             $subtotal = $slot->price();
-            $deposit = 0;
-            foreach ($slot->items as $item) {
-                $deposit += $lines[$item['line']]->service->depositFor($item['price']);
-            }
-            $deposit = min($deposit, $subtotal);
+            $deposit = $this->payments->depositFor($lines, $slot);
 
             $options = $this->payments->options($subtotal, $deposit, $branch->id);
             $preference = $data['payment_preference'] ?? ($online ? $this->payments->defaultOption($options) : 'pay_at_salon');

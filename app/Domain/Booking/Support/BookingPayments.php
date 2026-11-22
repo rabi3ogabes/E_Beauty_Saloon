@@ -2,6 +2,8 @@
 
 namespace App\Domain\Booking\Support;
 
+use App\Domain\Booking\Availability\ServiceLine;
+use App\Domain\Booking\Availability\Slot;
 use App\Domain\Booking\Models\Booking;
 use App\Domain\Payments\Actions\RefundPayment;
 use App\Domain\Payments\Models\Payment;
@@ -56,6 +58,21 @@ class BookingPayments
     public function defaultOption(array $options): string
     {
         return $options[0] ?? 'pay_at_salon';
+    }
+
+    /**
+     * Deposit for a quoted slot: sum of each service's deposit rule on its (staff-specific) price.
+     *
+     * @param  list<ServiceLine>  $lines
+     */
+    public function depositFor(array $lines, Slot $slot): int
+    {
+        $deposit = 0;
+        foreach ($slot->items as $item) {
+            $deposit += $lines[$item['line']]->service->depositFor($item['price']);
+        }
+
+        return min($deposit, $slot->price());
     }
 
     /** Amount the client must pay online now for a preference. */

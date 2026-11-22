@@ -4,6 +4,7 @@ namespace App\Domain\Booking\Actions;
 
 use App\Domain\Booking\Enums\BookingStatus;
 use App\Domain\Booking\Models\Booking;
+use App\Domain\Booking\Support\BookingLinks;
 use App\Domain\Booking\Support\BookingPayments;
 use App\Domain\Booking\Support\PayableBooking;
 use App\Domain\Payments\Actions\CreateOnlinePayment;
@@ -34,7 +35,7 @@ class StartBookingPayment
             PayableBooking::fromBooking($booking),
             $gateway,
             $amount,
-            returnUrl: route('booking.payment.return', ['reference' => $booking->reference]),
+            returnUrl: BookingLinks::paymentReturn($booking),
             customer: array_filter(['name' => $booking->client?->name, 'phone' => $booking->client?->phone, 'email' => $booking->client?->email]),
             purpose: $mode === 'deposit' ? 'deposit' : 'payment',
             branchId: $booking->branch_id,

@@ -243,6 +243,13 @@ return [
         'look' => 'AI Studio look',
         'attribution' => 'Attribution',
         'no_show_fee_note' => 'The no-show policy applies to the :amount collected online.',
+        'more' => 'More',
+        'recurring' => 'Recurring booking',
+        'every_weeks' => 'Every (weeks)',
+        'occurrences' => 'Number of visits',
+        'recurring_skipped' => 'Not available, skipped: :dates',
+        'group' => 'Group booking',
+        'guests' => 'Guests',
         'actions' => [
             'confirm' => 'Confirm', 'checkIn' => 'Check in', 'startService' => 'Start service', 'complete' => 'Complete',
             'noShow' => 'No-show', 'cancel' => 'Cancel', 'reschedule' => 'Reschedule',

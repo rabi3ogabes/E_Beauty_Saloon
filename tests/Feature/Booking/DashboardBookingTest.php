@@ -127,6 +127,27 @@ it('runs status actions from the bookings table', function () {
     expect($salon->booking->fresh()->status)->toBe(BookingStatus::CheckedIn);
 });
 
+it('creates group and recurring bookings from the dashboard', function () {
+    $salon = dashboardSalon();
+    asDashboard($salon, $salon->tenant->owner);
+
+    Livewire::test(ListBookings::class)->callAction('group', data: [
+        'branch_id' => $salon->branch->id, 'client_id' => $salon->client->id, 'starts_at' => '2026-12-05 10:00',
+        'members' => [
+            ['guest_name' => 'Bride', 'service_id' => $salon->services['color']->id, 'staff_id' => null],
+            ['guest_name' => 'Maid', 'service_id' => $salon->services['cut']->id, 'staff_id' => null],
+        ],
+    ])->assertHasNoActionErrors();
+    $group = asTenant($salon->tenant, fn () => Booking::whereNotNull('group_id')->get());
+    expect($group)->toHaveCount(2)->and($group->pluck('group_id')->unique())->toHaveCount(1);
+
+    Livewire::test(ListBookings::class)->callAction('recurring', data: [
+        'branch_id' => $salon->branch->id, 'client_id' => $salon->client->id, 'starts_at' => '2026-12-02 11:00', 'every_weeks' => 4, 'count' => 3,
+        'items' => [['service_id' => $salon->services['cut']->id, 'staff_id' => $salon->staff[0]->id]],
+    ])->assertHasNoActionErrors();
+    expect(asTenant($salon->tenant, fn () => Booking::where('recurrence_rule', 'every:4:weeks:count:3')->count()))->toBe(3);
+});
+
 it('hides the booking menu and blocks the calendar when the module is disabled', function () {
     $salon = dashboardSalon();
     $sub = $salon->tenant->currentSubscription;

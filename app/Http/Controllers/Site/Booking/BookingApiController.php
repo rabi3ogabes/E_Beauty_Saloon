@@ -49,18 +49,16 @@ class BookingApiController extends Controller
 
     public function hold(Request $request, HoldSlot $hold, BookingPayments $payments, LineBuilder $builder): JsonResponse
     {
-        $data = $request->validate(['starts_at' => ['required', 'date'], 'replace_token' => ['nullable', 'string', 'max:64']]);
+        $data = $request->validate(['starts_at' => ['required', 'date']]);
         $branch = $this->branch($request);
         $lines = $this->lines($request, $builder, $branch);
-        $result = $hold->handle($branch, $lines, $data['starts_at'], $data['replace_token'] ?? null);
+        // One active hold per browser session: picking another time releases the previous one.
+        $result = $hold->handle($branch, $lines, $data['starts_at'], $request->session()->get('booking.hold_token'));
+        $request->session()->put('booking.hold_token', $result['token']);
         $slot = $result['slot'];
 
-        $deposit = 0;
-        foreach ($slot->items as $item) {
-            $deposit += $lines[$item['line']]->service->depositFor($item['price']);
-        }
         $total = $slot->price();
-        $deposit = min($deposit, $total);
+        $deposit = $payments->depositFor($lines, $slot);
         $options = $payments->options($total, $deposit, $branch->id);
 
         return response()->json([

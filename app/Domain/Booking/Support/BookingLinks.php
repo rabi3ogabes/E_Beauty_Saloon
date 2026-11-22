@@ -22,6 +22,15 @@ class BookingLinks
         return self::onTenant(URL::signedRoute('booking.confirmation', ['reference' => $booking->reference], absolute: false));
     }
 
+    /**
+     * Where the hosted payment page sends the client back (then the core /payments/return flow).
+     * Unsigned on purpose: some gateways append their own query parameters to the return URL.
+     */
+    public static function paymentReturn(Booking $booking): string
+    {
+        return self::onTenant(route('booking.payment.return', ['reference' => $booking->reference], absolute: false));
+    }
+
     public static function ics(Booking $booking): string
     {
         return self::onTenant(URL::signedRoute('booking.ics', ['reference' => $booking->reference], absolute: false));

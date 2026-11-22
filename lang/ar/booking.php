@@ -243,6 +243,13 @@ return [
         'look' => 'إطلالة الاستوديو الذكي',
         'attribution' => 'مصدر الحملة',
         'no_show_fee_note' => 'تُطبق سياسة عدم الحضور على مبلغ :amount المدفوع إلكترونياً.',
+        'more' => 'المزيد',
+        'recurring' => 'حجز متكرر',
+        'every_weeks' => 'كل (أسابيع)',
+        'occurrences' => 'عدد الزيارات',
+        'recurring_skipped' => 'غير متاح، تم تخطي: :dates',
+        'group' => 'حجز جماعي',
+        'guests' => 'الضيفات',
         'actions' => [
             'confirm' => 'تأكيد', 'checkIn' => 'تسجيل الحضور', 'startService' => 'بدء الخدمة', 'complete' => 'إكمال',
             'noShow' => 'لم تحضر', 'cancel' => 'إلغاء', 'reschedule' => 'تغيير الموعد',

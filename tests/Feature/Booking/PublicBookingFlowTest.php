@@ -3,6 +3,7 @@
 use App\Domain\Booking\Actions\CreateBooking;
 use App\Domain\Booking\Enums\BookingStatus;
 use App\Domain\Booking\Models\Booking;
+use App\Domain\Booking\Models\SlotHold;
 use App\Domain\Booking\Support\BookingLinks;
 use App\Domain\Branches\Models\BranchHoliday;
 use App\Domain\Messaging\Channels\FakeChannel;
@@ -94,6 +95,17 @@ it('books as a guest with inline phone OTP and keeps campaign attribution', func
     $this->get($res->json('redirect'))->assertOk()->assertSee($booking->reference)->assertSee('calendar.google.com', false)->assertSee(__('booking.confirmation.manage'));
     $ics = asTenant($salon->tenant, fn () => BookingLinks::ics($booking));
     $this->get($ics)->assertOk()->assertHeader('Content-Type', 'text/calendar; charset=utf-8')->assertSee('DTSTART:20261201T080000Z', false);
+});
+
+it('keeps a single active hold per browser session', function () {
+    $salon = bookingSalon(['staff' => ['Layla']]);
+    $url = tenantUrl($salon->tenant, 'book/api/hold');
+    $this->postJson($url, ['branch' => $salon->branch->id, 'items' => flowItems($salon), 'starts_at' => '2026-12-01T08:00:00Z'])->assertOk();
+    $second = $this->postJson($url, ['branch' => $salon->branch->id, 'items' => flowItems($salon), 'starts_at' => '2026-12-01T10:00:00Z'])->assertOk()->json('token');
+
+    $holds = asTenant($salon->tenant, fn () => SlotHold::active()->get());
+    expect($holds)->toHaveCount(1)->and($holds[0]->token)->toStartWith($second)
+        ->and(slotTimes($salon, ['cut'], '2026-12-01', ['cache' => false]))->toContain('11:00')->not->toContain('13:00');
 });
 
 it('pays the deposit on the hosted page and comes back confirmed', function () {
