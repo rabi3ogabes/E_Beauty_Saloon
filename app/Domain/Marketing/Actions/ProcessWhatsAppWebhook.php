@@ -2,6 +2,7 @@
 
 namespace App\Domain\Marketing\Actions;
 
+use App\Domain\Marketing\Events\WhatsAppMessageReceived;
 use App\Domain\Marketing\Models\CampaignMessage;
 use App\Domain\Marketing\Models\PlatformMessageChannel;
 use App\Domain\Marketing\Models\TenantChannelSetting;
@@ -72,6 +73,11 @@ class ProcessWhatsAppWebhook
                         $text = data_get($inbound, 'text.body') ?? data_get($inbound, 'button.text') ?? data_get($inbound, 'interactive.button_reply.title');
                         $applied = $this->context->run(Tenant::find($tenantId), fn () => $this->unsubscribe->fromInbound('+'.ltrim((string) ($inbound['from'] ?? ''), '+'), $text, 'whatsapp'));
                         $stats['unsubscribed'] += $applied ? 1 : 0;
+                        // Hook for other modules (AI receptionist): every other inbound message.
+                        if (! $applied) {
+                            WhatsAppMessageReceived::dispatch((int) $tenantId, '+'.ltrim((string) ($inbound['from'] ?? ''), '+'), $text,
+                                $inbound['id'] ?? null, data_get($value, 'contacts.0.profile.name'), (string) ($inbound['type'] ?? 'text'));
+                        }
                     }
                 }
             }

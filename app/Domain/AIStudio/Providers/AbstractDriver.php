@@ -25,6 +25,15 @@ abstract class AbstractDriver implements AIImageProvider, AITextProvider
     /** Single text/vision completion. Drivers without a text model throw. */
     abstract protected function complete(string $prompt, ?string $image = null, string $mime = 'image/jpeg'): string;
 
+    /**
+     * Hook for other modules (Insights, Assistant): one plain text completion through this provider.
+     * Callers route it with AIRouter (capability "text") and charge credits themselves.
+     */
+    public function completeText(string $prompt): string
+    {
+        return $this->complete($prompt);
+    }
+
     protected function http(): PendingRequest
     {
         return Http::timeout(max(5, (int) ($this->provider->timeout_seconds ?: config('ai.timeout'))))
