@@ -18,6 +18,10 @@ class EarnLoyaltyForBooking
 
     public function handle(Booking $booking): int
     {
+        // Bookings settled at the POS earn points on the sale (key sale-earn:{id}) — never twice.
+        if ($booking->sale_id) {
+            return 0;
+        }
         if (! tenant()?->hasModule('loyalty') || ! $booking->client_id || (int) $booking->total <= 0 || ! LoyaltySettings::enabled()) {
             return 0;
         }

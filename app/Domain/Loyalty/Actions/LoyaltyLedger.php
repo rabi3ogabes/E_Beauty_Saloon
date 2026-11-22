@@ -33,6 +33,17 @@ class LoyaltyLedger
         return $this->apply($client, -abs($points), 'redeem', $reference, $key);
     }
 
+    /**
+     * Take back points earned on a refunded/voided sale or order. Never drives the balance below zero
+     * (points already spent are forgiven rather than creating debt).
+     */
+    public function reverse(Client $client, int $points, ?Model $reference = null, ?string $key = null): ?LoyaltyEntry
+    {
+        $points = min(abs($points), max(0, (int) Client::withoutGlobalScopes()->whereKey($client->id)->value('loyalty_points')));
+
+        return $points > 0 ? $this->apply($client, -$points, 'reversal', $reference, $key, 'refund') : null;
+    }
+
     /** Monetary value (minor units) of a number of points. */
     public function valueOf(int $points): int
     {

@@ -140,6 +140,12 @@ class RefundSale
             ])->save();
             if ($sale->client_id && ($client = Client::withoutGlobalScopes()->lockForUpdate()->find($sale->client_id))) {
                 $client->forceFill(['lifetime_value' => max(0, $client->lifetime_value - $amount)])->save();
+
+                // Reverse points earned on the refunded share of the sale (proportional for partial refunds).
+                $earned = (int) \App\Domain\Loyalty\Models\LoyaltyEntry::withoutGlobalScopes()->where('idempotency_key', "sale-earn:{$sale->id}")->value('points');
+                if ($earned > 0 && (int) $sale->total > 0) {
+                    app(\App\Domain\Loyalty\Actions\LoyaltyLedger::class)->reverse($client, (int) floor($earned * $amount / (int) $sale->total), $sale, "sale-reverse:{$refund->id}");
+                }
             }
 
             activity()->performedOn($sale)->causedBy($user)->withProperties([
