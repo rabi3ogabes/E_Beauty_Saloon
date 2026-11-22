@@ -1,0 +1,308 @@
+<?php
+
+return [
+    'channels' => ['whatsapp' => 'WhatsApp', 'sms' => 'SMS', 'email' => 'Email', 'push' => 'Push'],
+
+    'errors' => [
+        'no_online_gateway' => 'Online payment is not available yet. Please contact the salon.',
+    ],
+
+    'common' => [
+        'name' => 'Name', 'status' => 'Status', 'active' => 'Active', 'created' => 'Created', 'actions' => 'Actions', 'save' => 'Save',
+        'english' => 'English', 'arabic' => 'Arabic', 'preview' => 'Preview', 'none' => 'None', 'all_branches' => 'All branches',
+        'branches' => 'Branches', 'days' => 'days', 'hours' => 'hours', 'minutes' => 'minutes', 'generate_ai' => 'Generate with AI',
+        'ai_done' => 'Draft ready — review before sending.', 'saved' => 'Saved', 'sort' => 'Order',
+    ],
+
+    'nav' => [
+        'campaigns' => 'Campaigns', 'segments' => 'Audiences', 'automations' => 'Automations', 'templates' => 'WhatsApp templates',
+        'banners' => 'Banner studio', 'packages' => 'Packages', 'memberships' => 'Memberships', 'promotions' => 'Promotions',
+        'reviews' => 'Reviews', 'referrals' => 'Referrals', 'loyalty' => 'Loyalty', 'channels' => 'Channels & credits',
+        'message_prices' => 'Message pricing', 'message_credits' => 'Message credits', 'gift_card_orders' => 'Gift card orders',
+    ],
+
+    // ── Channels & credits ────────────────────────────────────────────────
+    'channel_settings' => [
+        'title' => 'Channels & credits',
+        'subtitle' => 'Connect your own WhatsApp, SMS, email and push senders — or use the platform’s shared numbers with prepaid credits.',
+        'mode' => 'Sending mode', 'modes' => ['own' => 'My own account', 'platform_shared' => 'Platform shared (prepaid credits)'],
+        'provider' => 'Provider',
+        'providers' => ['meta' => 'Meta WhatsApp Cloud API', 'twilio' => 'Twilio', 'unifonic' => 'Unifonic', 'http' => 'HTTP gateway (Ooredoo, Vodafone…)', 'mail' => 'Platform mailer (SMTP)', 'ses' => 'Amazon SES', 'fcm' => 'Firebase Cloud Messaging'],
+        'enabled' => 'Enabled', 'saved' => 'Channel settings saved.',
+        'fields' => [
+            'phone_number_id' => 'Phone number ID', 'token' => 'Access token', 'waba_id' => 'WhatsApp Business Account ID', 'app_secret' => 'App secret (webhook signature)',
+            'verify_token' => 'Webhook verify token', 'account_sid' => 'Account SID', 'auth_token' => 'Auth token', 'from' => 'Sender (number or ID)',
+            'app_sid' => 'App SID', 'sender_id' => 'Sender ID', 'url' => 'Gateway URL', 'method' => 'HTTP method', 'format' => 'Body format',
+            'params' => 'Parameters (JSON) — use {to}, {body}, {from}', 'headers' => 'Headers (JSON)', 'success_contains' => 'Success when response contains',
+            'inbound_secret' => 'Inbound secret (STOP keyword webhook)', 'from_address' => 'From address', 'from_name' => 'From name', 'reply_to' => 'Reply-to',
+            'project_id' => 'Firebase project ID', 'service_account' => 'Service account JSON',
+        ],
+        'webhook_hint' => 'Meta webhook URL: :url — subscribe to “messages”.',
+        'inbound_hint' => 'Inbound SMS URL (STOP keyword): :url',
+        'wallet' => 'Message credits', 'balance' => 'Balance', 'price' => 'Price per message', 'low' => 'Your credit balance is low — ask your account manager to top up.',
+        'transactions' => 'Recent credit movements',
+        'quiet_hours' => 'Quiet hours', 'quiet_hours_help' => 'Marketing messages due in this window wait until it ends (branch time zone).',
+        'quiet_enabled' => 'Respect quiet hours', 'quiet_start' => 'From', 'quiet_end' => 'Until', 'rate' => 'Max messages per minute',
+    ],
+
+    'credits' => [
+        'insufficient' => 'Not enough message credits: this send costs :cost and your balance is :balance.',
+        'types' => ['topup' => 'Top-up', 'debit' => 'Message', 'refund' => 'Refund', 'adjustment' => 'Adjustment'],
+        'top_up' => 'Top up', 'amount' => 'Amount', 'note' => 'Note', 'topped_up' => 'Credits added.', 'tenant' => 'Salon',
+        'price_per_message' => 'Price per message', 'platform_sender' => 'Platform sender', 'currency' => 'Currency',
+    ],
+
+    // ── WhatsApp templates ────────────────────────────────────────────────
+    'templates' => [
+        'label' => 'WhatsApp template', 'plural' => 'WhatsApp templates',
+        'name_help' => 'Lowercase letters, numbers and underscores, e.g. spring_glow_offer.',
+        'language' => 'Language', 'category' => 'Category', 'body' => 'Body', 'body_help' => 'Variables: {{1}} first name · {{2}} tracked link · {{3}} salon name.',
+        'header_type' => 'Header', 'header_types' => ['none' => 'None', 'text' => 'Text', 'image' => 'Image (banner)', 'video' => 'Video', 'document' => 'Document'],
+        'header_text' => 'Header text', 'header_media_url' => 'Sample media URL', 'footer' => 'Footer', 'buttons' => 'Buttons',
+        'button_type' => 'Type', 'button_types' => ['url' => 'Website (Book now / Shop)', 'phone' => 'Call', 'quick_reply' => 'Quick reply'],
+        'button_text' => 'Label', 'button_url' => 'URL (use {{1}} for the tracked suffix)', 'button_phone' => 'Phone',
+        'statuses' => ['draft' => 'Draft', 'pending' => 'In review', 'approved' => 'Approved', 'rejected' => 'Rejected', 'paused' => 'Paused'],
+        'sync' => 'Sync approval status', 'synced' => ':count template(s) updated from Meta.', 'submit' => 'Submit for approval', 'submitted' => 'Submitted to Meta for review.',
+        'empty' => 'No templates yet', 'empty_help' => 'Marketing messages outside the 24-hour window need an approved template.',
+        'errors' => [
+            'no_credentials' => 'Connect WhatsApp (WABA ID + token) in Channels first.',
+            'sync_failed' => 'Could not reach Meta: :error',
+            'submit_failed' => 'Meta rejected the submission: :error',
+        ],
+    ],
+
+    // ── Packages, memberships, promotions ────────────────────────────────
+    'packages' => [
+        'label' => 'Package', 'plural' => 'Packages', 'eyebrow' => 'Rituals & packages',
+        'public_title' => 'Packages & memberships', 'public_subtitle' => 'Considered bundles and session packs — more beauty, beautifully priced.',
+        'pricing' => 'Pricing', 'pricings' => ['fixed' => 'Fixed price', 'percent' => '% off the items'], 'price' => 'Price', 'discount' => 'Discount (%)',
+        'sessions_count' => 'Sessions included', 'validity_days' => 'Valid for (days)', 'items' => 'Included services & products',
+        'item_type' => 'Type', 'item_types' => ['service' => 'Service', 'product' => 'Product'], 'item' => 'Item', 'quantity' => 'Qty',
+        'sellable_online' => 'Sell online', 'sellable_pos' => 'Sell at POS', 'value' => 'Value', 'effective_price' => 'Price', 'sold' => 'Sold',
+        'sessions' => '{1} :count session|[2,*] :count sessions', 'valid_days' => 'Valid for :days days after purchase',
+        'buy' => 'Buy now', 'sign_in_to_buy' => 'Sign in to buy', 'activated' => 'Your package is ready to use.',
+        'empty' => 'No packages yet', 'empty_help' => 'Bundle services (e.g. “Bridal Glow”) or sell session packs (e.g. 6 blow-dries).',
+        'empty_public' => 'New packages are coming soon.',
+        'payment_description' => 'Package: :name',
+        'account_empty' => 'You have no packages yet.', 'browse' => 'Browse packages', 'sessions_left' => 'Sessions left',
+        'expires_on' => 'Valid until :date', 'no_expiry' => 'No expiry',
+        'statuses' => ['pending' => 'Awaiting payment', 'active' => 'Active', 'used_up' => 'Used', 'expired' => 'Expired', 'cancelled' => 'Cancelled'],
+        'client_packages' => 'Client packages', 'client' => 'Client', 'use_session' => 'Use a session', 'session_used' => 'Session redeemed.',
+        'sell' => 'Sell to a client', 'sold_ok' => 'Package sold and activated.',
+        'errors' => [
+            'not_available' => 'This package is not available.',
+            'not_usable' => 'This package has no sessions left or has expired.',
+            'service_not_covered' => 'This service is not part of the package.',
+        ],
+    ],
+
+    'memberships' => [
+        'label' => 'Membership', 'plural' => 'Memberships', 'eyebrow' => 'Beauty club', 'public_title' => 'Join the beauty club',
+        'monthly_price' => 'Monthly price', 'billing' => 'Billing', 'billings' => ['recurring' => 'Recurring (card on file)', 'prepaid' => 'Prepaid term'],
+        'term_months' => 'Term (months)', 'perks' => 'Perks', 'included' => 'Included every month', 'service' => 'Service', 'quantity' => 'Qty',
+        'product_discount' => 'Product discount (%)', 'service_discount' => 'Service discount (%)', 'members' => 'Members',
+        'ask_at_salon' => 'Ask our team to join at your next visit.', 'renews_on' => 'Renews on :date',
+        'statuses' => ['pending' => 'Pending', 'active' => 'Active', 'past_due' => 'Past due', 'cancelled' => 'Cancelled', 'expired' => 'Expired'],
+        'enroll' => 'Enrol a client', 'enrolled' => 'Client enrolled.', 'auto_renew' => 'Auto-renew',
+        'empty' => 'No memberships yet', 'empty_help' => 'Create a monthly club, e.g. 2 blow-dries + 10% off products.',
+    ],
+
+    'promotions' => [
+        'label' => 'Promotion', 'plural' => 'Promotions',
+        'type' => 'Type', 'types' => ['coupon' => 'Coupon code', 'happy_hour' => 'Happy hour', 'first_visit' => 'First visit', 'birthday' => 'Birthday', 'flash_sale' => 'Flash sale', 'bogo' => 'Buy X get Y'],
+        'code' => 'Code', 'discount_type' => 'Discount', 'discount_types' => ['percent' => 'Percentage', 'fixed' => 'Fixed amount'],
+        'discount_value' => 'Value', 'applies_to' => 'Applies to', 'applies' => ['all' => 'Everything', 'services' => 'Services', 'products' => 'Products'],
+        'services' => 'Only these services', 'products' => 'Only these products', 'min_subtotal' => 'Minimum spend',
+        'weekdays' => 'Days', 'from' => 'From', 'to' => 'To', 'days_before' => 'Days before birthday', 'days_after' => 'Days after birthday',
+        'buy_quantity' => 'Buy', 'get_quantity' => 'Get', 'get_discount' => 'Discount on the “get” items (%)',
+        'starts_at' => 'Starts', 'ends_at' => 'Ends', 'usage_limit' => 'Total uses', 'per_client_limit' => 'Uses per client', 'used' => 'Used',
+        'show_countdown' => 'Show countdown on the website', 'exclusive' => 'Cannot be combined with other offers', 'schedule' => 'Schedule & limits', 'rules' => 'Rules',
+        'live' => 'Live', 'scheduled' => 'Scheduled', 'ended' => 'Ended', 'paused' => 'Paused',
+        'weekday_names' => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        'empty' => 'No promotions yet', 'empty_help' => 'Launch a coupon, a happy hour for quiet slots, or a flash sale with countdown.',
+        'test' => 'Test pricing', 'test_result' => 'Subtotal :subtotal · discount :discount · total :total',
+        'ends_in' => 'Ends in',
+        'errors' => ['coupon_invalid' => 'This code is not valid or has expired.', 'coupon_not_applicable' => 'This code does not apply to these items.'],
+    ],
+
+    // ── Gift cards ────────────────────────────────────────────────────────
+    'gift_cards' => [
+        'eyebrow' => 'The art of gifting', 'title' => 'Gift cards', 'subtitle' => 'Send a moment of beauty — delivered instantly by WhatsApp or email.',
+        'card_label' => 'Gift card', 'for' => 'For', 'from' => 'from', 'choose_design' => 'Choose a design',
+        'designs' => ['champagne' => 'Champagne', 'noir' => 'Noir', 'rose' => 'Rose'],
+        'amount' => 'Amount', 'custom_amount' => 'Custom amount', 'recipient' => 'Recipient', 'recipient_name' => 'Their name', 'recipient_phone' => 'Their mobile (WhatsApp)',
+        'recipient_email' => 'Their email', 'message' => 'Personal message', 'message_placeholder' => 'Happy birthday, with love…', 'from_you' => 'From you',
+        'your_name' => 'Your name', 'your_phone' => 'Your mobile', 'your_email' => 'Your email', 'pay' => 'Pay securely',
+        'delivery_note' => 'Delivered as soon as payment is confirmed. Valid for 12 months.',
+        'unavailable' => 'Online gift cards are not available yet — please ask at the salon.',
+        'payment_description' => 'Gift card :amount',
+        'thanks_eyebrow' => 'Thank you', 'thanks_title' => 'Your gift is on its way', 'thanks_body' => 'We have sent the gift card to :name.', 'try_again' => 'Try again',
+        'for_you' => 'A gift for you', 'card_title' => 'A gift for :name', 'balance' => 'Balance', 'code' => 'Code', 'valid_until' => 'Valid until',
+        'book_with_it' => 'Book with your gift', 'discover' => 'Discover :salon', 'how_to_use' => 'Show this card or quote the code when you pay — online or at the salon.',
+        'delivery_message' => ':name, :from sent you a :amount gift card for :salon ✦ Open your card:', 'delivery_subject' => 'A gift for you from :from',
+        'open_card' => 'Open my gift card',
+        'errors' => ['amount' => 'Please choose an amount between :min and :max.'],
+        'orders' => 'Gift card orders', 'purchaser' => 'Purchaser', 'delivered' => 'Delivered', 'resend' => 'Resend', 'resent' => 'Gift card re-sent.',
+        'order_statuses' => ['pending' => 'Awaiting payment', 'paid' => 'Paid', 'failed' => 'Failed'],
+    ],
+
+    // ── Banner studio ─────────────────────────────────────────────────────
+    'banners' => [
+        'label' => 'Banner', 'plural' => 'Banners', 'studio' => 'Banner studio',
+        'subtitle' => 'Luxury templates in your brand colours. Drag to arrange, export PNG, use in campaigns.',
+        'format' => 'Format', 'formats' => ['story' => 'Story 9:16', 'post' => 'Post 1:1', 'whatsapp' => 'WhatsApp header 1.91:1'],
+        'template' => 'Template', 'templates' => ['editorial' => 'Editorial', 'minimal' => 'Minimal', 'offer' => 'Offer', 'arabic' => 'Arabic calligraphy'],
+        'headline' => 'Headline', 'subline' => 'Subline', 'price' => 'Price / offer', 'cta' => 'Call to action', 'add_text' => 'Add text', 'add_logo' => 'Add logo',
+        'background' => 'Background', 'image_url' => 'Background image URL', 'font' => 'Font', 'size' => 'Size', 'color' => 'Colour', 'align' => 'Align',
+        'delete_element' => 'Remove', 'save' => 'Save banner', 'export' => 'Export PNG', 'saved' => 'Banner saved.', 'new' => 'New banner',
+        'ai_prompt' => 'Describe the visual (e.g. “soft champagne silk, rose petals”)', 'ai_failed' => 'AI could not create a visual: :error',
+        'drag_hint' => 'Drag elements on the canvas. Double-click text to edit.', 'empty' => 'No banners yet', 'empty_help' => 'Design your first banner in the studio.',
+        'open' => 'Open in studio', 'samples' => [
+            'headline' => 'The Golden Hour', 'subline' => 'Signature blow-dry & gloss ritual', 'price' => 'From QAR 150', 'cta' => 'Book now',
+            'headline_ar' => 'الساعة الذهبية', 'subline_ar' => 'استشوار سيغنتشر مع لمعان', 'price_ar' => 'ابتداءً من 150 ر.ق', 'cta_ar' => 'احجزي الآن',
+        ],
+    ],
+
+    // ── Audiences ─────────────────────────────────────────────────────────
+    'segments' => [
+        'label' => 'Audience', 'plural' => 'Audiences', 'description' => 'Description', 'match' => 'Match', 'match_all' => 'All conditions', 'match_any' => 'Any condition',
+        'conditions' => 'Conditions', 'field' => 'Condition', 'value' => 'Value', 'add_condition' => 'Add condition',
+        'live_count' => 'Live audience', 'clients' => '{0} No clients|{1} 1 client|[2,*] :count clients', 'reachable' => 'reachable by :channels',
+        'fields' => [
+            'visited_within_days' => 'Visited in the last X days', 'not_visited_days' => 'Not visited in X days', 'spent_over' => 'Lifetime spend over', 'spent_under' => 'Lifetime spend under',
+            'visits_at_least' => 'At least X visits', 'birthday_this_month' => 'Birthday this month', 'bought_service' => 'Had service', 'bought_product' => 'Bought product',
+            'branch' => 'Branch', 'gender' => 'Gender', 'tags' => 'Tags', 'loyalty_tier' => 'Loyalty tier', 'ai_studio_users' => 'Used the AI Beauty Studio',
+            'has_consent' => 'Opted in to', 'vip' => 'VIP clients', 'source' => 'Acquisition source',
+        ],
+        'genders' => ['female' => 'Female', 'male' => 'Male'],
+        'sources' => ['walk_in' => 'Walk-in', 'website' => 'Website', 'app' => 'App', 'instagram' => 'Instagram', 'referral' => 'Referral', 'import' => 'Import', 'whatsapp' => 'WhatsApp'],
+        'empty' => 'No audiences yet', 'empty_help' => 'Build an audience like “not visited in 60 days” or “birthday this month”.',
+        'count' => 'Clients', 'refresh' => 'Refresh count',
+    ],
+
+    // ── Campaigns ─────────────────────────────────────────────────────────
+    'campaigns' => [
+        'label' => 'Campaign', 'plural' => 'Campaigns', 'new' => 'New campaign',
+        'statuses' => ['draft' => 'Draft', 'scheduled' => 'Scheduled', 'sending' => 'Sending', 'testing' => 'A/B testing', 'sent' => 'Sent', 'cancelled' => 'Cancelled', 'failed' => 'Failed'],
+        'steps' => ['audience' => 'Audience', 'channels' => 'Channels', 'content' => 'Content', 'ab' => 'A/B test', 'schedule' => 'Schedule'],
+        'segment' => 'Audience', 'channels' => 'Channels', 'primary_channel' => 'Send by', 'fallback' => 'Fallback when it fails / no consent',
+        'channels_help' => 'Clients are only contacted on channels they opted in to — others fall back or are skipped automatically.',
+        'template' => 'WhatsApp template', 'template_help' => 'Required for WhatsApp marketing outside the 24h window. Only approved templates are listed.',
+        'subject' => 'Subject (email / push)', 'body' => 'Message', 'body_help' => 'Placeholders: {first_name} {salon} {link} (tracked booking link) {points}',
+        'banner' => 'Banner', 'media_url' => 'Image URL (if no banner)', 'cta_url' => 'Button link', 'cta_url_help' => 'Default: your booking page. Clicks are tracked.',
+        'cta_label' => 'Button label', 'default_cta' => 'Book now',
+        'ab_enabled' => 'Run an A/B test', 'ab_help' => 'Variants A and B go to a test group; the winner is sent to everyone else automatically.',
+        'ab_test_percent' => 'Test group (%)', 'ab_metric' => 'Winner by', 'ab_metrics' => ['click' => 'Click rate', 'booking' => 'Booking rate'],
+        'ab_wait_hours' => 'Decide after (hours)', 'variant_b' => 'Variant B message', 'variant_b_subject' => 'Variant B subject',
+        'when' => 'When', 'send_now' => 'Send now', 'schedule_later' => 'Schedule', 'scheduled_at' => 'Send at',
+        'estimate' => 'Before you send', 'estimate_line' => ':reachable of :audience clients reachable · :skipped skipped (no consent) · estimated cost :cost',
+        'launch' => 'Send campaign', 'launched' => 'Campaign is on its way ✦', 'scheduled_ok' => 'Campaign scheduled.', 'cancel' => 'Cancel campaign', 'cancelled' => 'Campaign cancelled.',
+        'duplicate' => 'Duplicate', 'decide_now' => 'Pick winner now', 'report' => 'Report',
+        'sent_at' => 'Sent', 'recipients' => 'Recipients', 'revenue' => 'Revenue', 'clicks' => 'Clicks', 'bookings' => 'Bookings',
+        'funnel' => ['recipients' => 'Audience', 'sent' => 'Sent', 'delivered' => 'Delivered', 'read' => 'Read', 'clicked' => 'Clicked', 'booked' => 'Booked'],
+        'kpi' => ['revenue' => 'Revenue attributed', 'cost' => 'Message cost', 'roi' => 'Return', 'skipped' => 'Skipped (no consent)', 'deferred' => 'Waiting (quiet hours)', 'failed' => 'Failed'],
+        'attributed_bookings' => 'Bookings from this campaign (7-day window)', 'no_bookings' => 'No attributed bookings yet.',
+        'variants' => 'A/B results', 'winner' => 'Winner', 'by_channel' => 'By channel',
+        'message_statuses' => [
+            'held' => 'Waiting for A/B winner', 'queued' => 'Queued', 'sent' => 'Sent', 'delivered' => 'Delivered', 'read' => 'Read', 'clicked' => 'Clicked', 'failed' => 'Failed',
+            'skipped_no_consent' => 'Skipped — no consent', 'skipped_quiet_hours' => 'Waiting — quiet hours', 'skipped_credits' => 'Skipped — no credits',
+        ],
+        'messages' => 'Recipients',
+        'empty' => 'No campaigns yet', 'empty_help' => 'Send a banner to an audience by WhatsApp with SMS fallback, and see the bookings it brings.',
+        'errors' => [
+            'already_sent' => 'This campaign has already been sent.',
+            'incomplete' => 'Choose an audience and at least one channel.',
+            'template_required' => 'Choose an approved WhatsApp template.',
+        ],
+    ],
+
+    'unsubscribe' => [
+        'title' => 'Unsubscribe', 'body' => 'Stop receiving offers and news from :salon?', 'only_channel' => 'Only stop :channel messages', 'all' => 'Unsubscribe from everything',
+        'done_title' => 'You are unsubscribed', 'done_body' => 'You will no longer receive marketing messages from :salon. Appointment messages still arrive.', 'back' => 'Back to the website',
+        'link' => 'Unsubscribe', 'sms_footer' => 'Reply STOP to opt out',
+    ],
+
+    // ── Automations ───────────────────────────────────────────────────────
+    'automations' => [
+        'label' => 'Automation', 'plural' => 'Automations', 'builder' => 'Flow builder', 'trigger' => 'Trigger', 'recipe' => 'Recipe', 'runs' => 'Runs', 'last_run' => 'Last run',
+        'install' => 'Install recipes', 'installed' => ':count recipe(s) installed.', 'edit_flow' => 'Edit flow', 'save_flow' => 'Save flow', 'flow_saved' => 'Flow saved.',
+        'empty' => 'No automations yet', 'empty_help' => 'Install the prebuilt recipes — welcome series, birthday, win-back and more.',
+        'add_step' => 'Add step', 'remove_step' => 'Remove', 'move_up' => 'Move up', 'move_down' => 'Move down', 'when' => 'When',
+        'step_types' => ['wait' => 'Wait', 'condition' => 'Only continue if', 'send_message' => 'Send message', 'award_points' => 'Award points', 'add_tag' => 'Add tag', 'coupon' => 'Create personal coupon'],
+        'checks' => ['has_consent' => 'Client opted in to channel', 'not_visited_since_start' => 'Has not visited since the flow started', 'no_booking_since_start' => 'Has not booked since the flow started', 'tier_is' => 'Loyalty tier is', 'has_tag' => 'Has tag', 'wallet_below' => 'Wallet below'],
+        'fields' => ['days' => 'Days', 'hours' => 'Hours', 'minutes' => 'Minutes', 'channels' => 'Channels (in order)', 'template' => 'WhatsApp template (optional)', 'body_en' => 'Message · English', 'body_ar' => 'Message · Arabic', 'points' => 'Points', 'tag' => 'Tag', 'discount' => 'Discount (%)', 'valid_days' => 'Valid (days)', 'value' => 'Value', 'link' => 'Button link', 'transactional' => 'Service message (send even without marketing consent)'],
+        'config' => ['days' => 'Days since last visit', 'hours_before' => 'Hours before appointment', 'below' => 'Wallet balance below', 'days_before' => 'Days before'],
+        'placeholders' => 'Placeholders: {first_name} {salon} {link} {code} {points} — plus trigger data like {cart_url} {service} {review_url}.',
+        'triggers' => [
+            'client_created' => 'New client', 'booking_completed' => 'Visit completed', 'abandoned_cart' => 'Abandoned cart', 'booking_upcoming' => 'Upcoming appointment',
+            'rebook_due' => 'Rebook due (service cycle)', 'win_back' => 'Lapsed client (win-back)', 'birthday' => 'Birthday', 'low_wallet' => 'Low wallet balance',
+            'package_expiring' => 'Package sessions expiring', 'membership_renewal' => 'Membership renewal',
+        ],
+        'run_statuses' => ['running' => 'Running', 'waiting' => 'Waiting', 'completed' => 'Completed', 'stopped' => 'Stopped', 'failed' => 'Failed'],
+        'recipes' => [
+            'welcome_series' => ['name' => 'Welcome series', 'description' => 'Greets new clients, then sends a first-visit gift if they have not booked after 3 days.'],
+            'booking_reminders' => ['name' => 'Booking reminders', 'description' => 'Optional — the booking module already sends transactional reminders.'],
+            'review_request' => ['name' => 'Post-visit review request', 'description' => 'Asks for a review 2 hours after a completed visit.'],
+            'rebook_reminder' => ['name' => 'Rebook reminder', 'description' => 'Uses each service’s rebook cycle (e.g. colour every 6 weeks).'],
+            'win_back' => ['name' => 'Win-back after 60 days', 'description' => 'A personal 15% code, then a reminder if they still have not visited.'],
+            'birthday' => ['name' => 'Birthday', 'description' => 'A 20% birthday code and 200 bonus points.'],
+            'abandoned_cart' => ['name' => 'Abandoned cart', 'description' => 'Reminds shoppers about the bag they left behind.'],
+            'low_wallet' => ['name' => 'Low wallet balance', 'description' => 'Lets clients know their prepaid balance is running low.'],
+            'package_expiring' => ['name' => 'Package sessions expiring', 'description' => 'Reminds clients to use remaining sessions before they expire.'],
+            'membership_renewal' => ['name' => 'Membership renewal', 'description' => 'Heads-up a few days before a membership renews.'],
+        ],
+    ],
+
+    // ── Loyalty & referrals ───────────────────────────────────────────────
+    'loyalty' => [
+        'settings' => 'Loyalty settings', 'subtitle' => 'Points on every visit, three tiers with perks, and referral rewards.',
+        'enabled' => 'Loyalty programme active', 'points_per_currency_unit' => 'Points per QAR spent', 'point_value' => 'Value of 1 point (QAR)',
+        'min_redeem_points' => 'Minimum points to redeem', 'tiers_section' => 'Tiers', 'tier_key' => 'Tier', 'min_points' => 'From (lifetime points)',
+        'multiplier' => 'Points multiplier', 'perks_en' => 'Perks · English', 'perks_ar' => 'Perks · Arabic',
+        'referral_section' => 'Referrals', 'referrer_points' => 'Points for the referrer (after the friend’s first visit)',
+        'friend_discount' => 'Friend’s first-visit discount (%)', 'friend_coupon_days' => 'Friend’s coupon valid (days)', 'saved' => 'Loyalty settings saved.',
+        'tiers' => ['silver' => 'Silver', 'gold' => 'Gold', 'black' => 'Black'],
+        'your_tier' => 'Your tier', 'balance' => 'Points', 'worth' => 'Worth', 'to_next' => ':points points to :tier', 'from_points' => 'From :points points',
+        'history' => 'Points history', 'no_history' => 'Your points will appear here after your first visit.', 'points' => 'points',
+        'entry_types' => ['earn' => 'Visit', 'redeem' => 'Redeemed', 'referral' => 'Referral reward', 'bonus' => 'Bonus', 'expire' => 'Expired', 'adjustment' => 'Adjustment', 'reversal' => 'Reversal'],
+        'tier_bonus_note' => 'Tier bonus',
+        'stats' => ['members' => 'Members with points', 'outstanding' => 'Outstanding points', 'liability' => 'Liability', 'referrals' => 'Rewarded referrals'],
+    ],
+
+    'referrals' => [
+        'label' => 'Referral', 'plural' => 'Referrals', 'referrer' => 'Referred by', 'referred' => 'Friend', 'rewarded_at' => 'Rewarded', 'points' => 'Points',
+        'statuses' => ['pending' => 'Awaiting first visit', 'rewarded' => 'Rewarded', 'cancelled' => 'Cancelled'],
+        'reward_note' => 'Thank you for referring a friend',
+        'landing_eyebrow' => 'An invitation', 'landing_title' => ':name invited you',
+        'landing_body' => 'Enjoy :discount% off your first visit at :salon — our gift to friends of our clients.',
+        'claim' => 'Claim my welcome gift', 'claim_note' => 'Sign in with your mobile number — it takes 20 seconds.',
+        'your_code' => 'Your personal code', 'not_eligible' => 'This invitation is for new clients — but we are always happy to see you again.',
+        'account_eyebrow' => 'Refer a friend', 'account_title' => 'Give :discount%, get :points points',
+        'your_link' => 'Your referral link', 'share_text' => 'I love :salon — book with my link for a welcome gift: :link',
+        'your_friends' => 'Your invitations', 'none_yet' => 'Share your link — your friends will appear here.',
+        'empty' => 'No referrals yet',
+    ],
+
+    // ── Reviews ───────────────────────────────────────────────────────────
+    'reviews' => [
+        'label' => 'Review', 'plural' => 'Reviews', 'public_title' => 'Your review',
+        'rating' => 'Rating', 'comment' => 'Tell us more (optional)', 'comment_placeholder' => 'What did you love? What could be even better?',
+        'question' => 'How was your visit, :name?', 'with' => 'with :staff', 'submit' => 'Send review',
+        'labels' => ['1' => 'Disappointing', '2' => 'Not great', '3' => 'Good', '4' => 'Lovely', '5' => 'Exceptional'],
+        'stars' => '{1} :count star|[2,*] :count stars', 'count' => '{1} :count review|[2,*] :count reviews',
+        'thanks_title' => 'Thank you', 'thanks_published' => 'Your kind words mean the world to our team.',
+        'thanks_private' => 'Thank you for telling us. Our manager will personally look into it and may reach out.', 'book_again' => 'Book your next visit',
+        'statuses' => ['published' => 'Published', 'private' => 'Private', 'pending' => 'Pending'],
+        'sources' => ['website' => 'Website', 'whatsapp' => 'WhatsApp', 'google' => 'Google', 'import' => 'Import', 'dashboard' => 'Dashboard'],
+        'reply' => 'Reply', 'reply_draft' => 'Draft reply with AI', 'replied' => 'Reply saved.', 'publish' => 'Publish', 'make_private' => 'Make private',
+        'staff' => 'Staff', 'booking' => 'Booking', 'client' => 'Client',
+        'low_rating_title' => 'New :rating★ review — needs your attention',
+        'owner_alert' => '⚠️ Private :rating★ review from :client: “:comment” — reply from your dashboard.',
+        'widget_eyebrow' => 'Kind words', 'widget_title' => 'Loved by our clients', 'anonymous' => 'A client',
+        'empty' => 'No reviews yet', 'empty_help' => 'Reviews arrive automatically after completed visits.',
+        'errors' => ['rating' => 'Please choose 1 to 5 stars.', 'already' => 'This visit has already been reviewed.'],
+        'average' => 'Average rating', 'private_count' => 'Private (to follow up)',
+    ],
+
+    'account' => ['packages' => 'Packages', 'loyalty' => 'Loyalty', 'referrals' => 'Refer a friend'],
+];
