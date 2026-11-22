@@ -13,6 +13,9 @@ use App\Domain\POS\Models\Sale;
 use App\Domain\POS\Support\SellableRegistry;
 use App\Domain\Team\Models\Staff;
 use App\Support\Exceptions\DomainException;
+use Filament\Facades\Filament;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Support\ServiceProvider;
 
 class POSServiceProvider extends ServiceProvider
@@ -48,5 +51,9 @@ class POSServiceProvider extends ServiceProvider
         Client::resolveRelationUsing('sales', fn (Client $client) => $client->hasMany(Sale::class)->latest('completed_at'));
         Staff::resolveRelationUsing('commissions', fn (Staff $staff) => $staff->hasMany(Commission::class));
         Branch::resolveRelationUsing('registers', fn (Branch $branch) => $branch->hasMany(Register::class));
+
+        // PWA head tags + POS styles/offline script on every /pos panel page.
+        FilamentView::registerRenderHook(PanelsRenderHook::HEAD_END, fn (): string => Filament::getCurrentPanel()?->getId() === 'pos' && tenant()
+            ? view('pos.partials.head')->render() : '');
     }
 }

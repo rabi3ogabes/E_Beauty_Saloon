@@ -37,7 +37,7 @@ class RefundSale
         }
 
         return DB::transaction(function () use ($sale, $items, $storeCredit, $reason, $user, $authorizedBy, $kind, $shift) {
-            $sale = Sale::withoutGlobalScopes()->with(['items', 'salePayments.payment'])->lockForUpdate()->findOrFail($sale->id);
+            $sale = Sale::withoutGlobalScopes()->with(['items', 'salePayments.payment', 'shift'])->lockForUpdate()->findOrFail($sale->id);
             if (! in_array($sale->status, [SaleStatus::Completed, SaleStatus::PartiallyRefunded], true)) {
                 throw new DomainException(__('pos.errors.not_refundable'));
             }
