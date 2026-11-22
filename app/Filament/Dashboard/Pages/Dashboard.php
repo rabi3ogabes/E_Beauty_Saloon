@@ -18,7 +18,7 @@ class Dashboard extends BaseDashboard
         // First login of the owner: finish the onboarding wizard before the command center.
         // Client-side redirect keeps the dashboard response itself a 200 (health checks, support sessions).
         if (tenant() && tenant()->onboarded_at === null && Onboarding::canAccess()) {
-            $this->js('window.location.replace('.json_encode(Onboarding::getUrl()).')');
+            $this->js('window.location.replace('.json_encode(Onboarding::getUrl(), JSON_UNESCAPED_SLASHES).')');
         }
     }
 

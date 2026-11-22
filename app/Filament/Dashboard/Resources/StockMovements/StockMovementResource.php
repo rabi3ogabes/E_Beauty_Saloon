@@ -77,7 +77,7 @@ class StockMovementResource extends Resource
             ->defaultSort('id', 'desc')
             ->columns([
                 TextColumn::make('created_at')->label(__('workspace.common.date'))->dateTime('d M Y, H:i')->sortable(),
-                TextColumn::make('variant.product.name')->label(__('workspace.products.label'))->weight('semibold')->description(fn ($r) => $r->variant?->sku),
+                TextColumn::make('variant.product.name')->label(__('workspace.products.label'))->weight('semibold')->description(fn ($record) => $record->variant?->sku),
                 TextColumn::make('branch.name')->label(__('salon.ui.branch'))->badge()->color('gray'),
                 TextColumn::make('type')->label(__('fields.type'))->badge()->formatStateUsing(fn ($state) => __('workspace.inventory.types.'.$state))
                     ->color(fn ($state) => match ($state) {

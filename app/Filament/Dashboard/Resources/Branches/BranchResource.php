@@ -13,6 +13,7 @@ use App\Filament\Support\Translatable;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -109,7 +110,7 @@ class BranchResource extends Resource
             ->itemLabel(fn (array $state) => __('workspace.weekdays.'.($state['day'] ?? 'sun')).(($state['closed'] ?? false) ? ' · '.__('workspace.branches.closed') : ' · '.substr((string) ($state['open'] ?? ''), 0, 5).'–'.substr((string) ($state['close'] ?? ''), 0, 5)))
             ->columns(['default' => 2, 'md' => 4])
             ->schema([
-                TextInput::make('day')->hidden()->dehydrated(),
+                Hidden::make('day'),
                 Toggle::make('closed')->label(__('workspace.branches.closed'))->inline(false)->live(),
                 TimePicker::make('open')->label(__('workspace.branches.opens'))->seconds(false)->required(fn (Get $get) => ! $get('closed'))->hidden(fn (Get $get) => (bool) $get('closed')),
                 TimePicker::make('close')->label(__('workspace.branches.closes'))->seconds(false)->required(fn (Get $get) => ! $get('closed'))->hidden(fn (Get $get) => (bool) $get('closed'))->after('open'),

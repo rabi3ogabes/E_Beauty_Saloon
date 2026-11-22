@@ -57,11 +57,11 @@ class SupplierResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->defaultSort('name')->columns([
-            TextColumn::make('name')->label(__('fields.name'))->weight('semibold')->searchable()->sortable()->description(fn ($r) => $r->contact_name),
+            TextColumn::make('name')->label(__('fields.name'))->weight('semibold')->searchable()->sortable()->description(fn ($record) => $record->contact_name),
             TextColumn::make('phone')->label(__('fields.phone'))->placeholder('—')->copyable(),
             TextColumn::make('email')->label(__('fields.email'))->placeholder('—')->copyable(),
             TextColumn::make('orders')->label(__('workspace.purchase_orders.plural'))->alignCenter()
-                ->state(fn ($r) => PurchaseOrder::where('supplier_id', $r->id)->count()),
+                ->state(fn ($record) => PurchaseOrder::where('supplier_id', $record->id)->count()),
         ])->recordActions([EditAction::make()->slideOver(), DeleteAction::make()])
             ->emptyStateIcon(Heroicon::OutlinedTruck)
             ->emptyStateHeading(__('workspace.suppliers.empty'))

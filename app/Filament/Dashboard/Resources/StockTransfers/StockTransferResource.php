@@ -121,7 +121,7 @@ class StockTransferResource extends Resource
                 TextColumn::make('fromBranch.name')->label(__('workspace.transfers.from'))->badge()->color('gray'),
                 TextColumn::make('toBranch.name')->label(__('workspace.transfers.to'))->badge()->color('primary'),
                 TextColumn::make('units')->label(__('workspace.transfers.units'))->alignCenter()
-                    ->description(fn ($r) => trans_choice('workspace.transfers.lines_count', $r->items_count, ['count' => $r->items_count])),
+                    ->description(fn ($record) => trans_choice('workspace.transfers.lines_count', $record->items_count, ['count' => $record->items_count])),
                 TextColumn::make('status')->label(__('fields.status'))->badge()->color('success')->formatStateUsing(fn ($state) => __('workspace.transfers.status.'.$state)),
                 TextColumn::make('created_at')->label(__('workspace.common.date'))->dateTime('d M Y, H:i')->sortable(),
             ])

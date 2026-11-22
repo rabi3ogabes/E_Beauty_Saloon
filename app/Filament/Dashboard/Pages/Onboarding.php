@@ -146,7 +146,7 @@ class Onboarding extends Page
                             ->options(['test' => __('workspace.payments.test'), 'live' => __('workspace.payments.live')])
                             ->visible(fn (Get $get) => in_array($get('gateway.driver'), TenantPaymentGateway::ONLINE_DRIVERS, true)),
                         ...collect(SavePaymentGateway::DRIVER_FIELDS)->flatten()->unique()->map(fn ($field) => TextInput::make('gateway.credentials.'.$field)
-                            ->label(__('workspace.payments.fields.'.$field))->password(! in_array($field, SavePaymentGateway::PUBLIC_FIELDS, true))->revealable()
+                            ->label(__('workspace.payments.fields.'.$field))->password($secret = ! in_array($field, SavePaymentGateway::PUBLIC_FIELDS, true))->revealable($secret)
                             ->visible(fn (Get $get) => in_array($field, SavePaymentGateway::DRIVER_FIELDS[$get('gateway.driver')] ?? [], true)))->values()->all(),
                         Text::make(__('workspace.payments.direct_copy'))->columnSpanFull()->color('gray'),
                     ]),

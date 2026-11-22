@@ -48,7 +48,7 @@ class ClientTimeline
         $client->photos()->limit($limit)->get()->each(fn ($p) => $events->push([
             'at' => $p->created_at, 'type' => 'photo', 'icon' => 'heroicon-o-photo', 'color' => 'info',
             'title' => __('workspace.timeline.photo', ['kind' => __('workspace.clients.photo_kinds.'.$p->kind)]),
-            'body' => $p->caption, 'photo' => $p->path,
+            'body' => $p->caption, 'photo' => route('tenant.workspace.client-photo', $p),
         ]));
 
         return $events->filter(fn ($e) => $e['at'] !== null)->sortByDesc(fn ($e) => $e['at']->getTimestamp())->take($limit)->values();

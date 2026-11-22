@@ -128,7 +128,7 @@ class PurchaseOrderResource extends Resource
             ->modifyQueryUsing(fn (Builder $query) => $query->with(['supplier', 'branch'])->withCount('items'))
             ->defaultSort('created_at', 'desc')
             ->columns([
-                TextColumn::make('number')->label(__('fields.number'))->weight('semibold')->searchable()->description(fn ($r) => $r->supplier?->name),
+                TextColumn::make('number')->label(__('fields.number'))->weight('semibold')->searchable()->description(fn ($record) => $record->supplier?->name),
                 TextColumn::make('branch.name')->label(__('salon.ui.branch'))->badge()->color('gray'),
                 TextColumn::make('items_count')->label(__('workspace.purchase_orders.items'))->alignCenter(),
                 Money::column('total')->label(__('fields.total')),

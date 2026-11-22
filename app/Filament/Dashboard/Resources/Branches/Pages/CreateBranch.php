@@ -25,13 +25,18 @@ class CreateBranch extends CreateRecord
 
     protected function fillForm(): void
     {
-        $this->form->fill(['hours' => NormalizeOpeningHours::toRows(null), 'timezone' => tenant()->timezone, 'status' => 'active']);
+        $this->form->fill([
+            'hours' => NormalizeOpeningHours::toRows(null), 'timezone' => tenant()->timezone, 'status' => 'active', 'city' => 'Doha',
+            'tax_percent' => 0, 'tax_inclusive' => true, 'booking_enabled' => true, 'shop_pickup_enabled' => true,
+        ]);
     }
 
     protected function handleRecordCreation(array $data): Model
     {
         $data['opening_hours'] = app(NormalizeOpeningHours::class)->handle($data['hours'] ?? []);
         unset($data['hours']);
+        $data['tax_percent'] ??= 0;
+        $data['tax_inclusive'] ??= true;
 
         try {
             return app(CreateBranchAction::class)->handle($data);

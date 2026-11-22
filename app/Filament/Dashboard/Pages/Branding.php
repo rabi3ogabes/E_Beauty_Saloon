@@ -106,7 +106,7 @@ class Branding extends SettingsPage
                         }),
                 ]),
                 Section::make(__('workspace.branding.identity'))->description(__('workspace.branding.identity_help'))->columns(2)
-                    ->headerActions([$this->generateKitAction()])
+                    ->key('identity')->headerActions([$this->generateKitAction()])
                     ->schema([
                         $upload('logo_path', __('workspace.branding.logo_light')),
                         $upload('logo_dark_path', __('workspace.branding.logo_dark')),

@@ -79,7 +79,7 @@ class PaymentGatewayResource extends Resource
     {
         $credentialFields = collect(SavePaymentGateway::DRIVER_FIELDS)->flatten()->unique()->map(fn ($field) => TextInput::make('credentials.'.$field)
             ->label(__('workspace.payments.fields.'.$field))
-            ->password(! in_array($field, SavePaymentGateway::PUBLIC_FIELDS, true))->revealable()
+            ->password($secret = ! in_array($field, SavePaymentGateway::PUBLIC_FIELDS, true))->revealable($secret)
             ->autocomplete('new-password')
             ->visible(fn (Get $get) => in_array($field, SavePaymentGateway::DRIVER_FIELDS[$get('driver')] ?? [], true))
             ->required(fn (Get $get, $record) => in_array($field, ['merchant_id', 'secret_key', 'api_key', 'client_id', 'key_id', 'key_secret'], true)
@@ -140,9 +140,9 @@ class PaymentGatewayResource extends Resource
     {
         return $table->defaultSort('sort')->reorderable('sort', fn () => static::canManage())->columns([
             TextColumn::make('driver')->label(__('workspace.payments.driver'))->weight('semibold')
-                ->formatStateUsing(fn ($state) => __('salon.payments.drivers.'.$state))->description(fn ($r) => $r->label),
+                ->formatStateUsing(fn ($state) => __('salon.payments.drivers.'.$state))->description(fn ($record) => $record->label),
             TextColumn::make('mode')->label(__('workspace.payments.mode'))->badge()
-                ->state(fn ($r) => $r->isOnline() ? $r->mode : 'offline')
+                ->state(fn ($record) => $record->isOnline() ? $record->mode : 'offline')
                 ->formatStateUsing(fn ($state) => __('workspace.payments.'.$state))
                 ->color(fn ($state) => match ($state) {
                     'live' => 'success', 'test' => 'warning', default => 'gray'
@@ -150,12 +150,12 @@ class PaymentGatewayResource extends Resource
             TextColumn::make('enabled_for')->label(__('workspace.payments.enabled_for'))->badge()->color('gray')
                 ->formatStateUsing(fn ($state) => __('workspace.payments.contexts.'.$state)),
             TextColumn::make('last_test_ok')->label(__('workspace.payments.connection'))->badge()
-                ->state(fn ($r) => ! $r->isOnline() ? 'na' : ($r->last_tested_at === null ? 'untested' : ($r->last_test_ok ? 'ok' : 'failed')))
+                ->state(fn ($record) => ! $record->isOnline() ? 'na' : ($record->last_tested_at === null ? 'untested' : ($record->last_test_ok ? 'ok' : 'failed')))
                 ->formatStateUsing(fn ($state) => __('workspace.payments.connection_states.'.$state))
                 ->color(fn ($state) => match ($state) {
                     'ok' => 'success', 'failed' => 'danger', 'untested' => 'warning', default => 'gray'
                 })
-                ->description(fn ($r) => $r->last_tested_at?->diffForHumans()),
+                ->description(fn ($record) => $record->last_tested_at?->diffForHumans()),
             IconColumn::make('is_active')->label(__('fields.is_active'))->boolean(),
         ])->recordActions([
             static::testAction(),

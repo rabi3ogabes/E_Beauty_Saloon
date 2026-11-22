@@ -83,7 +83,7 @@ class Domains extends Page
     public function checkNow(int $domainId): void
     {
         $domain = tenant()->domains()->whereKey($domainId)->where('type', 'custom')->firstOrFail();
-        VerifyCustomDomain::dispatchSync($domain->id);
+        app()->call([new VerifyCustomDomain($domain->id), 'handle']); // run now, in this request
         $domain->refresh();
 
         $domain->isVerified()

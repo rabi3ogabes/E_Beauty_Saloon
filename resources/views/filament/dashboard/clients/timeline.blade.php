@@ -28,7 +28,10 @@
                     <p class="mt-1 whitespace-pre-line text-sm text-gray-600 dark:text-gray-300">{{ $event['body'] }}</p>
                 @endif
                 @if ($event['photo'])
-                    <p class="mt-2 inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-600 dark:bg-white/10 dark:text-gray-300">
+                    <a href="{{ $event['photo'] }}" target="_blank" rel="noopener" class="mt-2 block w-fit overflow-hidden rounded-xl border border-gray-200 dark:border-white/10">
+                        <img src="{{ $event['photo'] }}" alt="{{ $event['title'] }}" loading="lazy" class="h-28 w-28 object-cover">
+                    </a>
+                    <p class="mt-1 inline-flex items-center gap-1 text-xs text-gray-500">
                         <x-filament::icon icon="heroicon-m-lock-closed" class="h-3 w-3" /> {{ __('workspace.timeline.private_photo') }}
                     </p>
                 @endif
