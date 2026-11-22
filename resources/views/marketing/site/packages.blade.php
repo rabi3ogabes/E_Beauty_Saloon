@@ -1,5 +1,6 @@
 <x-layouts.site :title="__('marketing.packages.public_title')" :description="__('marketing.packages.public_subtitle')">
     @php($locale = app()->getLocale())
+    <x-marketing.flash-sale />
     <section class="container-luxe py-12 sm:py-16">
         <div class="max-w-2xl" data-reveal>
             <p class="eyebrow">{{ __('marketing.packages.eyebrow') }}</p>

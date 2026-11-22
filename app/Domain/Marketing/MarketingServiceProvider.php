@@ -21,6 +21,7 @@ use App\Domain\Marketing\Services\ChannelResolver;
 use App\Domain\Marketing\Support\AccountViews;
 use App\Domain\Marketing\Support\MarketingUrl;
 use App\Domain\Messaging\MessagingManager;
+use App\Domain\Tenancy\Models\Tenant;
 use App\Support\Account\AccountSections;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
@@ -45,9 +46,13 @@ class MarketingServiceProvider extends ServiceProvider
         $this->registerObservers();
         $this->registerAccountSections();
 
-        RateLimiter::for('marketing-sends', fn ($job) => Limit::perMinute(
-            (int) (tenant()?->setting('marketing.rate_per_minute') ?? 600)
-        )->by('marketing-sends:'.($job->tenantId ?? 'none')));
+        // Per-tenant throttle for campaign delivery jobs (SendCampaignBatch carries tenantId).
+        RateLimiter::for('marketing-sends', function ($job) {
+            $tenantId = $job->tenantId ?? null;
+            $perMinute = $tenantId ? (int) (Tenant::find($tenantId)?->setting('marketing.rate_per_minute') ?? 600) : 600;
+
+            return Limit::perMinute(max(10, $perMinute))->by('marketing-sends:'.($tenantId ?? 'none'));
+        });
     }
 
     protected function registerChannels(): void
