@@ -1,4 +1,5 @@
-import 'dart:async';
+  final flavor = ref.watch(flavorProvider);
+  return _mockLive ?const bool _mockLive = Env.demoMode;import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -127,12 +128,11 @@ final apiClientProvider = Provider<ApiClient>((ref) {
 });
 
 // ---------------------------------------------------------------------------
-// Repositories. Live endpoints use the API unless DEMO_MODE; pending ones use
-// mocks until MOCK_PENDING_APIS=false.
+// Repositories. Every area is live (Phase 10 API); DEMO_MODE swaps in the mocks
+// (design QA, screenshots, store review without a backend).
 // ---------------------------------------------------------------------------
 
 const bool _mockLive = Env.demoMode;
-const bool _mockPending = Env.demoMode || Env.mockPendingApis;
 
 final catalogRepositoryProvider = Provider<CatalogRepository>(
   (ref) => _mockLive ? MockCatalogRepository() : ApiCatalogRepository(ref.watch(apiClientProvider)),
@@ -140,9 +140,7 @@ final catalogRepositoryProvider = Provider<CatalogRepository>(
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final flavor = ref.watch(flavorProvider);
-  // TODO(backend): staff/owner auth endpoints pending — mocked until shipped.
-  final mock = _mockLive || (flavor != AppFlavor.client && _mockPending);
-  return mock ? MockAuthRepository() : ApiAuthRepository(ref.watch(apiClientProvider), prefix: flavor.authPrefix);
+  return _mockLive ? MockAuthRepository() : ApiAuthRepository(ref.watch(apiClientProvider), prefix: flavor.authPrefix);
 });
 
 final profileRepositoryProvider = Provider<ProfileRepository>(
@@ -166,11 +164,11 @@ final studioRepositoryProvider = Provider<StudioRepository>(
 );
 
 final staffRepositoryProvider = Provider<StaffRepository>(
-  (ref) => _mockPending ? MockStaffRepository() : ApiStaffRepository(ref.watch(apiClientProvider)),
+  (ref) => _mockLive ? MockStaffRepository() : ApiStaffRepository(ref.watch(apiClientProvider)),
 );
 
 final ownerRepositoryProvider = Provider<OwnerRepository>(
-  (ref) => _mockPending ? MockOwnerRepository() : ApiOwnerRepository(ref.watch(apiClientProvider)),
+  (ref) => _mockLive ? MockOwnerRepository() : ApiOwnerRepository(ref.watch(apiClientProvider)),
 );
 
 // ---------------------------------------------------------------------------

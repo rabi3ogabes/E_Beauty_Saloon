@@ -2,11 +2,18 @@ import '../../core/api/api_client.dart';
 import '../models/json.dart';
 import '../models/team.dart';
 
-/// Staff app — TODO(backend): `/staff/me/*` and check-in endpoints in progress.
+/// Staff app — live (`routes/api/staff.php`, token ability `staff`).
 abstract class StaffRepository {
+  /// `GET /staff/me/calendar?date` — my appointments of a branch-local day.
   Future<List<CalendarEntry>> calendar(DateTime date);
-  Future<void> checkIn(int bookingId);
+
+  /// `POST /staff/bookings/{reference}/check-in` — own appointments, or any with bookings.manage.
+  Future<void> checkIn(CalendarEntry entry);
+
+  /// `GET /staff/me/commissions` (this month by default).
   Future<CommissionSummary> commissions();
+
+  /// `POST /staff/me/time-off` — creates a pending request the owner reviews.
   Future<void> requestTimeOff({required DateTime from, required DateTime to, String? reason});
 }
 
@@ -20,8 +27,8 @@ class ApiStaffRepository implements StaffRepository {
       unwrapList(await _api.get('/staff/me/calendar', query: {'date': ymd(date)})).map(CalendarEntry.fromJson).toList();
 
   @override
-  Future<void> checkIn(int bookingId) async {
-    await _api.post('/bookings/$bookingId/check-in');
+  Future<void> checkIn(CalendarEntry entry) async {
+    await _api.post('/staff/bookings/${Uri.encodeComponent(entry.reference ?? '${entry.bookingId}')}/check-in');
   }
 
   @override
@@ -29,17 +36,20 @@ class ApiStaffRepository implements StaffRepository {
 
   @override
   Future<void> requestTimeOff({required DateTime from, required DateTime to, String? reason}) async {
-    // TODO(backend): endpoint name not agreed yet; assumed `POST /staff/me/time-off`.
-    await _api.post('/staff/me/time-off', data: {'from': ymd(from), 'to': ymd(to), 'reason': ?reason});
+    await _api.post('/staff/me/time-off', data: {'from': ymd(from), 'to': ymd(to), 'reason': ?reason}, idempotencyKey: newIdempotencyKey());
   }
 }
 
-/// Owner app — TODO(backend): `/owner/*` endpoints in progress.
+/// Owner app — live (`routes/api/owner.php`, token ability `owner`).
 abstract class OwnerRepository {
+  /// `GET /owner/kpis?branch_id` — today, salon timezone.
   Future<OwnerKpis> kpis({int? branchId});
+
+  /// `GET /owner/alerts`
   Future<List<OwnerAlert>> alerts();
 
-  /// Stub: quick campaign send. TODO(backend): marketing API not specified yet.
+  /// `POST /owner/campaigns` — [audience] is a preset (`all`, `lapsed`, `vip`, `birthday`) or a saved
+  /// segment id from `GET /owner/segments`. Consent, quiet hours and message credits apply server-side.
   Future<void> sendCampaign({required String channel, required String audience, required String message});
 }
 
@@ -57,6 +67,10 @@ class ApiOwnerRepository implements OwnerRepository {
 
   @override
   Future<void> sendCampaign({required String channel, required String audience, required String message}) async {
-    await _api.post('/owner/campaigns', data: {'channel': channel, 'audience': audience, 'message': message});
+    await _api.post(
+      '/owner/campaigns',
+      data: {'channel': channel, 'audience': audience, 'message': message},
+      idempotencyKey: newIdempotencyKey(),
+    );
   }
 }

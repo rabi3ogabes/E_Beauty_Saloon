@@ -23,6 +23,8 @@
   "appearance": "Appearance",
   "appointment": "Appointment",
   "audience": "Audience",
+  "authenticatorCode": "Authenticator code",
+  "authenticatorCodeHint": "6-digit code, or one of your recovery codes",
   "audienceAll": "All opted-in clients",
   "audienceBirthday": "Birthdays this month",
   "audienceLapsed": "Not seen in 60 days",
@@ -97,6 +99,7 @@
   "delivery": "Delivery",
   "depositRequiredNote": "A deposit secures this appointment.",
   "done": "Done",
+  "emailLabel": "Email",
   "durationHours": "{h} h",
   "@durationHours": {
     "placeholders": {
@@ -234,6 +237,7 @@
   "outOfStock": "Out of stock",
   "packages": "Packages",
   "pageNotFound": "We couldn't find that page",
+  "passwordLabel": "Password",
   "past": "Past",
   "payAtSalon": "Pay at the salon",
   "payAtSalonHint": "Nothing to pay now",
@@ -363,6 +367,7 @@
   "switchCamera": "Switch camera",
   "tabBookings": "Bookings",
   "tabCalendar": "Calendar",
+  "teamSignInSubtitle": "Use the e-mail and password of your salon account.",
   "tabDashboard": "Dashboard",
   "tabHome": "Home",
   "tabProfile": "Me",

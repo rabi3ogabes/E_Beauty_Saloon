@@ -15,9 +15,8 @@ import '../repositories/commerce_repository.dart';
 import '../repositories/team_repository.dart';
 import 'mock_data.dart';
 
-/// Mock implementations used while backend endpoints are pending
-/// (`MOCK_PENDING_APIS=true`, the default) or in `DEMO_MODE`.
-/// Delete a mock once its endpoint ships and the flag is flipped.
+/// Mock implementations used in `DEMO_MODE` (no backend: design QA, screenshots, store review)
+/// and by widget tests.
 
 Future<void> _latency([int ms = 350]) => Future<void>.delayed(Duration(milliseconds: ms));
 
@@ -94,6 +93,24 @@ class MockAuthRepository implements AuthRepository {
       );
     }
     return AuthResult(token: 'mock-token', client: MockData.client);
+  }
+
+  /// Any e-mail/password works except password `wrong`.
+  @override
+  Future<AuthResult> signInWithPassword({required String email, required String password, String? code, required String deviceName}) async {
+    await _latency();
+    if (password == 'wrong') {
+      throw const ApiException(
+        kind: ApiErrorKind.validation,
+        statusCode: 422,
+        message: 'These credentials do not match our records.',
+        code: 'invalid_credentials',
+      );
+    }
+    return AuthResult(
+      token: 'mock-token',
+      member: TeamMember(id: 1, name: 'Layla Haddad', email: email, permissions: const ['bookings.view'], staffId: 11),
+    );
   }
 
   @override
@@ -539,9 +556,9 @@ class MockStaffRepository implements StaffRepository {
   }
 
   @override
-  Future<void> checkIn(int bookingId) async {
+  Future<void> checkIn(CalendarEntry entry) async {
     await _latency();
-    _checkedIn.add(bookingId);
+    _checkedIn.add(entry.bookingId);
   }
 
   @override

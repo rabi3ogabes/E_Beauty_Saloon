@@ -73,14 +73,48 @@ class ClientProfile {
   );
 }
 
-/// `POST /auth/verify`
+/// `POST /auth/verify` (client: `{token, client}`) or `POST /staff|owner/auth/login` (team: `{token, user}`).
 class AuthResult {
-  const AuthResult({required this.token, required this.client});
+  const AuthResult({required this.token, this.client, this.member});
 
-  factory AuthResult.fromJson(Json j) => AuthResult(token: asString(j['token']), client: ClientProfile.fromJson(asJson(j['client'])));
+  factory AuthResult.fromJson(Json j) => AuthResult(
+    token: asString(j['token']),
+    client: j['client'] is Map ? ClientProfile.fromJson(asJson(j['client'])) : null,
+    member: j['user'] is Map ? TeamMember.fromJson(asJson(j['user'])) : null,
+  );
 
   final String token;
-  final ClientProfile client;
+
+  /// Client app only.
+  final ClientProfile? client;
+
+  /// Staff / owner apps only.
+  final TeamMember? member;
+}
+
+/// Staff / owner app profile (`TeamMemberResource`).
+class TeamMember {
+  const TeamMember({required this.id, required this.name, this.email, this.isOwner = false, this.permissions = const [], this.staffId});
+
+  factory TeamMember.fromJson(Json j) => TeamMember(
+    id: asInt(j['id']),
+    name: asString(j['name']),
+    email: asStringOrNull(j['email']),
+    isOwner: asBool(j['is_owner']),
+    permissions: asStringList(j['permissions']),
+    staffId: asIntOrNull(asJson(j['staff'])['id']),
+  );
+
+  final int id;
+  final String name;
+  final String? email;
+  final bool isOwner;
+  final List<String> permissions;
+
+  /// Linked stylist profile (staff app calendar / commissions).
+  final int? staffId;
+
+  bool can(String permission) => isOwner || permissions.contains(permission);
 }
 
 class WalletTransaction {

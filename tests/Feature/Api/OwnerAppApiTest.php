@@ -9,6 +9,7 @@ use App\Domain\Inventory\Models\BranchStock;
 use App\Domain\Marketing\Models\Campaign;
 use App\Domain\Marketing\Models\CampaignMessage;
 use App\Domain\Marketing\Models\Review;
+use App\Domain\Marketing\Models\Segment;
 use App\Domain\Messaging\MessagingManager;
 use App\Domain\POS\Actions\CompleteSale;
 use App\Domain\Team\Models\TimeOff;
@@ -123,6 +124,19 @@ it('sends a quick campaign to a saved segment through the Marketing actions', fu
             ->and(CampaignMessage::where('status', 'skipped_no_consent')->count())->toBe(2) // POS client + no-consent client
             ->and(CampaignMessage::whereIn('status', CampaignMessage::SENT_STATUSES)->count())->toBe(2);
     });
+});
+
+it('maps the app\'s preset audiences to saved segments', function () {
+    asTenant($this->s->tenant, function () {
+        F::noQuietHours($this->s->tenant);
+        F::client(['is_vip' => true], ['sms']);
+        F::client([], ['sms']);
+    });
+
+    $this->postJson(apiUrl('owner/campaigns'), ['audience' => 'vip', 'channel' => 'sms', 'message' => 'VIP night'], $this->h)->assertCreated()->assertJsonPath('data.recipients', 1);
+    $this->postJson(apiUrl('owner/campaigns'), ['audience' => 'vip', 'channel' => 'sms', 'message' => 'VIP night 2'], $this->h)->assertCreated();
+    expect(asTenant($this->s->tenant, fn () => Segment::where('description', 'owner-app:vip')->count()))->toBe(1);
+    $this->postJson(apiUrl('owner/campaigns'), ['audience' => 'everyone', 'channel' => 'sms', 'message' => 'x'], $this->h)->assertStatus(422)->assertJsonValidationErrors('audience');
 });
 
 it('requires marketing.send for quick campaigns and the owner ability for owner endpoints', function () {

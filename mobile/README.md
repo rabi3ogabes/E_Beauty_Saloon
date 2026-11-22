@@ -58,23 +58,27 @@ Main points:
 - **Design.** Ivory `#FAF7F2` and ink `#1C1A17` with champagne `#C8A96A` (dark shade `#A88B4F`) and rose `#E9D6CF` accents. Dark mode uses plum `#1E1620` / `#141014`. Fonts are Playfair Display (headings), Inter (body) and IBM Plex Sans Arabic (Arabic). Cards have a 16 px radius, buttons are pills, borders are hairlines and shadows are soft. Loading states use skeleton shimmers, never a lone spinner. Key actions give haptic feedback, and touch targets are at least 44 px.
 - **RTL.** Arabic flips the whole UI. Phone numbers, OTP boxes and the before/after slider stay LTR on purpose.
 
-### Backend endpoints: live vs mocked
+### Backend endpoints
 
-Live (in `routes/api/core.php`): `/salon`, `/branches`, `/categories`, `/services`, `/services/{id}`, `/staff`, `/auth/otp`, `/auth/verify`, `/auth/logout`, `/me` (GET/PATCH/DELETE), `/me/wallet`, `/me/loyalty`, `/me/export`.
-
-Other engineers are still building some endpoints. The app codes against the agreed contracts in `Api*Repository` (look for `TODO(backend)`) and uses `Mock*Repository` until `MOCK_PENDING_APIS=false`:
+Every area is live under `/api/v1` (Laravel `routes/api/*.php`; full reference: `/docs` on the backend, Postman
+collection in `docs/api/`). Mocks are only used with `DEMO_MODE=true` and in widget tests.
 
 | Area | Endpoints | Repository |
 | --- | --- | --- |
-| Booking | `GET /availability`, `POST /bookings`, `GET /bookings`, `POST /bookings/{id}/cancel`, `/reschedule` | `BookingRepository` |
-| Shop & packages | `GET /products`, `GET /products/{id}`, `POST /orders`, `GET /packages` | `ShopRepository` |
-| AI Studio | `GET /studio/styles`, `POST /studio/jobs` (multipart), `GET /studio/jobs/{id}`, `GET /looks` | `StudioRepository` |
-| Push | `POST /devices` | `DeviceRepository` |
-| Staff | `GET /staff/me/calendar`, `POST /bookings/{id}/check-in`, `GET /staff/me/commissions`, `POST /staff/me/time-off` (assumed) | `StaffRepository` |
-| Owner | `GET /owner/kpis`, `GET /owner/alerts`, `POST /owner/campaigns` (stub) | `OwnerRepository` |
-| Staff/owner auth | `POST /staff/auth/*`, `/owner/auth/*` (assumed) | `AuthRepository` (prefix per flavor) |
+| Catalog & client auth | `/salon`, `/branches`, `/categories`, `/services`, `/staff`, `/auth/otp`, `/auth/verify`, `/me*` | `CatalogRepository`, `AuthRepository`, `ProfileRepository` |
+| Booking | `GET /availability`, `POST /bookings/hold`, `POST /bookings` (Idempotency-Key), `GET /bookings`, `GET /bookings/{reference}`, `POST /bookings/{reference}/cancel`, `/reschedule`, `GET /bookings/{reference}/availability` | `BookingRepository` |
+| Shop | `GET /shop/products`, `GET /shop/products/{id\|slug}`, cart via `X-Cart-Token`, `POST /shop/orders`, `GET /shop/orders` | `ShopRepository` |
+| Packages & loyalty | `GET /packages`, `GET /me/packages`, `POST /packages/{id}/purchase`, `GET /notifications`, `GET /me/referral` | `ShopRepository` (`packages`) |
+| AI Studio | `GET /studio/styles`, `POST /studio/consent`, `POST /studio/jobs` (multipart), `GET /studio/jobs/{id}`, `GET /looks`, `POST /looks/{id}/save`, `DELETE /looks/{id}` | `StudioRepository` |
+| Push | `POST /devices`, `DELETE /devices/{token}` (client app) | `DeviceRepository` |
+| Staff | `POST /staff/auth/login`, `GET /staff/me`, `GET /staff/me/calendar`, `POST /staff/bookings/{reference}/check-in`, `GET /staff/me/commissions`, `POST /staff/me/time-off`, `GET /staff/clients/{id}` | `AuthRepository`, `StaffRepository` |
+| Owner | `POST /owner/auth/login`, `GET /owner/kpis`, `GET /owner/alerts`, `GET /owner/segments`, `POST /owner/campaigns` | `AuthRepository`, `OwnerRepository` |
 
-When an endpoint ships, check its JSON against the model's `fromJson`, then build with `--dart-define=MOCK_PENDING_APIS=false`. After every area is live, delete its mock.
+Conventions: money is `{amount, currency, formatted}` in minor units, times are UTC ISO-8601, bookings are addressed by
+`reference`, errors are `{message, error: {code, status}, errors?, module?}` (`ApiException.code`). Staff and owner apps
+sign in with the dashboard e-mail + password; with app MFA enabled the first attempt returns `error.code = mfa_required`
+and the sign-in screen asks for the authenticator (or a recovery) code. Their tokens only work on their own app's
+endpoints (`staff` / `owner` ability).
 
 ### Compile-time switches (`--dart-define`)
 
@@ -83,7 +87,6 @@ When an endpoint ships, check its JSON against the model's `fromJson`, then buil
 | `API_BASE_URL` | from white-label config | Backend origin, without `/api/v1` |
 | `TENANT` | from white-label config | Salon slug sent as `X-Tenant` |
 | `APP_NAME` | from white-label config | Display name override |
-| `MOCK_PENDING_APIS` | `true` | Use mocks for unfinished endpoints |
 | `DEMO_MODE` | `false` | Mock everything (no backend needed: design QA, screenshots) |
 | `FIREBASE_API_KEY`, `FIREBASE_APP_ID`, `FIREBASE_SENDER_ID`, `FIREBASE_PROJECT_ID` | empty | Optional explicit Firebase options |
 
@@ -174,11 +177,11 @@ Once a user signs in, the app sends its FCM token to `POST /devices`.
 - [ ] Icons and splash generated. Splash checked in light and dark mode.
 - [ ] Firebase apps created, config files in CI secrets, APNs key uploaded.
 - [ ] Signing: Android upload keystore stored in CI secrets (never committed) and Play App Signing enabled. iOS distribution certificate and profile set up through the App Store Connect API key.
-- [ ] `MOCK_PENDING_APIS=false` once all endpoints are live. `API_BASE_URL` is the salon's HTTPS domain.
+- [ ] `API_BASE_URL` is the salon's HTTPS domain (no `DEMO_MODE` in release builds).
 - [ ] Privacy: data-safety form (Play) and privacy nutrition labels (App Store), covering phone, name, photos (AI Studio, used only to generate the preview) and push token. Privacy policy URL is set. In-app account deletion works (Profile → Delete account, which calls `DELETE /me`).
 - [ ] Permission strings reviewed (camera, photos, calendar) in English and Arabic.
 - [ ] Store listing in English and Arabic: screenshots on 6.7" and 5.5" iPhones and on Android phones, in both languages and in RTL. Use `DEMO_MODE` for clean screenshots.
 - [ ] Payments go through the hosted web checkout (`url_launcher`). Explain in the review notes that these are physical services and goods, not digital content.
-- [ ] Test account for App Review (a phone number and fixed OTP from the backend's review allow-list).
+- [ ] Test account for App Review: set the salon settings `api.review_phone` + `api.review_code` (see `docs/api/README.md`) and put that phone + code in the review notes.
 - [ ] Version and build numbers bumped (`pubspec.yaml` version and CI `--build-number`).
 - [ ] Release to the internal track / TestFlight, run a smoke test of book → pay → confirm, then promote.

@@ -181,7 +181,7 @@ class _StaffBookingDetailScreenState extends ConsumerState<StaffBookingDetailScr
   Future<void> _checkIn() async {
     setState(() => _busy = true);
     try {
-      await ref.read(staffRepositoryProvider).checkIn(_entry.bookingId);
+      await ref.read(staffRepositoryProvider).checkIn(_entry);
       Haptics.success();
       setState(() => _entry = _entry.copyWith(status: BookingStatus.checkedIn));
       ref.invalidate(staffCalendarProvider);

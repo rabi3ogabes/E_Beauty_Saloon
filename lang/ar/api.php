@@ -58,6 +58,12 @@ return [
     'owner' => [
         'campaign_queued' => 'الحملة في طريقها إلى :count عميلة.',
         'quick_campaign' => 'حملة سريعة :date',
+        'audiences' => [
+            'all' => 'جميع العميلات (تطبيق المالكة)',
+            'lapsed' => 'منقطعات منذ 60+ يوماً (تطبيق المالكة)',
+            'vip' => 'عميلات VIP (تطبيق المالكة)',
+            'birthday' => 'أعياد ميلاد هذا الشهر (تطبيق المالكة)',
+        ],
         'alerts' => [
             'low_stock' => 'مخزون منخفض: :count منتجات',
             'low_stock_body' => ':items',

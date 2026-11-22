@@ -1,13 +1,17 @@
 import '../../core/api/api_client.dart';
 import '../models/account.dart';
 
-/// Phone OTP sign-in.
+/// Sign-in: phone OTP for clients, e-mail + password (+ authenticator code) for staff / owner.
 abstract class AuthRepository {
-  /// `POST {prefix}/otp` → 202.
+  /// `POST {prefix}/otp` → 202 (client app).
   Future<void> requestOtp(String phone);
 
-  /// `POST {prefix}/verify` → `{token, client}`.
+  /// `POST {prefix}/verify` → `{token, client}` (client app).
   Future<AuthResult> verify({required String phone, required String code, String? name, required String deviceName});
+
+  /// `POST {prefix}/login` → `{token, user}` (staff / owner apps). Throws `ApiException` with
+  /// `code == 'mfa_required'` when the account has app MFA and [code] was not sent.
+  Future<AuthResult> signInWithPassword({required String email, required String password, String? code, required String deviceName});
 
   Future<void> logout();
 }
@@ -17,8 +21,22 @@ class ApiAuthRepository implements AuthRepository {
 
   final ApiClient _api;
 
-  /// `/auth` for clients. TODO(backend): `/staff/auth`, `/owner/auth` pending.
+  /// `/auth` (clients), `/staff/auth`, `/owner/auth` — see `AppFlavor.authPrefix`.
   final String prefix;
+
+  @override
+  Future<AuthResult> signInWithPassword({required String email, required String password, String? code, required String deviceName}) async {
+    final body = await _api.post(
+      '$prefix/login',
+      data: {
+        'email': email.trim(),
+        'password': password,
+        if (code != null && code.trim().isNotEmpty) 'code': code.trim(),
+        'device_name': deviceName,
+      },
+    );
+    return AuthResult.fromJson(body is Map ? Map<String, dynamic>.from(body) : const {});
+  }
 
   @override
   Future<void> requestOtp(String phone) async {

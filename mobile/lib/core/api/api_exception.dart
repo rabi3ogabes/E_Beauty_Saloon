@@ -24,6 +24,7 @@ class ApiException implements Exception {
     this.statusCode,
     this.errors = const {},
     this.module,
+    this.code,
   });
 
   final ApiErrorKind kind;
@@ -35,6 +36,10 @@ class ApiException implements Exception {
 
   /// Disabled module key (`booking`, `shop`, `ai_studio` …) for 403s.
   final String? module;
+
+  /// Stable machine code from the API envelope (`error.code`): validation_failed, domain_error,
+  /// module_disabled, mfa_required, invalid_credentials, …
+  final String? code;
 
   String? firstError(String field) {
     final list = errors[field];
@@ -102,6 +107,7 @@ class ApiException implements Exception {
       message: (message == null || message.isEmpty) ? _defaultMessage(kind) : message,
       errors: errors,
       module: map['module'] as String?,
+      code: (map['error'] is Map ? (map['error'] as Map)['code'] : map['code'])?.toString(),
     );
   }
 

@@ -2,11 +2,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../app/flavor.dart';
 import '../app/providers.dart';
 import '../core/widgets/states.dart';
 import '../data/models/team.dart';
 import '../features/auth/otp_screen.dart';
 import '../features/auth/phone_screen.dart';
+import '../features/auth/team_sign_in_screen.dart';
 import '../features/client/account/account_screens.dart';
 import '../features/client/booking/booking_confirmation_screen.dart';
 import '../features/client/booking/booking_flow_screen.dart';
@@ -35,7 +37,12 @@ List<int> _ids(String? csv) => (csv ?? '').split(',').map(int.tryParse).whereTyp
 List<RouteBase> _authRouteList() => [
   GoRoute(
     path: '/sign-in',
-    builder: (_, s) => PhoneScreen(from: s.uri.queryParameters['from']),
+    // Clients: phone OTP. Staff / owner: e-mail + password (+ authenticator code).
+    builder: (_, s) => Consumer(
+      builder: (context, ref, _) => ref.watch(flavorProvider) == AppFlavor.client
+          ? PhoneScreen(from: s.uri.queryParameters['from'])
+          : TeamSignInScreen(from: s.uri.queryParameters['from']),
+    ),
   ),
   GoRoute(
     path: '/otp',

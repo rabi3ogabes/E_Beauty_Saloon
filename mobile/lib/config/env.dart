@@ -1,10 +1,5 @@
 /// Compile-time switches (`--dart-define=KEY=value`).
 abstract final class Env {
-  /// Use in-app mock data for endpoints the backend has not shipped yet
-  /// (availability, bookings, shop, AI Studio, packages, staff, owner).
-  /// Flip to `false` once those endpoints are live.
-  static const bool mockPendingApis = bool.fromEnvironment('MOCK_PENDING_APIS', defaultValue: true);
-
   /// Run the whole app against mock data, no backend required (screenshots, demos, design QA).
   static const bool demoMode = bool.fromEnvironment('DEMO_MODE', defaultValue: false);
 

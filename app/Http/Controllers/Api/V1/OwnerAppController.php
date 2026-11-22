@@ -25,6 +25,14 @@ use Illuminate\Support\Facades\DB;
  */
 class OwnerAppController extends Controller
 {
+    /** Quick-campaign audiences offered by the owner app → SegmentQuery conditions. */
+    public const AUDIENCES = [
+        'all' => [],
+        'lapsed' => [['field' => 'not_visited_days', 'value' => 60]],
+        'vip' => [['field' => 'vip', 'value' => true]],
+        'birthday' => [['field' => 'birthday_this_month', 'value' => true]],
+    ];
+
     /** Me. */
     public function me(Request $request): JsonResponse
     {
@@ -108,10 +116,11 @@ class OwnerAppController extends Controller
         $user = $this->user($request);
         abort_unless($user->can('marketing.send'), 403);
         if (! $request->filled('segment_id') && is_numeric($request->input('audience'))) {
-            $request->merge(['segment_id' => (int) $request->input('audience')]);
+            $request->merge(['segment_id' => (int) $request->input('audience'), 'audience' => null]);
         }
         $data = $request->validate([
-            'segment_id' => ['required', 'integer'],
+            'segment_id' => ['required_without:audience', 'nullable', 'integer'],
+            'audience' => ['required_without:segment_id', 'nullable', 'in:'.implode(',', array_keys(self::AUDIENCES))],
             'channel' => ['required_without:channels', 'in:whatsapp,sms,email,push'],
             'channels' => ['nullable', 'array', 'min:1'],
             'channels.*' => ['in:whatsapp,sms,email,push'],
@@ -119,7 +128,7 @@ class OwnerAppController extends Controller
             'subject' => ['nullable', 'string', 'max:120'],
             'name' => ['nullable', 'string', 'max:120'],
         ]);
-        $segment = Segment::query()->findOrFail($data['segment_id']);
+        $segment = ! empty($data['segment_id']) ? Segment::query()->findOrFail($data['segment_id']) : $this->presetSegment($data['audience']);
         $locale = app()->getLocale();
         $content = ['en' => ['subject' => $data['subject'] ?? null, 'body' => $data['message']]];
         if ($locale !== 'en') {
@@ -149,6 +158,15 @@ class OwnerAppController extends Controller
             'recipients' => (int) $campaign->recipients_count,
             'estimated_cost' => Money::of((int) ($cost['cost'] ?? 0), tenant()->currency ?? 'QAR'),
         ], 'message' => __('api.owner.campaign_queued', ['count' => (int) $campaign->recipients_count])], 201);
+    }
+
+    /** Saved segment behind an app preset audience (created once per salon, visible in the dashboard). */
+    protected function presetSegment(string $audience): Segment
+    {
+        return Segment::query()->firstOrCreate(['description' => 'owner-app:'.$audience], [
+            'name' => __('api.owner.audiences.'.$audience),
+            'rules' => ['match' => 'all', 'conditions' => self::AUDIENCES[$audience]],
+        ]);
     }
 
     protected function user(Request $request): User

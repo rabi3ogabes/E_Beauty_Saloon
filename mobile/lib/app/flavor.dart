@@ -10,8 +10,7 @@ enum AppFlavor {
   owner;
 
   /// Path prefix of the auth endpoints for this audience.
-  /// Client: `/auth/*` (live). Staff/owner: `/staff/auth/*`, `/owner/auth/*`
-  /// TODO(backend): staff & owner OTP endpoints are not implemented yet.
+  /// Client: `/auth/*` (phone OTP). Staff/owner: `/staff/auth/login`, `/owner/auth/login` (e-mail + password, MFA).
   String get authPrefix => switch (this) {
     AppFlavor.client => '/auth',
     AppFlavor.staff => '/staff/auth',

@@ -58,6 +58,12 @@ return [
     'owner' => [
         'campaign_queued' => 'Campaign is on its way to :count clients.',
         'quick_campaign' => 'Quick campaign :date',
+        'audiences' => [
+            'all' => 'All clients (owner app)',
+            'lapsed' => 'Lapsed 60+ days (owner app)',
+            'vip' => 'VIP clients (owner app)',
+            'birthday' => 'Birthdays this month (owner app)',
+        ],
         'alerts' => [
             'low_stock' => 'Low stock: :count products',
             'low_stock_body' => ':items',

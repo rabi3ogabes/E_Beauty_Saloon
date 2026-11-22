@@ -28,7 +28,7 @@ definitions:
   vars: &vars
     TENANT: lumiere
     APP: client
-    MOCK_PENDING_APIS: "true"
+    DEMO_MODE: "false"
 
   scripts:
     - &white_label
@@ -53,7 +53,7 @@ definitions:
     - &dart_defines
       name: Compose dart-defines
       script: |
-        DEFINES="--dart-define=MOCK_PENDING_APIS=$MOCK_PENDING_APIS"
+        DEFINES="--dart-define=DEMO_MODE=$DEMO_MODE"
         if [ -n "$FIREBASE_API_KEY" ]; then
           DEFINES="$DEFINES --dart-define=FIREBASE_API_KEY=$FIREBASE_API_KEY --dart-define=FIREBASE_APP_ID=$FIREBASE_APP_ID"
           DEFINES="$DEFINES --dart-define=FIREBASE_SENDER_ID=$FIREBASE_SENDER_ID --dart-define=FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID"

@@ -2,7 +2,7 @@ import '../../core/money/money.dart';
 import 'booking.dart';
 import 'json.dart';
 
-/// One appointment on a staff member's day — `GET /staff/me/calendar?date` (TODO(backend)).
+/// One appointment on a staff member's day — `GET /staff/me/calendar?date`.
 class CalendarEntry {
   const CalendarEntry({
     required this.bookingId,
@@ -15,6 +15,7 @@ class CalendarEntry {
     this.services = const [],
     this.isFirstVisit = false,
     this.branchName,
+    this.reference,
   });
 
   factory CalendarEntry.fromJson(Json j) {
@@ -30,6 +31,7 @@ class CalendarEntry {
       status: bookingStatusFrom(asStringOrNull(j['status'])),
       services: asStringList(j['services']),
       branchName: asStringOrNull(j['branch_name']),
+      reference: asStringOrNull(j['reference']),
     );
   }
 
@@ -44,6 +46,9 @@ class CalendarEntry {
   final List<String> services;
   final String? branchName;
 
+  /// Booking reference used by `POST /staff/bookings/{reference}/check-in`.
+  final String? reference;
+
   CalendarEntry copyWith({BookingStatus? status}) => CalendarEntry(
     bookingId: bookingId,
     clientName: clientName,
@@ -55,6 +60,7 @@ class CalendarEntry {
     status: status ?? this.status,
     services: services,
     branchName: branchName,
+    reference: reference,
   );
 }
 
@@ -72,7 +78,7 @@ class CommissionLine {
   final DateTime? date;
 }
 
-/// `GET /staff/me/commissions` — TODO(backend).
+/// `GET /staff/me/commissions` — `total` = commission + tips.
 class CommissionSummary {
   const CommissionSummary({
     required this.periodLabel,
@@ -100,7 +106,7 @@ class CommissionSummary {
   final List<CommissionLine> lines;
 }
 
-/// `GET /owner/kpis?branch_id` — TODO(backend).
+/// `GET /owner/kpis?branch_id` (`App\Domain\Api\Owner\TodayKpis`); money fields are null without reports.revenue.
 class OwnerKpis {
   const OwnerKpis({
     required this.revenueToday,
@@ -140,7 +146,7 @@ class OwnerKpis {
 
 enum AlertSeverity { info, warning, critical }
 
-/// `GET /owner/alerts` — TODO(backend).
+/// `GET /owner/alerts` (`App\Domain\Api\Owner\OwnerAlerts`).
 class OwnerAlert {
   const OwnerAlert({required this.id, required this.title, required this.severity, this.body, this.createdAt});
 
