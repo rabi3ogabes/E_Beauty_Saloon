@@ -165,4 +165,36 @@ return [
             'top_staff' => 'Your top team member:scope was :top with :value (:period).', 'revenue_by_branch' => ':top led with :value (:period).',
         ],
     ],
+
+    'assistant' => [
+        'inbox' => 'WhatsApp inbox', 'ai_on' => 'The AI receptionist is answering inside its hours', 'ai_off' => 'The AI receptionist is off — every message waits for your team',
+        'filters' => ['all' => 'All', 'unread' => 'Unread', 'handoff' => 'Needs a human'],
+        'empty' => 'No WhatsApp conversations yet.', 'pick' => 'Choose a conversation to read and reply.', 'human' => 'Human',
+        'last_booking' => 'last booking :ref', 'resume' => 'Hand back to AI', 'take_over' => 'Take over', 'resumed' => 'The AI receptionist is answering again',
+        'reply_placeholder' => 'Write a reply…', 'send' => 'Send', 'reply_hint' => 'Replying pauses the AI for this conversation until you hand it back.',
+        'staff' => 'Team', 'authors' => ['client' => 'Client', 'bot' => 'AI receptionist', 'system' => 'System'],
+        'handoff_reasons' => ['requested' => 'Asked for a person', 'low_confidence' => 'AI was unsure', 'ai_unavailable' => 'AI unavailable', 'tool' => 'AI handed over', 'staff' => 'Team took over'],
+        'handoff_reply' => 'Of course — a member of the :salon team will reply to you here shortly.',
+        'booked_note' => 'Booked by the WhatsApp AI receptionist', 'non_text' => 'media message',
+        'empty_reply' => 'Write a message first.', 'send_failed' => 'The message could not be sent. Check your WhatsApp channel.',
+        'settings' => [
+            'nav' => 'AI receptionist', 'title' => 'WhatsApp AI receptionist', 'subtitle' => 'Answers FAQs, prices and hours, checks availability and books — or hands over to your team',
+            'duty' => 'On duty', 'duty_help' => 'Switch it on and choose when it answers (salon time). Outside these hours messages wait in the inbox.',
+            'enabled' => 'AI receptionist is on', 'enabled_help' => 'Uses AI credits per reply step.', 'hours_from' => 'Answers from', 'hours_to' => 'Until', 'hours_help' => 'Use 24:00 for midnight.',
+            'knowledge' => 'What it knows', 'knowledge_help' => 'Services, prices, hours and availability come from your workspace. Add anything else here.',
+            'tone' => 'Tone of voice', 'faq' => 'FAQ & policies', 'faq_placeholder' => "Parking: free valet at the entrance\nPayment: card, cash, Apple Pay\nKids: welcome from age 6",
+            'handoff' => 'Human handoff', 'handoff_help' => 'The AI hands over when the client asks for a person, when it is unsure, or for complaints and medical questions.',
+            'keywords' => 'Handoff words', 'min_confidence' => 'Minimum confidence to reply (0–1)',
+        ],
+    ],
+
+    'content' => [
+        'nav' => 'Content assistant', 'title' => 'Content assistant', 'subtitle' => 'Descriptions, offers and captions in English and Arabic · :credits credit(s) per text',
+        'kind' => 'What to write', 'kinds' => ['service_description' => 'Service description', 'offer' => 'Offer message', 'caption' => 'Social caption'],
+        'tone' => 'Tone', 'tones' => ['luxury' => 'Quiet luxury', 'warm' => 'Warm & friendly', 'playful' => 'Playful', 'minimal' => 'Minimal'],
+        'service' => 'Service (optional)', 'brief' => 'Brief', 'brief_placeholder' => 'e.g. Eid glow facial with gold mask, 20% off this week',
+        'generate' => 'Write it', 'apply' => 'Use as service description', 'applied' => 'Service description updated',
+        'used' => '{1} :count AI credit used|[2,*] :count AI credits used', 'wallet' => 'AI credits',
+        'unavailable' => 'AI is not available right now — check your AI credits.', 'invalid_kind' => 'Choose what to write.',
+    ],
 ];
