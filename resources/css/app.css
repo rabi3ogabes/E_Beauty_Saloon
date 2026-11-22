@@ -163,3 +163,67 @@
         scroll-behavior: auto !important;
     }
 }
+
+/* ==========================================================================
+ * WEBSITES MODULE — salon themes (Maison, Atelier, Noir, Rose, Minimal)
+ * Owned by the Websites module. Themes are a class on <html> (theme-{key}); every
+ * colour/font comes from the tenant's branding CSS variables, so owners restyle
+ * their site instantly without a build.
+ * ========================================================================== */
+html[class*='theme-']:not(.dark) {
+    --color-ivory: var(--brand-bg, #faf7f2);
+    --color-ink: var(--brand-ink, #1c1a17);
+}
+/* WCAG AA contrast for small muted / eyebrow text on light public pages */
+html[class*='theme-']:not(.dark), html.platform-site {
+    --color-muted: #686158;
+    --color-gold-dark: #7f6633;
+}
+html[class*='theme-'] body {
+    background-color: var(--brand-bg, #faf7f2);
+}
+.site-section { padding-block: clamp(3.5rem, 7vw, 6.5rem); }
+.site-ornament {
+    display: inline-block; width: 3rem; height: 1px; vertical-align: middle;
+    background: linear-gradient(90deg, transparent, var(--brand-primary), transparent);
+}
+.hero-media { aspect-ratio: 4 / 5; overflow: hidden; background: linear-gradient(140deg, var(--brand-accent), var(--brand-bg) 55%, color-mix(in srgb, var(--brand-primary) 35%, transparent)); }
+.hero-media img { width: 100%; height: 100%; object-fit: cover; }
+.hero-title { font-size: clamp(2.6rem, 6.2vw, 5.2rem); line-height: 1.02; letter-spacing: -0.025em; }
+.price-dots { flex: 1; border-bottom: 1px dotted color-mix(in srgb, currentColor 25%, transparent); transform: translateY(-0.35em); min-width: 1.5rem; }
+.marquee { display: flex; gap: 3rem; width: max-content; animation: marquee 38s linear infinite; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+html[dir='rtl'] .marquee { animation-direction: reverse; }
+
+/* Maison — ivory & champagne, arched imagery */
+.theme-maison .hero-media { border-radius: 999px 999px 28px 28px; box-shadow: var(--shadow-lift); }
+.theme-maison .site-eyebrow-line::before { content: ''; display: inline-block; width: 2.25rem; height: 1px; margin-inline-end: .75rem; vertical-align: middle; background: var(--brand-primary); }
+
+/* Atelier — linen, framed photography, generous serif */
+.theme-atelier { --radius-card: 6px; --radius-hero: 4px; --color-line: #e3d8ca; }
+.theme-atelier .hero-media { border-radius: 4px; outline: 1px solid color-mix(in srgb, var(--brand-primary) 55%, transparent); outline-offset: 14px; }
+.theme-atelier .card { background-color: color-mix(in srgb, #ffffff 70%, var(--brand-bg)); box-shadow: none; }
+.theme-atelier h1, .theme-atelier h2 { font-weight: 500; }
+
+/* Noir — midnight plum, gold light */
+.theme-noir { --color-line: rgba(255, 255, 255, 0.1); --color-muted: #b6aba0; color-scheme: dark; }
+.theme-noir body { background-color: var(--brand-bg, #141014); color: #f5efe6; }
+.theme-noir .hero-media { border-radius: var(--radius-hero); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(200, 169, 106, 0.18); }
+.theme-noir .glass { background-color: rgba(20, 16, 20, 0.72); }
+.theme-noir .site-glow { background: radial-gradient(60% 60% at 70% 20%, color-mix(in srgb, var(--brand-primary) 22%, transparent), transparent 70%); }
+
+/* Rose — blush, soft organic shapes */
+.theme-rose { --radius-card: 22px; --radius-hero: 36px; --color-line: #f1dedb; }
+.theme-rose .hero-media { border-radius: 46% 54% 42% 58% / 40% 38% 62% 60%; box-shadow: var(--shadow-lift); }
+.theme-rose .btn-primary { background-color: var(--brand-primary); color: #fff; }
+.theme-rose .eyebrow { color: var(--brand-primary); }
+
+/* Minimal — white space, crisp edges */
+.theme-minimal { --radius-card: 0px; --radius-hero: 0px; --radius-input: 0px; --color-line: #e8e8e8; --shadow-soft: none; --shadow-lift: 0 1px 0 #e8e8e8; }
+.theme-minimal .hero-media { border-radius: 0; }
+.theme-minimal .eyebrow { color: var(--color-ink); letter-spacing: 0.3em; }
+.theme-minimal h1, .theme-minimal h2, .theme-minimal h3 { font-weight: 500; letter-spacing: -0.03em; }
+
+/* Leaflet map container (styles for tiles come from leaflet.css in the map bundle) */
+.site-map { min-height: 320px; border-radius: var(--radius-card); overflow: hidden; background: var(--color-line); }
+/* ======================= end WEBSITES MODULE ======================= */
