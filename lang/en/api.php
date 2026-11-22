@@ -51,10 +51,13 @@ return [
         'not_your_booking' => 'You can only check in your own appointments.',
         'time_off_requested' => 'Time off requested. The salon will review it.',
         'time_off_overlaps' => 'You already have time off in this period.',
+        'checked_in_from_app' => 'Checked in from the staff app by :name',
+        'commission' => 'Commission',
     ],
 
     'owner' => [
         'campaign_queued' => 'Campaign is on its way to :count clients.',
+        'quick_campaign' => 'Quick campaign :date',
         'alerts' => [
             'low_stock' => 'Low stock: :count products',
             'low_stock_body' => ':items',

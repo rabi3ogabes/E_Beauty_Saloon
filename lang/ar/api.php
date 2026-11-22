@@ -51,10 +51,13 @@ return [
         'not_your_booking' => 'يمكنك تسجيل وصول مواعيدك فقط.',
         'time_off_requested' => 'تم طلب الإجازة. سيراجعها الصالون.',
         'time_off_overlaps' => 'لديك إجازة بالفعل في هذه الفترة.',
+        'checked_in_from_app' => 'تم تسجيل الحضور من تطبيق الفريق بواسطة :name',
+        'commission' => 'عمولة',
     ],
 
     'owner' => [
         'campaign_queued' => 'الحملة في طريقها إلى :count عميلة.',
+        'quick_campaign' => 'حملة سريعة :date',
         'alerts' => [
             'low_stock' => 'مخزون منخفض: :count منتجات',
             'low_stock_body' => ':items',
