@@ -127,5 +127,6 @@ it('computes the commission report and exports payroll to Excel', function () {
         ->and($rows['Mariam']['payout'])->toBe(2800);
 
     $component->callAction('export');
-    Excel::assertDownloaded('payroll-'.now()->startOfMonth()->toDateString().'-'.now()->toDateString().'.xlsx');
+    $tz = $s->tenant->timezone; // the page uses salon-local dates
+    Excel::assertDownloaded('payroll-'.now($tz)->startOfMonth()->toDateString().'-'.now($tz)->toDateString().'.xlsx');
 });

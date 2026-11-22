@@ -81,6 +81,12 @@ return [
 
     'alerts' => [
         'types' => ['big_sale' => 'Big sale', 'vip_checkin' => 'VIP check-in', 'bad_review' => 'Bad review', 'low_stock' => 'Low stock', 'failed_payment' => 'Failed payment'],
+        'walk_in' => 'a walk-in client',
+        'big_sale' => ['title' => 'Big sale: :amount', 'body' => ':client at :branch.'],
+        'vip_checkin' => ['title' => 'VIP check-in: :client', 'body' => 'Arrived at :branch for :time.'],
+        'bad_review' => ['title' => ':rating★ review from :client', 'body' => ':comment'],
+        'low_stock' => ['title' => 'Low stock: :item', 'body' => 'Only :qty left at :branch.'],
+        'failed_payment' => ['title' => 'Payment failed: :amount', 'body' => ':reason'],
     ],
 
     'hub' => [
@@ -196,5 +202,31 @@ return [
         'generate' => 'Write it', 'apply' => 'Use as service description', 'applied' => 'Service description updated',
         'used' => '{1} :count AI credit used|[2,*] :count AI credits used', 'wallet' => 'AI credits',
         'unavailable' => 'AI is not available right now — check your AI credits.', 'invalid_kind' => 'Choose what to write.',
+    ],
+
+    'overbookings' => [
+        'nav' => 'Overbookings', 'title' => 'Overbooking detector', 'subtitle' => 'Same team member booked on overlapping services',
+        'empty' => 'No overlapping bookings — your calendar is clean.', 'conflicts' => 'Conflicts', 'staff' => 'Team members affected',
+    ],
+
+    'consultation' => [
+        'label' => 'Consultation form', 'plural' => 'Consultation forms', 'title' => 'Consultation form',
+        'intro' => 'Hi :name — a few quick questions so we can care for you safely. It takes a minute.',
+        'q' => [
+            'patch_test' => 'Have you had a patch test for colour or lash/brow tint?', 'patch_test_date' => 'Patch test date (if any)',
+            'allergies' => 'Allergies or sensitivities', 'medications' => 'Medications or treatments (e.g. retinoids, antibiotics)',
+            'pregnant' => 'I am pregnant or breastfeeding', 'skin_conditions' => 'Skin or scalp conditions', 'notes' => 'Anything else we should know',
+        ],
+        'patch' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not needed'],
+        'signed_name' => 'Full name', 'signature' => 'Signature', 'clear' => 'Clear', 'sign_hint' => 'Sign with your finger or mouse.',
+        'consent' => 'The information above is correct and I agree that :salon may keep it to provide my treatments safely.',
+        'submit' => 'Sign and send', 'thanks' => 'Thank you — your form is signed.', 'signed_on' => 'Signed on :date',
+        'expired' => 'This link has expired. Please ask the salon for a new one.', 'already_signed' => 'This form has already been signed.',
+        'consent_required' => 'Please confirm the consent box.', 'signature_required' => 'Please add your signature.',
+        'message' => 'Hi :name, before your visit to :salon please fill in this short consultation form: :url', 'open' => 'Open form',
+        'status' => ['sent' => 'Waiting', 'signed' => 'Signed', 'expired' => 'Expired'],
+        'booking' => 'Booking', 'sent' => 'Sent', 'signed' => 'Signed', 'send' => 'Send a form', 'resend' => 'Resend', 'sent_ok' => 'Consultation form sent',
+        'waiting' => 'Waiting for the client to sign.', 'photo_vault' => 'Client profile & before/after photo vault',
+        'empty' => 'No consultation forms yet', 'empty_body' => 'Send one before a colour, lash or skin treatment.',
     ],
 ];
