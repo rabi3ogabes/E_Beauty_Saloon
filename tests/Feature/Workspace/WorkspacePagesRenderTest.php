@@ -1,5 +1,14 @@
 <?php
 
+use App\Domain\Catalog\Models\Service;
+use App\Domain\CRM\Actions\AddClientNote;
+use App\Domain\CRM\Models\Client;
+use App\Domain\Inventory\Actions\CreatePurchaseOrder;
+use App\Domain\Inventory\Actions\StockLedger;
+use App\Domain\Inventory\Actions\TransferStock;
+use App\Domain\Team\Models\Staff;
+use App\Domain\Team\Models\TimeOff;
+use App\Domain\Workspace\Actions\SavePaymentGateway;
 use Filament\Facades\Filament;
 
 beforeEach(function () {
@@ -44,3 +53,28 @@ it('renders every workspace page for the owner', function (string $path) {
     'billing' => 'dashboard/billing',
     'onboarding' => 'dashboard/welcome',
 ]);
+
+it('renders record pages (edit / view) with data, in English and Arabic', function (string $locale) {
+    require_once __DIR__.'/WorkspaceHelpers.php';
+    $branch = ws_main_branch();
+    $service = Service::create(['name' => ['en' => 'Balayage', 'ar' => 'بالياج'], 'slug' => 'balayage', 'duration_minutes' => 180, 'price' => 95000]);
+    $service->branches()->attach($branch->id, ['price' => 99000, 'is_active' => true]);
+    $variant = ws_variant('R-1');
+    app(StockLedger::class)->move($branch->id, $variant->id, 2, 'purchase');
+    $staff = Staff::create(['name' => ['en' => 'Lina', 'ar' => 'لينا']]);
+    $staff->branches()->attach($branch);
+    $client = Client::create(['name' => 'Noor', 'phone' => '55001122', 'allergies' => 'Latex']);
+    app(AddClientNote::class)->handle($client, 'VIP');
+    $po = app(CreatePurchaseOrder::class)->handle($branch->id, null, [['product_variant_id' => $variant->id, 'qty' => 3, 'unit_cost' => 1000]]);
+    $gateway = app(SavePaymentGateway::class)->handle(null, ['driver' => 'stripe', 'credentials' => ['secret_key' => 'sk_live_secret']]);
+    app(TransferStock::class)->handle($branch->id, ws_branch('pearl')->id, [$variant->id => 1]);
+    TimeOff::create(['staff_id' => $staff->id, 'starts_at' => now(), 'ends_at' => now()->addDay()]);
+
+    foreach (['dashboard/branches/'.$branch->id.'/edit', 'dashboard/staff/'.$staff->id.'/edit', 'dashboard/services/'.$service->id.'/edit',
+        'dashboard/products/'.$variant->product_id.'/edit', 'dashboard/clients/'.$client->id, 'dashboard/clients/'.$client->id.'/edit',
+        'dashboard/purchase-orders/'.$po->id, 'dashboard/payment-methods/'.$gateway->id.'/edit', 'dashboard/stock', 'dashboard/stock-movements',
+        'dashboard/stock-transfers', 'dashboard/services', 'dashboard/products', 'dashboard/staff', 'dashboard/clients', 'dashboard/time-off',
+        'dashboard/team-logins', 'dashboard/payment-methods', 'dashboard/security-log', 'dashboard/roles', 'dashboard/branding', 'dashboard/welcome'] as $path) {
+        $this->withSession(['locale' => $locale])->get(tenantUrl($this->tenant, $path))->assertOk();
+    }
+})->with(['en', 'ar']);
