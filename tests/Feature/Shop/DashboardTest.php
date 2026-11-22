@@ -44,7 +44,7 @@ it('module disabled → menu hidden and shop pages blocked', function () {
     $tenant = createTenant('essential');
     $this->actingAs($tenant->owner);
 
-    $this->get(tenantUrl($tenant, 'dashboard'))->assertOk()->assertDontSee(__('shop.admin.board.title'))->assertDontSee(__('shop.admin.orders.plural'));
+    $this->get(tenantUrl($tenant, 'dashboard'))->assertOk()->assertDontSee('/dashboard/shop/', false);
     $this->get(tenantUrl($tenant, 'dashboard/shop/board'))->assertForbidden();
     $this->get(tenantUrl($tenant, 'dashboard/shop/orders'))->assertForbidden();
     $this->get(tenantUrl($tenant, 'dashboard/shop/settings'))->assertForbidden();
