@@ -20,3 +20,8 @@ Schedule::call(function () {
 foreach (glob(base_path('routes/schedules/*.php')) as $file) {
     require $file;
 }
+
+// Backups: daily DB + media, 30-day retention (config/backup.php). Restore drill documented in docs/RUNBOOK.md.
+Schedule::command('backup:clean')->dailyAt('01:30')->onOneServer();
+Schedule::command('backup:run')->dailyAt('02:00')->onOneServer();
+Schedule::command('backup:monitor')->dailyAt('08:00')->onOneServer();

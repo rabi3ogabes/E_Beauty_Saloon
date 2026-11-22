@@ -2,16 +2,22 @@
 
 namespace App\Providers;
 
+use App\Domain\AIStudio\Contracts\GeneratesMarketingContent;
+use App\Domain\AIStudio\NullMarketingContentGenerator;
 use App\Domain\Tenancy\Domains\CaddyOnDemandProvisioner;
 use App\Domain\Tenancy\Domains\CloudflareSaasProvisioner;
 use App\Domain\Tenancy\Domains\DomainProvisioner;
 use App\Domain\Tenancy\Domains\NullProvisioner;
 use App\Domain\Tenancy\Models\Tenant;
+use App\Listeners\RecordLogin;
 use App\Models\User;
+use App\Support\Account\AccountSections;
 use App\Support\Tenancy\TenantContext;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -22,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(TenantContext::class);
-        $this->app->singleton(\App\Support\Account\AccountSections::class);
+        $this->app->singleton(AccountSections::class);
 
         // Each domain may ship its own provider: app/Domain/{Domain}/{Domain}ServiceProvider.php
         // (relations onto core models via resolveRelationUsing, listeners, bindings...).
@@ -31,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register($class);
         }
 
-        $this->app->bindIf(\App\Domain\AIStudio\Contracts\GeneratesMarketingContent::class, \App\Domain\AIStudio\NullMarketingContentGenerator::class);
+        $this->app->bindIf(GeneratesMarketingContent::class, NullMarketingContentGenerator::class);
 
         $this->app->bind(DomainProvisioner::class, fn () => match (config('salon.domains.provisioner')) {
             'caddy' => new CaddyOnDemandProvisioner,
@@ -62,6 +68,8 @@ class AppServiceProvider extends ServiceProvider
 
             return null;
         });
+
+        Event::listen(Login::class, RecordLogin::class);
 
         RateLimiter::for('api', fn (Request $r) => Limit::perMinute(120)->by(($r->user()?->getAuthIdentifier() ?? $r->ip()).'|'.tenant()?->id));
         RateLimiter::for('otp', fn (Request $r) => [Limit::perMinute(3)->by('otp:'.$r->input('phone')), Limit::perHour(20)->by('otp-ip:'.$r->ip())]);

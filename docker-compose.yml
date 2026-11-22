@@ -1,0 +1,38 @@
+# Production-like stack. Local development can simply use `php artisan serve` + SQLite.
+services:
+  app:
+    build: { context: ., dockerfile: docker/Dockerfile }
+    env_file: .env
+    volumes: [storage:/var/www/html/storage]
+    depends_on: [mysql, redis]
+  caddy:
+    image: caddy:2-alpine
+    ports: ["80:80", "443:443"]
+    environment: { ACME_EMAIL: "${ACME_EMAIL:-ops@example.com}" }
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./public:/var/www/html/public:ro
+      - caddy_data:/data
+    depends_on: [app]
+  queue:
+    build: { context: ., dockerfile: docker/Dockerfile }
+    env_file: .env
+    command: php artisan queue:work --tries=3 --backoff=10 --max-time=3600
+    volumes: [storage:/var/www/html/storage]
+    depends_on: [mysql, redis]
+  scheduler:
+    build: { context: ., dockerfile: docker/Dockerfile }
+    env_file: .env
+    command: sh -c "while true; do php artisan schedule:run --no-interaction; sleep 60; done"
+    depends_on: [mysql, redis]
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: luxe
+      MYSQL_USER: luxe
+      MYSQL_PASSWORD: "${DB_PASSWORD:-change-me}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-change-me-root}"
+    volumes: [mysql:/var/lib/mysql]
+  redis:
+    image: redis:7-alpine
+volumes: { storage: {}, mysql: {}, caddy_data: {} }
