@@ -160,6 +160,9 @@ class CompleteSale
                         $conflicts[] = ['product_variant_id' => $line['model']->getKey(), 'name' => $line['name'], 'qty' => $line['qty'], 'balance_after' => $movement->balance_after];
                     }
                 }
+                if (! in_array($line['type'], ['service', 'product', 'gift_card'], true)) {
+                    $this->sellables->sold($line['type'], $item, $sale, $client);
+                }
                 if ($line['type'] === 'gift_card') {
                     $card = $this->issueGiftCard->handle($line['unit_price'], $line['recipient'] ?? [], $client?->id);
                     $item->update(['sellable_type' => $card->getMorphClass(), 'sellable_id' => $card->id, 'meta' => array_merge($item->meta ?? [], ['gift_card_code' => $card->code])]);

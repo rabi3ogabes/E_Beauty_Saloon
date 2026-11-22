@@ -91,6 +91,7 @@ return [
         'sell' => 'Sell to a client', 'sold_ok' => 'Package sold and activated.',
         'errors' => [
             'not_available' => 'This package is not available.',
+            'client_required' => 'Select a client to sell a package.',
             'not_usable' => 'This package has no sessions left or has expired.',
             'service_not_covered' => 'This service is not part of the package.',
         ],

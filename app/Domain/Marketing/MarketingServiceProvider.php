@@ -45,6 +45,7 @@ class MarketingServiceProvider extends ServiceProvider
         $this->registerRelations();
         $this->registerObservers();
         $this->registerAccountSections();
+        $this->registerPosSellables();
 
         // Per-tenant throttle for campaign delivery jobs (SendCampaignBatch carries tenantId).
         RateLimiter::for('marketing-sends', function ($job) {
@@ -52,6 +53,43 @@ class MarketingServiceProvider extends ServiceProvider
             $perMinute = $tenantId ? (int) (Tenant::find($tenantId)?->setting('marketing.rate_per_minute') ?? 600) : 600;
 
             return Limit::perMinute(max(10, $perMinute))->by('marketing-sends:'.($tenantId ?? 'none'));
+        });
+    }
+
+    /** Packages are sellable at the POS (Packages tab appears automatically). */
+    protected function registerPosSellables(): void
+    {
+        if (! class_exists(\App\Domain\POS\Support\SellableRegistry::class)) {
+            return;
+        }
+        $this->app->booted(function () {
+            app(\App\Domain\POS\Support\SellableRegistry::class)->register('package',
+                resolve: function (int $id, $branch) {
+                    $package = \App\Domain\Marketing\Models\Package::with('items.itemable')->where('is_active', true)->where('sellable_pos', true)->findOrFail($id);
+                    if (! empty($package->branch_ids) && ! in_array($branch->id, $package->branch_ids)) {
+                        throw new \App\Support\Exceptions\DomainException(__('marketing.packages.errors.not_available'));
+                    }
+
+                    return ['model' => $package, 'name' => $package->name, 'unit_price' => $package->effectivePrice(), 'tax_percent' => null, 'track_stock' => false];
+                },
+                catalog: fn ($branch) => \App\Domain\Marketing\Models\Package::with('items.itemable')->where('is_active', true)->where('sellable_pos', true)->get()
+                    ->filter(fn ($p) => empty($p->branch_ids) || in_array($branch->id, $p->branch_ids))
+                    ->map(fn ($p) => ['id' => $p->id, 'name' => $p->name, 'price' => $p->effectivePrice(), 'category' => null])->values()->all(),
+                onSold: function ($item, $sale, $client) {
+                    if (! $client) {
+                        throw new \App\Support\Exceptions\DomainException(__('marketing.packages.errors.client_required'));
+                    }
+                    $package = \App\Domain\Marketing\Models\Package::findOrFail($item->sellable_id);
+                    for ($i = 0; $i < max(1, (int) $item->qty); $i++) {
+                        $cp = \App\Domain\Marketing\Models\ClientPackage::create([
+                            'client_id' => $client->id, 'package_id' => $package->id, 'status' => 'pending',
+                            'sessions_total' => $package->sessions_count, 'sessions_remaining' => $package->sessions_count,
+                            'price_paid' => (int) $item->unit_price, 'currency' => tenant()?->currency ?? 'QAR', 'channel' => 'pos',
+                        ]);
+                        app(\App\Domain\Marketing\Actions\ActivateClientPackage::class)->handle($cp, (int) $item->unit_price);
+                    }
+                },
+            );
         });
     }
 

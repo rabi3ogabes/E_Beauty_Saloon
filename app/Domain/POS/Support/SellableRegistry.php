@@ -19,12 +19,23 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SellableRegistry
 {
-    /** @var array<string, array{resolve: Closure, catalog: ?Closure}> */
+    /** @var array<string, array{resolve: Closure, catalog: ?Closure, onSold: ?Closure}> */
     protected array $types = [];
 
-    public function register(string $type, Closure $resolve, ?Closure $catalog = null): void
+    /**
+     * @param  Closure|null  $onSold  fn (SaleItem $item, Sale $sale, ?Client $client) — runs inside the sale transaction
+     *                                (e.g. create the client's package). Must be idempotent per sale item.
+     */
+    public function register(string $type, Closure $resolve, ?Closure $catalog = null, ?Closure $onSold = null): void
     {
-        $this->types[$type] = ['resolve' => $resolve, 'catalog' => $catalog];
+        $this->types[$type] = ['resolve' => $resolve, 'catalog' => $catalog, 'onSold' => $onSold];
+    }
+
+    public function sold(string $type, Model $item, Model $sale, ?Model $client): void
+    {
+        if ($callback = $this->types[$type]['onSold'] ?? null) {
+            $callback($item, $sale, $client);
+        }
     }
 
     public function has(string $type): bool

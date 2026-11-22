@@ -35,3 +35,23 @@ it('earns loyalty once when a booking is checked out at the POS, and reverses it
     expect($s->client->fresh()->loyalty_points)->toBe($before)
         ->and(LoyaltyEntry::where('type', 'reversal')->count())->toBe(1);
 });
+
+it('sells a package at the POS and gives the client their sessions', function () {
+    $s = posSalon(['tax_percent' => 0]);
+    posActingAs($s->tenant, $s->owner);
+    $package = \App\Domain\Marketing\Models\Package::create([
+        'name' => ['en' => '6 Blowouts', 'ar' => '6 استشوار'], 'slug' => 'six-blowouts', 'pricing' => 'fixed', 'price' => 60000, 'sessions_count' => 6,
+    ]);
+    $package->items()->create(['itemable_type' => $s->services[0]->getMorphClass(), 'itemable_id' => $s->services[0]->id, 'quantity' => 6]);
+
+    expect(collect(app(\App\Domain\POS\Support\SellableRegistry::class)->catalog('package', $s->branch))->pluck('id'))->toContain($package->id);
+
+    app(CompleteSale::class)->handle([
+        'idempotency_key' => saleKey(), 'branch_id' => $s->branch->id, 'client_id' => $s->client->id,
+        'lines' => [['type' => 'package', 'id' => $package->id]],
+        'payments' => [['method' => 'cash', 'tendered' => 60000]],
+    ], $s->owner);
+
+    $cp = \App\Domain\Marketing\Models\ClientPackage::where('client_id', $s->client->id)->first();
+    expect($cp)->not->toBeNull()->and($cp->status)->toBe('active')->and($cp->sessions_remaining)->toBe(6)->and($cp->channel)->toBe('pos');
+});
