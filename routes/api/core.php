@@ -21,8 +21,8 @@ Route::middleware(ApiEtag::class)->group(function () {
 Route::post('/auth/otp', [AuthController::class, 'requestCode'])->middleware('throttle:otp')->name('auth.otp');
 Route::post('/auth/verify', [AuthController::class, 'verify'])->middleware('throttle:10,1')->name('auth.verify');
 
-// Authenticated client
-Route::middleware(['auth:sanctum', EnsureTokenBelongsToTenant::class])->group(function () {
+// Authenticated client (staff / owner app tokens are rejected here: api.actor:client)
+Route::middleware(['auth:sanctum', EnsureTokenBelongsToTenant::class, 'api.actor:client', ApiEtag::class])->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/me', [ProfileController::class, 'show'])->name('me');
     Route::patch('/me', [ProfileController::class, 'update'])->name('me.update');
