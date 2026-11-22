@@ -145,7 +145,7 @@ class StudioController extends Controller
     public function look(Request $request, ClientLook $look)
     {
         $this->authorizeOwner($request, $look->client_id, $look->device_fingerprint);
-        $look->load('style.service', 'job');
+        $look->load('style.service', 'job', 'client');
         $service = $look->style?->service;
         $branch = $service ? LookPresenter::branchFor($service, $look) : null;
 

@@ -16,7 +16,8 @@
     $pageTitle = (isset($title) && $title ? $title.' · ' : '').$t?->name;
     $metaDescription = $description ?? (string) ($t?->setting('website.seo_description') ?: \Illuminate\Support\Str::limit(strip_tags((string) $t?->brand('about')), 155));
     $og = $ogImage ?? ($t?->brand('hero_path') ? asset('storage/'.$t->brand('hero_path')) : null);
-    $canonical = url()->current();
+    $bareUrl = url()->current();
+    $canonical = $bareUrl.'?lang='.$locale; // each language version is canonical to itself
 @endphp
 <!DOCTYPE html>
 <html lang="{{ $locale }}" dir="{{ $rtl ? 'rtl' : 'ltr' }}" class="theme-{{ $theme['key'] }} {{ $theme['dark'] ? 'dark' : '' }}">
@@ -29,9 +30,9 @@
     @if (! empty($noindex))<meta name="robots" content="noindex">@endif
     <link rel="canonical" href="{{ $canonical }}">
     @foreach (config('salon.locales') as $code => $label)
-        <link rel="alternate" hreflang="{{ $code }}" href="{{ $canonical }}?lang={{ $code }}">
+        <link rel="alternate" hreflang="{{ $code }}" href="{{ $bareUrl }}?lang={{ $code }}">
     @endforeach
-    <link rel="alternate" hreflang="x-default" href="{{ $canonical }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $bareUrl }}">
     <meta property="og:title" content="{{ $title ?? $t?->name }}">
     <meta property="og:description" content="{{ $metaDescription }}">
     <meta property="og:site_name" content="{{ $t?->name }}">

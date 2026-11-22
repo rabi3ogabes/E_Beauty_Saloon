@@ -6,11 +6,12 @@
     $fonts = $rtl
         ? 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap'
         : 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap';
-    $canonical = url()->current();
+    $bareUrl = url()->current();
+    $canonical = $bareUrl.'?lang='.$locale; // each language version is canonical to itself
     $modulesNav = \App\Domain\Billing\Models\Module::where('is_active', true)->orderBy('sort')->get(['key', 'name']);
 @endphp
 <!DOCTYPE html>
-<html lang="{{ $locale }}" dir="{{ $rtl ? 'rtl' : 'ltr' }}">
+<html lang="{{ $locale }}" dir="{{ $rtl ? 'rtl' : 'ltr' }}" class="platform-site">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -20,9 +21,9 @@
     @if ($noindex)<meta name="robots" content="noindex">@endif
     <link rel="canonical" href="{{ $canonical }}">
     @foreach (config('salon.locales') as $code => $label)
-        <link rel="alternate" hreflang="{{ $code }}" href="{{ $canonical }}?lang={{ $code }}">
+        <link rel="alternate" hreflang="{{ $code }}" href="{{ $bareUrl }}?lang={{ $code }}">
     @endforeach
-    <link rel="alternate" hreflang="x-default" href="{{ $canonical }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $bareUrl }}">
     <meta property="og:title" content="{{ $title ?? $brand }}">
     <meta property="og:description" content="{{ $description ?? __('platform.meta_description') }}">
     <meta property="og:type" content="website">

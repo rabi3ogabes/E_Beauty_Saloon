@@ -33,7 +33,7 @@
                                     <div class="mt-1 flex items-center justify-between gap-3 text-xs text-muted">
                                         <span>{{ $service->duration_minutes }} {{ __('salon.ui.minutes') }}</span>
                                         @if ($tenant->hasModule('booking'))
-                                            <a href="{{ url('/book').'?service='.$service->slug }}" class="font-medium text-gold-dark opacity-80 transition group-hover:opacity-100">{{ __('website.labels.book_this') }} →</a>
+                                            <a href="{{ url('/book').'?service='.$service->slug }}" class="font-medium text-gold-dark underline-offset-4 transition group-hover:underline">{{ __('website.labels.book_this') }} →</a>
                                         @endif
                                     </div>
                                 </li>

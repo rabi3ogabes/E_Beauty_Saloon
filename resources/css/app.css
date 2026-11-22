@@ -174,6 +174,11 @@ html[class*='theme-']:not(.dark) {
     --color-ivory: var(--brand-bg, #faf7f2);
     --color-ink: var(--brand-ink, #1c1a17);
 }
+/* WCAG AA contrast for small muted / eyebrow text on light public pages */
+html[class*='theme-']:not(.dark), html.platform-site {
+    --color-muted: #686158;
+    --color-gold-dark: #7f6633;
+}
 html[class*='theme-'] body {
     background-color: var(--brand-bg, #faf7f2);
 }

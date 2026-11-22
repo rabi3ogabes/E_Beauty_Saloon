@@ -41,7 +41,7 @@ class SiteData
 
     public function products(int $limit = 4): Collection
     {
-        return $this->once('products'.$limit, fn () => Product::query()->active()->where('sold_online', true)->with('defaultVariant')->latest('id')->limit($limit)->get());
+        return $this->once('products'.$limit, fn () => Product::query()->active()->where('sold_online', true)->with(['defaultVariant', 'brand'])->latest('id')->limit($limit)->get());
     }
 
     public function studioStyles(int $limit = 6): Collection

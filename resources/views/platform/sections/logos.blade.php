@@ -5,7 +5,7 @@
     <div class="relative mt-6 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]" aria-hidden="true">
         <div class="marquee">
             @foreach (array_merge($names, $names) as $name)
-                <span class="font-display text-2xl whitespace-nowrap text-ink/45">{{ $name }}</span>
+                <span class="font-display text-2xl whitespace-nowrap text-ink/70">{{ $name }}</span>
             @endforeach
         </div>
     </div>
