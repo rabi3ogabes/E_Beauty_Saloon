@@ -10,6 +10,7 @@ use App\Domain\Messaging\Channels\FakeChannel;
 use App\Domain\Messaging\MessagingManager;
 use App\Domain\Payments\Gateways\GatewayManager;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Pennant\Feature;
 
 require_once __DIR__.'/Helpers.php';
@@ -17,8 +18,11 @@ require_once __DIR__.'/Helpers.php';
 beforeEach(function () {
     $this->travelTo(CarbonImmutable::parse('2026-11-30 09:00', 'Asia/Qatar'));
     MessagingManager::fake();
+    Model::preventLazyLoading(); // mirror local dev: catch N+1 / lazy loads
     GatewayManager::fake();
 });
+
+afterEach(fn () => Model::preventLazyLoading(false));
 
 function flowItems(object $salon, string $service = 'cut', ?int $staff = null): array
 {

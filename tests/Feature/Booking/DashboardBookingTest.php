@@ -11,6 +11,7 @@ use App\Filament\Dashboard\Resources\Bookings\Pages\ViewBooking;
 use App\Support\Tenancy\TenantContext;
 use Carbon\CarbonImmutable;
 use Filament\Facades\Filament;
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Pennant\Feature;
 use Livewire\Livewire;
 
@@ -19,7 +20,10 @@ require_once __DIR__.'/Helpers.php';
 beforeEach(function () {
     $this->travelTo(CarbonImmutable::parse('2026-11-30 09:00', 'Asia/Qatar'));
     MessagingManager::fake();
+    Model::preventLazyLoading(); // mirror local dev: catch N+1 / lazy loads
 });
+
+afterEach(fn () => Model::preventLazyLoading(false));
 
 function dashboardSalon(): object
 {

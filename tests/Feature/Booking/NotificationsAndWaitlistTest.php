@@ -11,13 +11,17 @@ use App\Domain\Booking\Models\WaitlistEntry;
 use App\Domain\Messaging\Channels\FakeChannel;
 use App\Domain\Messaging\MessagingManager;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Model;
 
 require_once __DIR__.'/Helpers.php';
 
 beforeEach(function () {
     $this->travelTo(CarbonImmutable::parse('2026-11-28 09:00', 'Asia/Qatar'));
     MessagingManager::fake();
+    Model::preventLazyLoading(); // mirror local dev: catch N+1 / lazy loads
 });
+
+afterEach(fn () => Model::preventLazyLoading(false));
 
 function bookAt(object $salon, string $local, $client, string $service = 'cut', ?int $staffId = null): Booking
 {
