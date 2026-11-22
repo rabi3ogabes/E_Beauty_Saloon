@@ -14,14 +14,16 @@ class CloseShift
 {
     public function __construct(protected BuildShiftSummary $summary, protected PdfRenderer $pdf) {}
 
-    public function handle(Shift $shift, User $user, int $countedCash, ?string $notes = null): Shift
+    /** @param  User|null  $authorizedBy  a manager who entered their PIN when $user lacks pos.close_shift */
+    public function handle(Shift $shift, User $user, int $countedCash, ?string $notes = null, ?User $authorizedBy = null): Shift
     {
         abort_if(tenant()?->isReadOnly(), 423, __('salon.errors.read_only'));
-        if (! $user->can('pos.close_shift') && ! $user->can('pos.cash_drawer')) {
-            throw new DomainException(__('pos.errors.forbidden'));
+        $authorizer = $authorizedBy ?? $user;
+        if ($authorizer->tenant_id !== $shift->tenant_id || ! $authorizer->can('pos.close_shift')) {
+            throw new DomainException(__('pos.errors.manager_pin_required'));
         }
 
-        $shift = DB::transaction(function () use ($shift, $user, $countedCash, $notes) {
+        $shift = DB::transaction(function () use ($shift, $user, $countedCash, $notes, $authorizer) {
             $shift = Shift::withoutGlobalScopes()->lockForUpdate()->findOrFail($shift->id);
             if (! $shift->isOpen()) {
                 throw new DomainException(__('pos.errors.shift_closed'));
@@ -37,7 +39,7 @@ class CloseShift
                 'summary' => $summary,
                 'notes' => $notes,
             ])->save();
-            activity()->performedOn($shift)->causedBy($user)->withProperties(['expected' => $summary['expected_cash'], 'counted' => $countedCash, 'variance' => $shift->variance])->log('pos.shift.closed');
+            activity()->performedOn($shift)->causedBy($user)->withProperties(['expected' => $summary['expected_cash'], 'counted' => $countedCash, 'variance' => $shift->variance, 'approved_by' => $authorizer->id])->log('pos.shift.closed');
 
             return $shift;
         });

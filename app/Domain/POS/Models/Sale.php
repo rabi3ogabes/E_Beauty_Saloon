@@ -102,10 +102,10 @@ class Sale extends Model implements Payable
         return max(0, (int) $this->total - (int) $this->refunded_total);
     }
 
-    /** Signed public receipt link (WhatsApp / email share). */
+    /** Signed public receipt link (WhatsApp / email share). Relative signature: valid on any of the salon's domains. */
     public function receiptUrl(): string
     {
-        return URL::signedRoute('pos.receipt.public', ['sale' => $this->id]);
+        return url(URL::signedRoute('pos.receipt.public', ['sale' => $this->id], absolute: false));
     }
 
     public function paymentDescription(): string

@@ -2,6 +2,10 @@
 
 require_once __DIR__.'/PosTestHelpers.php';
 
+// Production-like strictness: catch N+1 / lazy loading in POS code paths.
+beforeEach(fn () => Model::preventLazyLoading());
+afterEach(fn () => Model::preventLazyLoading(false));
+
 use App\Domain\Booking\Enums\BookingStatus;
 use App\Domain\Booking\Models\Booking;
 use App\Domain\Loyalty\Actions\LoyaltyLedger;
@@ -16,6 +20,7 @@ use App\Domain\POS\Models\Commission;
 use App\Domain\POS\Models\Sale;
 use App\Domain\POS\Support\BookingTicket;
 use App\Support\Exceptions\DomainException;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Models\Activity;
 
 /*

@@ -3,6 +3,7 @@
 use App\Domain\POS\Http\Controllers\PosAppController;
 use App\Domain\POS\Http\Controllers\ReceiptController;
 use App\Domain\POS\Http\Controllers\ShiftReportController;
+use App\Domain\POS\Http\Middleware\ReapplyBranchScope;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Signed public receipt (shared by WhatsApp / email). Works even if the module is later removed.
-Route::get('/r/{sale}', [ReceiptController::class, 'public'])->middleware('signed')->name('pos.receipt.public')->whereNumber('sale');
+Route::get('/r/{sale}', [ReceiptController::class, 'public'])->middleware('signed:relative')->name('pos.receipt.public')->whereNumber('sale');
 
 Route::prefix('pos')->name('pos.')->middleware('module:pos')->group(function () {
     // PWA shell (scope /pos/)
@@ -18,7 +19,8 @@ Route::prefix('pos')->name('pos.')->middleware('module:pos')->group(function () 
     Route::get('/manifest.webmanifest', [PosAppController::class, 'manifest'])->name('manifest');
     Route::get('/icon.svg', [PosAppController::class, 'icon'])->name('icon');
 
-    Route::middleware(['auth', 'tenant.access:dashboard'])->group(function () {
+    // Branch restrictions re-applied (see ReapplyBranchScope).
+    Route::middleware(['auth', 'tenant.access:dashboard', ReapplyBranchScope::class])->group(function () {
         Route::get('/catalog.json', [PosAppController::class, 'catalog'])->name('catalog');
         Route::post('/sync', [PosAppController::class, 'sync'])->name('sync')->middleware('throttle:30,1');
 
