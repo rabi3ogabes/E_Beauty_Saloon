@@ -28,7 +28,7 @@ class StorefrontController extends Controller
         }
         $filters['brand'] = array_values(array_filter((array) ($filters['brand'] ?? [])));
 
-        $products = $this->catalog->search($filters)->paginate(24)->withQueryString();
+        $products = $this->catalog->search($filters)->paginate(24)->appends($request->except(['partial', 'page']));
 
         if ($request->boolean('partial')) {
             return response()->json([

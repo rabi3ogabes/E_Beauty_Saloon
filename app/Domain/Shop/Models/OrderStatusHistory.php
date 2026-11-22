@@ -15,6 +15,8 @@ class OrderStatusHistory extends Model
 
     public $timestamps = false;
 
+    protected $with = ['user'];
+
     protected function casts(): array
     {
         return ['created_at' => 'datetime'];
