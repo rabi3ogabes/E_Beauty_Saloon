@@ -66,14 +66,21 @@ class ApiShopRepository implements ShopRepository {
   Future<List<SalonPackage>> packages() async => unwrapList(await _api.get('/packages')).map(SalonPackage.fromJson).toList();
 }
 
-/// AI Studio — TODO(backend): `/studio/*` and `/looks` in progress.
+/// AI Studio — live (`routes/api/studio.php`, module `ai_studio`).
 abstract class StudioRepository {
   Future<List<StudioStyle>> styles({StudioCategory? category});
 
-  /// Uploads the photo, returns the job id.
+  /// Uploads the photo, returns the job id. The in-app consent screen (18+ and photo terms) has been
+  /// accepted before this is called, so the consent is recorded server-side with the first job.
   Future<String> createJob({required File photo, required StudioCategory category, required int styleId});
   Future<StudioJob> job(String id);
   Future<List<Look>> looks();
+
+  /// `POST /looks/{id}/save` — keeps the look past the retention window.
+  Future<void> saveLook(String id);
+
+  /// `DELETE /looks/{id}` — deletes the look and its photos.
+  Future<void> deleteLook(String id);
 }
 
 class ApiStudioRepository implements StudioRepository {
@@ -91,6 +98,8 @@ class ApiStudioRepository implements StudioRepository {
       'photo': await MultipartFile.fromFile(photo.path, filename: 'photo.jpg'),
       'category': category.wire,
       'style_id': styleId,
+      'consent': 1,
+      'adult': 1,
     });
     final map = unwrapMap(body);
     return '${map['id'] ?? map['job_id']}';
@@ -101,4 +110,14 @@ class ApiStudioRepository implements StudioRepository {
 
   @override
   Future<List<Look>> looks() async => unwrapList(await _api.get('/looks')).map(Look.fromJson).toList();
+
+  @override
+  Future<void> saveLook(String id) async {
+    await _api.post('/looks/${Uri.encodeComponent(id)}/save');
+  }
+
+  @override
+  Future<void> deleteLook(String id) async {
+    await _api.delete('/looks/${Uri.encodeComponent(id)}');
+  }
 }

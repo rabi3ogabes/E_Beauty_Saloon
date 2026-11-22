@@ -478,6 +478,15 @@ class MockStudioRepository implements StudioRepository {
     await _latency();
     return List.unmodifiable(_looks);
   }
+
+  @override
+  Future<void> saveLook(String id) async => _latency();
+
+  @override
+  Future<void> deleteLook(String id) async {
+    await _latency();
+    _looks.removeWhere((l) => l.id == id);
+  }
 }
 
 class MockStaffRepository implements StaffRepository {

@@ -137,10 +137,12 @@ class _StudioScreenState extends ConsumerState<StudioScreen> {
     final styles = ref.watch(studioStylesProvider(_category));
     final categoryLabels = {
       StudioCategory.hair: l10n.categoryHair,
-      StudioCategory.color: l10n.categoryColor,
+      StudioCategory.eyes: l10n.categoryEyes,
+      StudioCategory.lips: l10n.categoryLips,
       StudioCategory.makeup: l10n.categoryMakeup,
       StudioCategory.nails: l10n.categoryNails,
-      StudioCategory.brows: l10n.categoryBrows,
+      StudioCategory.pedicure: l10n.categoryPedicure,
+      StudioCategory.bridal: l10n.categoryBridal,
     };
 
     return ListView(

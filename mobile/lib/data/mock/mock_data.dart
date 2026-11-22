@@ -163,8 +163,8 @@ abstract final class MockData {
   ];
 
   static const styles = <StudioStyle>[
-    StudioStyle(id: 1, name: 'Honey Balayage', category: 'color', serviceId: 201),
-    StudioStyle(id: 2, name: 'Espresso Gloss', category: 'color', serviceId: 202),
+    StudioStyle(id: 1, name: 'Honey Balayage', category: 'hair', serviceId: 201),
+    StudioStyle(id: 2, name: 'Espresso Gloss', category: 'hair', serviceId: 202),
     StudioStyle(id: 3, name: 'Parisian Bob', category: 'hair', serviceId: 102),
     StudioStyle(id: 4, name: 'Hollywood Waves', category: 'hair', serviceId: 101),
     StudioStyle(id: 5, name: 'Soft Glam', category: 'makeup', serviceId: 501),

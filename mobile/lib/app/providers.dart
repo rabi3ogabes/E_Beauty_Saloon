@@ -162,7 +162,7 @@ final shopRepositoryProvider = Provider<ShopRepository>(
 );
 
 final studioRepositoryProvider = Provider<StudioRepository>(
-  (ref) => _mockPending ? MockStudioRepository() : ApiStudioRepository(ref.watch(apiClientProvider)),
+  (ref) => _mockLive ? MockStudioRepository() : ApiStudioRepository(ref.watch(apiClientProvider)),
 );
 
 final staffRepositoryProvider = Provider<StaffRepository>(
