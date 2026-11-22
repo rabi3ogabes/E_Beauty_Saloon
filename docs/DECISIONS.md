@@ -45,3 +45,6 @@ Append-only log. Newest last.
     recognised at sale time and reversals in the period they happen.
 18. **ResolveTenant is re-entrant**: re-resolving the same tenant swaps in a fresh instance but keeps branch scoping
     (previously route-level `tenant:required` wiped branch restrictions).
+19. **Marketing**: platform message prices + shared sender credentials in `platform_message_channels`; tenant channel
+    credentials encrypted in `tenant_channel_settings`; quiet hours in `settings.marketing.quiet_hours`; loyalty/referral
+    rules in `settings.loyalty.*`. Loyalty points for bookings use idempotency key `loyalty:booking:{id}`.
