@@ -4,6 +4,7 @@ namespace App\Domain\Shop\Models;
 
 use App\Domain\Branches\Models\Branch;
 use App\Domain\Team\Models\Staff;
+use App\Domain\Tenancy\Models\Tenant;
 use App\Models\User;
 use App\Support\Tenancy\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
@@ -42,10 +43,16 @@ class Driver extends Model
         return $this->hasMany(Order::class);
     }
 
-    /** Permanent signed link to the driver web view (no login needed). Revoke by deactivating the driver. */
+    /**
+     * Permanent signed link to the driver web view (no login needed). Signed relative to the host so it works on
+     * the salon subdomain and custom domains alike. Revoke by deactivating the driver.
+     */
     public function signedUrl(): string
     {
-        return URL::signedRoute('shop.driver.show', ['driver' => $this->id]);
+        $path = URL::signedRoute('shop.driver.show', ['driver' => $this->id], absolute: false);
+        $tenant = tenant()?->id === $this->tenant_id ? tenant() : Tenant::find($this->tenant_id);
+
+        return $tenant ? $tenant->url($path) : url($path);
     }
 
     public function scopeActive($q)
