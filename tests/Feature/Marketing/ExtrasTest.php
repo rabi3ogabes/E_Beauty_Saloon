@@ -98,3 +98,19 @@ it('waits for quiet hours before an automation sends', function () {
     asTenant($tenant, fn () => expect(AutomationRun::first()->status)->toBe('completed'));
     expect(FakeChannel::sentTo('whatsapp'))->toHaveCount(1);
 });
+
+it('renders the loyalty and referral account sections for a client', function () {
+    $tenant = createTenant();
+    $client = asTenant($tenant, fn () => F::client(['loyalty_points' => 2400, 'loyalty_tier' => 'gold']));
+
+    $this->actingAs($client, 'client')->get(tenantUrl($tenant, 'account/loyalty'))->assertOk()->assertSee(__('marketing.loyalty.tiers.gold'))->assertSee('2,400');
+    $this->actingAs($client, 'client')->get(tenantUrl($tenant, 'account/referrals'))->assertOk()->assertSee('/r/'.$client->referral_code);
+});
+
+it('renders marketing screens in Arabic', function () {
+    $tenant = createTenant();
+    $tenant->owner->update(['locale' => 'ar']);
+
+    $this->actingAs($tenant->owner)->get(tenantUrl($tenant, 'dashboard/marketing/campaigns?lang=ar'))->assertOk();
+    $this->get(tenantUrl($tenant, 'gift-cards?lang=ar'))->assertOk()->assertSee('بطاقات الهدايا');
+});

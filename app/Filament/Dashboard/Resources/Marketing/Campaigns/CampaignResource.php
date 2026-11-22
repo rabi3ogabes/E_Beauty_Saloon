@@ -2,6 +2,7 @@
 
 namespace App\Filament\Dashboard\Resources\Marketing\Campaigns;
 
+use App\Domain\AIStudio\Contracts\GeneratesMarketingContent;
 use App\Domain\Marketing\Actions\EstimateCampaignCost;
 use App\Domain\Marketing\Models\Banner;
 use App\Domain\Marketing\Models\Campaign;
@@ -13,6 +14,7 @@ use App\Filament\Dashboard\Resources\Marketing\Campaigns\Pages\ViewCampaign;
 use App\Filament\Marketing\GatedResource;
 use App\Filament\Marketing\MarketingAccess;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -20,11 +22,13 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Text;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -91,7 +95,16 @@ class CampaignResource extends Resource
                     TextInput::make('content.en.subject')->label(__('marketing.campaigns.subject').' · English')->maxLength(150),
                     TextInput::make('content.ar.subject')->label(__('marketing.campaigns.subject').' · العربية')->maxLength(150)->extraInputAttributes(['dir' => 'rtl']),
                     Textarea::make('content.en.body')->label(__('marketing.campaigns.body').' · English')->rows(5)->required()->maxLength(1000)
-                        ->default(fn () => "Hi {first_name} ✦\n\n{link}"),
+                        ->default(fn () => "Hi {first_name} ✦\n\n{link}")
+                        ->hintAction(Action::make('aiCopy')->label(__('marketing.common.generate_ai'))->icon('heroicon-o-sparkles')
+                            ->action(function (Get $get, Set $set) {
+                                $copy = app(GeneratesMarketingContent::class)->copy(
+                                    'WhatsApp marketing message for '.tenant()->name.' (beauty salon): '.($get('name') ?: 'seasonal offer').'. Address the client as {first_name} and end with {link}.'
+                                );
+                                $set('content.en.body', $copy['en'] ?? '');
+                                $set('content.ar.body', $copy['ar'] ?? '');
+                                Notification::make()->success()->title(__('marketing.common.ai_done'))->send();
+                            })),
                     Textarea::make('content.ar.body')->label(__('marketing.campaigns.body').' · العربية')->rows(5)->maxLength(1000)->extraInputAttributes(['dir' => 'rtl']),
                 ]),
                 Text::make(__('marketing.campaigns.body_help')),
