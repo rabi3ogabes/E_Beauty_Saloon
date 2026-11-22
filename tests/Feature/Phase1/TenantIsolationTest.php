@@ -39,3 +39,15 @@ it('keeps platform admins out of tenant dashboards and owners out of /admin', fu
     $this->actingAs(platformAdmin())->get(tenantUrl($a, 'dashboard'))->assertForbidden();
     $this->actingAs($a->owner)->get(centralUrl('admin'))->assertForbidden();
 });
+
+it('keeps branch restrictions on tenant routes after tenant re-resolution', function () {
+    $tenant = createTenant(slug: 'alpha');
+    $other = asTenant($tenant, fn () => \App\Domain\Branches\Models\Branch::create(['name' => ['en' => 'Second'], 'slug' => 'second']));
+    $main = asTenant($tenant, fn () => \App\Domain\Branches\Models\Branch::where('slug', 'main')->first());
+    $manager = tenantUser($tenant, 'branch_manager', [$main->id]);
+
+    \Illuminate\Support\Facades\Route::middleware(['web', 'tenant:required', 'auth'])
+        ->get('/__test/branches', fn () => \App\Domain\Branches\Models\Branch::pluck('slug'));
+
+    $this->actingAs($manager)->get(tenantUrl($tenant, '__test/branches'))->assertExactJson(['main']);
+});

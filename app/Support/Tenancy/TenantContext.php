@@ -32,6 +32,14 @@ class TenantContext
         }
     }
 
+    /** Swap in a freshly loaded instance of the SAME tenant, keeping branch scoping. */
+    public function replaceTenantInstance(Tenant $tenant): void
+    {
+        if ($this->tenant?->getKey() === $tenant->getKey()) {
+            $this->tenant = $tenant;
+        }
+    }
+
     public function tenant(): ?Tenant
     {
         return $this->tenant;

@@ -12,7 +12,7 @@ use Mpdf\Mpdf;
  */
 class PdfRenderer
 {
-    public function render(string $view, array $data = [], ?string $locale = null, string $format = 'A4'): string
+    public function render(string $view, array $data = [], ?string $locale = null, string|array $format = 'A4'): string
     {
         $locale ??= app()->getLocale();
         $previous = app()->getLocale();

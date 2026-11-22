@@ -21,7 +21,13 @@ class ResolveTenant
     public function handle(Request $request, Closure $next, string $mode = 'optional'): Response
     {
         $tenant = $this->identify($request);
-        $this->context->set($tenant);
+        // Re-running (e.g. global web group + route-level `tenant:required`) must not wipe
+        // branch restrictions already applied for the same tenant.
+        if ($tenant && $this->context->id() === $tenant->getKey()) {
+            $this->context->replaceTenantInstance($tenant);
+        } else {
+            $this->context->set($tenant);
+        }
 
         if ($mode === 'required' && ! $tenant) {
             abort(404);

@@ -38,3 +38,10 @@ Append-only log. Newest last.
     Late-cancel / no-show fees are percentages of the money collected online (deposit or prepayment).
 14. **Staff calendar is a custom CSS-grid Livewire + Alpine page** (FullCalendar's resource-timegrid is a premium
     plugin). Realtime: broadcast-ready `BookingCalendarUpdated` on `private-tenant.{id}.bookings` + 20 s polling.
+15. **Shop search** uses a `shop_search_index` table with normalised Arabic/English text (LIKE) instead of Meilisearch;
+    swap for Scout later without changing the storefront.
+16. **Signed links are host-relative** (driver links, receipts) so they work on subdomains and custom domains alike.
+17. **POS tables are prefixed** (`pos_registers`, `pos_shifts`, `pos_cash_movements`, `sale_refunds`); commissions are
+    recognised at sale time and reversals in the period they happen.
+18. **ResolveTenant is re-entrant**: re-resolving the same tenant swaps in a fresh instance but keeps branch scoping
+    (previously route-level `tenant:required` wiped branch restrictions).
