@@ -6,7 +6,11 @@
         ['label' => __('site.nav.shop'), 'href' => url('/shop'), 'show' => $t?->hasModule('shop')],
         ['label' => __('site.nav.studio'), 'href' => url('/studio'), 'show' => $t?->hasModule('ai_studio')],
         ['label' => __('site.nav.gift_cards'), 'href' => url('/gift-cards'), 'show' => true],
-    ])->where('show', true);
+    ])->merge(
+        // Owner pages flagged "show in menu" (website builder).
+        $t ? \App\Domain\Websites\Models\SitePage::query()->where('in_menu', true)->where('is_published', true)->where('is_home', false)->orderBy('sort')->limit(3)->get()
+            ->map(fn ($p) => ['label' => $p->title, 'href' => url('/pages/'.$p->slug), 'show' => true]) : []
+    )->where('show', true);
 @endphp
 <header x-data="{ open: false, scrolled: false }" x-init="scrolled = window.scrollY > 8" @scroll.window="scrolled = window.scrollY > 8"
         :class="scrolled ? 'glass shadow-soft' : 'bg-transparent'"

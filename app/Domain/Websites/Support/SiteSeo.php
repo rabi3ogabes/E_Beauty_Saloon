@@ -2,8 +2,10 @@
 
 namespace App\Domain\Websites\Support;
 
+use App\Domain\Billing\Models\Plan;
 use App\Domain\Branches\Models\Branch;
 use App\Domain\Tenancy\Models\Tenant;
+use App\Domain\Websites\Models\BlogPost;
 
 /** Sanitizers for values injected into CSS/JS + schema.org builders. */
 class SiteSeo
@@ -88,6 +90,57 @@ class SiteSeo
             'parentOrganization' => ['@type' => 'Organization', 'name' => $tenant->name, 'url' => $tenant->url()],
             'potentialAction' => $tenant->hasModule('booking') ? ['@type' => 'ReserveAction', 'target' => $tenant->url('book?branch='.$branch->slug)] : null,
         ]);
+    }
+
+    /** @param iterable<array{q:string, a:string}> $items */
+    public static function faq(iterable $items): array
+    {
+        $entities = [];
+        foreach ($items as $i) {
+            $entities[] = ['@type' => 'Question', 'name' => $i['q'] ?? '', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $i['a'] ?? '']];
+        }
+
+        return ['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $entities];
+    }
+
+    /** @param array<string, string> $crumbs name => url */
+    public static function breadcrumbs(array $crumbs): array
+    {
+        $items = [];
+        $pos = 1;
+        foreach ($crumbs as $name => $url) {
+            $items[] = ['@type' => 'ListItem', 'position' => $pos++, 'name' => $name, 'item' => $url];
+        }
+
+        return ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => $items];
+    }
+
+    public static function blogPosting(BlogPost $post): array
+    {
+        return array_filter([
+            '@context' => 'https://schema.org', '@type' => 'BlogPosting', 'headline' => $post->title, 'description' => $post->excerpt,
+            'datePublished' => $post->published_at?->toAtomString(), 'dateModified' => $post->updated_at?->toAtomString(),
+            'author' => ['@type' => 'Person', 'name' => $post->author_name ?: config('salon.name')],
+            'publisher' => ['@type' => 'Organization', 'name' => config('salon.name')],
+            'image' => $post->cover_path ? asset('storage/'.$post->cover_path) : null, 'mainEntityOfPage' => url('/blog/'.$post->slug),
+        ]);
+    }
+
+    /** Organization + SoftwareApplication graph for the platform website. */
+    public static function platform(): array
+    {
+        $brand = config('salon.name');
+        $from = Plan::public()->min('monthly_price') ?? 0;
+
+        return [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                ['@type' => 'Organization', '@id' => url('/').'#org', 'name' => $brand, 'url' => url('/'), 'logo' => url('/favicon.ico')],
+                ['@type' => 'SoftwareApplication', 'name' => $brand, 'applicationCategory' => 'BusinessApplication', 'operatingSystem' => 'Web',
+                    'description' => __('platform.meta_description'), 'publisher' => ['@id' => url('/').'#org'],
+                    'offers' => ['@type' => 'AggregateOffer', 'priceCurrency' => config('salon.defaults.currency'), 'lowPrice' => number_format($from / 100, 2, '.', '')]],
+            ],
+        ];
     }
 
     public static function jsonLd(array $data): string
