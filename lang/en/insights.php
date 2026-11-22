@@ -82,4 +82,87 @@ return [
     'alerts' => [
         'types' => ['big_sale' => 'Big sale', 'vip_checkin' => 'VIP check-in', 'bad_review' => 'Bad review', 'low_stock' => 'Low stock', 'failed_payment' => 'Failed payment'],
     ],
+
+    'hub' => [
+        'nav' => 'Insights', 'title' => 'Insights', 'subtitle' => 'What your numbers are telling you this week',
+        'refresh' => 'Refresh now', 'refreshed' => 'Insights refreshed',
+        'tabs' => ['cards' => 'This week', 'churn' => 'Churn risk', 'forecast' => 'Demand forecast', 'reorder' => 'Reorder', 'pricing' => 'Pricing hints', 'ask' => 'Ask your data'],
+        'empty_title' => 'No insights yet', 'empty_body' => 'Cards appear every night once there is enough booking and sales history.',
+        'widget_title' => 'This week’s insights', 'see_all' => 'See all insights',
+    ],
+
+    'cards' => [
+        'off_peak' => ['title' => ':day :from–:to is :empty% empty — launch a happy-hour offer?', 'body' => 'Over the last 4 weeks only :util% of team time was booked in this window. A 15% happy-hour offer to opted-in clients usually fills it.'],
+        'reorder' => ['title' => ':count item(s) will run out within two weeks', 'body' => 'Based on the last 28 days of use. A purchase order of about :value covers the next month.'],
+        'churn_risk' => ['title' => ':count regular clients are overdue for a visit', 'body' => 'They usually come back on a steady cycle but are now about :days days late. Together they are worth :value in lifetime value — a warm win-back message works best.'],
+        'no_show' => ['title' => 'No-shows are at :rate%', 'body' => ':count missed appointments in the last 4 weeks. Asking for a deposit on long services usually halves no-shows.'],
+        'peak_pricing' => ['title' => ':day :from–:to is :util% booked', 'body' => 'Your busiest window. Consider a :change% peak price for this slot — you approve, nothing changes automatically.'],
+        'revenue_up' => ['title' => 'Revenue is up :pct% this week', 'body' => ':revenue in the last 7 days, led by :top. Keep the momentum with a rebooking reminder.'],
+        'revenue_down' => ['title' => 'Revenue is down :pct% this week', 'body' => ':revenue in the last 7 days. :top is still your strongest service — a short offer can bring clients back.'],
+        'demand' => ['title' => ':day looks busy at :branch', 'body' => 'About :forecast bookings expected (:booked already booked). Plan for at least :staff team member(s) on the floor.'],
+        'actions' => ['campaign_draft' => 'Create campaign draft', 'purchase_order_draft' => 'Draft purchase order', 'pricing_review' => 'Approve hint', 'open_page' => 'Open'],
+        'done' => ['campaign_draft' => 'Campaign draft created', 'purchase_order_draft' => 'Purchase order draft created', 'pricing_review' => 'Pricing hint approved — update your prices when ready'],
+        'status' => ['new' => 'New', 'done' => 'Done', 'approved' => 'Approved', 'dismissed' => 'Dismissed'],
+        'dismiss' => 'Dismiss', 'no_action' => 'This insight has no one-click action.', 'open_campaign' => 'Open campaign', 'open_po' => 'Open purchase order',
+        'by_ai' => 'Written by AI from aggregated numbers', 'by_rules' => 'Written from templates', 'rules' => 'Rules',
+    ],
+
+    'drafts' => [
+        'opted_in_segment' => 'Opted in on WhatsApp', 'win_back_segment' => 'Not visited in :days days', 'po_note' => 'Drafted from an insight suggestion',
+        'happy_hour' => [
+            'name' => 'Happy hour · :day :from–:to', 'subject' => 'Your :day treat at :salon',
+            'body' => 'Hi {first_name}, enjoy :discount% off every :day between :from and :to at :salon. Book your moment: {link}',
+        ],
+        'win_back' => [
+            'name' => 'We miss you · win-back', 'subject' => 'We miss you at :salon',
+            'body' => 'Hi {first_name}, it has been a while! Your chair at :salon is waiting — book your next visit here: {link}',
+        ],
+    ],
+
+    'churn' => [
+        'title' => 'Clients at risk', 'subtitle' => 'Overdue compared with their own usual visit cycle', 'empty' => 'Nobody is overdue — lovely.',
+        'draft' => 'Create win-back draft', 'message_col' => 'Suggested message', 'days' => '{1} :count day|[2,*] :count days',
+        'message' => 'Hi :name, we miss you at :salon! Shall we save you a spot this week?',
+    ],
+
+    'forecast' => [
+        'title' => 'Demand forecast', 'subtitle' => 'Expected bookings per day for the next two weeks',
+        'booked' => ':count booked', 'staff' => '{0} no extra staff|{1} :count on the floor|[2,*] :count on the floor',
+        'explain' => 'Last four :weekday: :samples → average :avg × trend :trend',
+        'method' => 'Average of the same weekday over the last 4 weeks × the 28-day trend (clipped 0.8–1.25). Staff = expected booked hours ÷ 8.',
+    ],
+
+    'reorder' => [
+        'draft' => 'Draft purchase order', 'empty' => 'Stock levels look healthy.',
+        'method' => 'Daily use from the last 28 days; suggested when fewer than 14 days remain, sized for 30 days plus the safety threshold.',
+    ],
+
+    'pricing' => [
+        'title' => 'Smart pricing hints', 'subtitle' => 'Peak and off-peak suggestions from the last 4 weeks', 'empty' => 'No strong peaks or quiet windows yet.',
+        'peak' => 'Peak', 'off_peak' => 'Off-peak', 'util' => ':pct% booked',
+        'note' => 'Suggestions only — prices never change automatically. Apply approved hints in your catalog or as a promotion.',
+    ],
+
+    'ask' => [
+        'title' => 'Ask your data', 'subtitle' => 'Answered from safe, read-only reports of your salon only',
+        'placeholder' => 'e.g. How much did The Pearl make from color services in October?', 'button' => 'Ask',
+        'examples' => ['Revenue last month', 'No-show rate this month', 'Top services in the last 30 days', 'Which branch made the most this month?'],
+        'empty' => 'Type a question first.', 'not_understood' => 'I can answer questions about revenue, bookings, average ticket, no-shows, rebooking, utilization, new clients and top services or staff.',
+        'numbers_used' => 'Numbers used', 'query_used' => 'Query used (:source)',
+        'rejected' => [
+            'shape' => 'That question could not be turned into a safe report query.', 'metric' => '":metric" is not one of the reports I can run.',
+            'filter' => '":filter" is not an allowed filter for this report.', 'value' => 'I could not find ":value" in your salon.',
+            'period' => 'That period is not supported.', 'permission' => 'You need revenue access for this report.',
+        ],
+        'metrics' => ['revenue' => 'Revenue', 'bookings' => 'Bookings', 'average_ticket' => 'Average ticket', 'no_show_rate' => 'No-show rate', 'rebook_rate' => 'Rebook rate', 'utilization' => 'Utilization', 'new_clients' => 'New clients'],
+        'channels' => ['pos' => 'in salon', 'shop' => 'online shop'],
+        'scope' => ['branch' => 'at :name', 'service_category' => 'from :name', 'service' => 'from :name', 'staff' => 'by :name', 'product' => 'from :name', 'channel' => '(:name)'],
+        'answers' => [
+            'revenue' => 'Revenue:scope was :value (:period).', 'bookings' => 'There were :value bookings:scope (:period).',
+            'average_ticket' => 'The average ticket:scope was :value (:period).', 'no_show_rate' => 'The no-show rate:scope was :value (:period).',
+            'rebook_rate' => 'The rebook rate:scope was :value (:period).', 'utilization' => 'Utilization:scope was :value (:period).',
+            'new_clients' => 'You welcomed :value new clients (:period).', 'top_services' => 'Your top service:scope was :top with :value (:period).',
+            'top_staff' => 'Your top team member:scope was :top with :value (:period).', 'revenue_by_branch' => ':top led with :value (:period).',
+        ],
+    ],
 ];
