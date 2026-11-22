@@ -1,0 +1,255 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+@source '../../../../resources/views/components/**/*';
+
+/*
+ * Luxe Salon OS — "quiet luxury" panel theme (shared by /admin, /dashboard, /pos)
+ * Ivory canvas, ink text, champagne gold accent, hairline borders, very soft shadows.
+ */
+@theme {
+    --font-display: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    --font-arabic: 'IBM Plex Sans Arabic', 'Tajawal', sans-serif;
+}
+
+:root {
+    --luxe-bg: #faf7f2;
+    --luxe-surface: #ffffff;
+    --luxe-ink: #1c1a17;
+    --luxe-muted: #7a736a;
+    --luxe-gold: #c8a96a;
+    --luxe-gold-dark: #a88b4f;
+    --luxe-rose: #e9d6cf;
+    --luxe-line: #ece6dd;
+    --luxe-shadow: 0 1px 2px rgba(28, 26, 23, 0.04), 0 8px 24px rgba(28, 26, 23, 0.06);
+    --luxe-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.dark {
+    --luxe-bg: #141014;
+    --luxe-surface: #1e1620;
+    --luxe-ink: #f5efe6;
+    --luxe-muted: #a79c90;
+    --luxe-gold: #d4b77a;
+    --luxe-line: #2e2430;
+    --luxe-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.fi-body {
+    background-color: var(--luxe-bg);
+    color: var(--luxe-ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+}
+
+[dir='rtl'] .fi-body,
+html[lang='ar'] .fi-body {
+    font-family: var(--font-arabic);
+}
+
+/* Display serif for page titles and section headings */
+.fi-header-heading,
+.fi-simple-header-heading,
+.fi-modal-heading,
+.luxe-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+html[lang='ar'] .fi-header-heading,
+html[lang='ar'] .fi-simple-header-heading,
+html[lang='ar'] .fi-modal-heading,
+html[lang='ar'] .luxe-display {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+}
+
+.fi-header-heading {
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+/* Sidebar & topbar: calm, hairline separated */
+.fi-sidebar,
+.fi-topbar > nav,
+.fi-topbar {
+    background-color: var(--luxe-surface) !important;
+    border-color: var(--luxe-line) !important;
+    box-shadow: none !important;
+}
+
+.fi-sidebar {
+    border-inline-end: 1px solid var(--luxe-line);
+}
+
+.fi-sidebar-item-btn {
+    border-radius: 12px;
+    transition: background-color 180ms var(--luxe-ease), color 180ms var(--luxe-ease);
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-btn {
+    background: linear-gradient(90deg, rgba(200, 169, 106, 0.16), rgba(200, 169, 106, 0.04));
+}
+
+.fi-sidebar-item.fi-active .fi-icon,
+.fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    color: var(--luxe-gold-dark) !important;
+}
+
+.dark .fi-sidebar-item.fi-active .fi-icon,
+.dark .fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    color: var(--luxe-gold) !important;
+}
+
+.fi-sidebar-group-label {
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    color: var(--luxe-muted);
+}
+
+/* Cards: 16px radius, hairline border, very soft shadow */
+.fi-section,
+.fi-ta-ctn,
+.fi-wi-stats-overview-stat,
+.fi-wi-chart,
+.fi-fo-repeater-item,
+.fi-in-entry-wrp,
+.fi-simple-main {
+    border-radius: 16px !important;
+    border: 1px solid var(--luxe-line) !important;
+    box-shadow: var(--luxe-shadow) !important;
+    background-color: var(--luxe-surface);
+    --tw-ring-shadow: 0 0 #0000 !important;
+}
+
+.fi-simple-main {
+    border-radius: 24px !important;
+}
+
+.fi-wi-stats-overview-stat {
+    transition: transform 200ms var(--luxe-ease), box-shadow 200ms var(--luxe-ease);
+}
+
+.fi-wi-stats-overview-stat:hover {
+    transform: translateY(-2px);
+}
+
+.fi-wi-stats-overview-stat-value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* Inputs: 10px radius */
+.fi-input-wrp,
+.fi-select-input,
+.fi-fo-file-upload .filepond--root {
+    border-radius: 10px !important;
+}
+
+.fi-input-wrp:focus-within {
+    --tw-ring-color: var(--luxe-gold) !important;
+}
+
+/* Buttons: confident pills, generous touch target */
+.fi-btn {
+    border-radius: 999px !important;
+    min-height: 2.5rem;
+    transition: transform 150ms var(--luxe-ease), box-shadow 180ms var(--luxe-ease), background-color 180ms var(--luxe-ease);
+}
+
+.fi-btn:active {
+    transform: scale(0.98);
+}
+
+.fi-btn.fi-color-primary {
+    box-shadow: 0 6px 18px rgba(200, 169, 106, 0.28);
+}
+
+/* Tables */
+.fi-ta-header-cell {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--luxe-muted);
+}
+
+.fi-ta-row {
+    transition: background-color 150ms var(--luxe-ease);
+}
+
+/* Badges: soft pills */
+.fi-badge {
+    border-radius: 999px !important;
+}
+
+/* Modals & dropdowns: subtle glass */
+.fi-modal-window,
+.fi-dropdown-panel {
+    border-radius: 20px !important;
+    border: 1px solid var(--luxe-line);
+    backdrop-filter: saturate(140%) blur(10px);
+}
+
+.fi-modal-close-overlay {
+    background-color: rgba(28, 26, 23, 0.35) !important;
+    backdrop-filter: blur(4px);
+}
+
+/* Tabs */
+.fi-tabs {
+    border-radius: 999px !important;
+}
+
+/* Empty states */
+.fi-ta-empty-state-heading {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+}
+
+/* Login page backdrop */
+.fi-simple-layout {
+    background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(233, 214, 207, 0.55), transparent 60%),
+        radial-gradient(900px 500px at 110% 110%, rgba(200, 169, 106, 0.18), transparent 60%),
+        var(--luxe-bg);
+}
+
+/* Impersonation banner */
+.luxe-impersonation-banner {
+    background: linear-gradient(90deg, #a88b4f, #c8a96a 50%, #a88b4f);
+    color: #1c1a17;
+}
+
+/* Skeleton loader */
+.luxe-skeleton {
+    background: linear-gradient(90deg, var(--luxe-line) 0%, rgba(255, 255, 255, 0.6) 50%, var(--luxe-line) 100%);
+    background-size: 200% 100%;
+    animation: luxe-shimmer 1.4s ease-in-out infinite;
+    border-radius: 10px;
+}
+
+@keyframes luxe-shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+}
+
+/* Touch targets on tablet (POS) */
+@media (pointer: coarse) {
+    .fi-btn,
+    .fi-sidebar-item-btn {
+        min-height: 44px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0ms !important;
+        animation-duration: 0ms !important;
+    }
+}

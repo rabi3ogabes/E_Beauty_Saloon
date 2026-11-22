@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Filament\Admin\Resources\Coupons\Pages;
+
+use App\Filament\Admin\Resources\Coupons\CouponResource;
+use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\ManageRecords;
+
+class ManageCoupons extends ManageRecords
+{
+    protected static string $resource = CouponResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return CouponResource::canCreate() ? [CreateAction::make()] : [];
+    }
+}
