@@ -92,3 +92,18 @@ states, short confident copy, full RTL.
   `tenantUrl($tenant, $path)`, `centralUrl()`, `tenantUser($tenant, $role, $branchIds)`, `platformAdmin()`.
 * Every Action gets feature tests; every acceptance-checklist item gets a test named after it.
 * Run: `php vendor/bin/pest` (whole suite must stay green).
+
+## Shared building blocks (already in core — reuse, don't duplicate)
+* **Bookings schema & models**: `App\Domain\Booking\Models\{Booking,BookingItem,BookingStatusHistory,SlotHold,WaitlistEntry}`,
+  enum `BookingStatus` (with `transitions()`), migration `2026_01_01_000500_create_booking_tables.php`.
+* **Client auth**: guard `client` (phone OTP: `SendClientOtp`, `VerifyClientOtp`), routes `/login`, `/account/{section?}`;
+  protect client routes with `['auth:client', 'client.tenant']`. In tests: `MessagingManager::fake()`; the OTP is `123456`.
+* **My Account sections**: register from your ServiceProvider:
+  `app(\App\Support\Account\AccountSections::class)->register('bookings', fn () => __('booking.account.title'), 'calendar', fn ($client, $request) => view(...)->render(), order: 10, module: 'booking');`
+* **Messaging**: `app(MessagingManager::class)->send('whatsapp', new OutboundMessage(...))` / `sendWithFallback(['whatsapp','sms'], fn ($channel) => ...)`.
+  Real drivers are registered with `->extend('whatsapp', fn ($tenant) => ...)`. Tests: `MessagingManager::fake()` + `FakeChannel::sentTo()`.
+* **AI hook for marketing**: `App\Domain\AIStudio\Contracts\GeneratesMarketingContent` (null implementation by default).
+* **Payments**: `CreateOnlinePayment`, `SettlePayment`, `RefundPayment`, `GatewayManager::fake()`, `Payable` contract,
+  `TenantPaymentGateway::for('booking'|'shop'|'pos'|'deposits', $branchId)`.
+* **Ledgers**: `StockLedger`, `TransferStock`, `ReceivePurchaseOrder`, `WalletLedger`, `GiftCardLedger`, `LoyaltyLedger`.
+* **PDF**: `App\Support\Pdf\PdfRenderer::render($view, $data, $locale, $format)` (use `'format' => [80, 297]` for 80mm receipts).

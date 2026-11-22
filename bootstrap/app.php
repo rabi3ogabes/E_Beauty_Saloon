@@ -30,8 +30,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'module' => EnsureModuleEnabled::class,
             'tenant.access' => EnsureTenantIsAccessible::class,
             'tenant' => ResolveTenant::class,
+            'client.tenant' => \App\Http\Middleware\EnsureClientBelongsToTenant::class,
         ]);
         $middleware->validateCsrfTokens(except: ['webhooks/*']);
+        $middleware->redirectGuestsTo(fn (Request $request) => tenant() && ! $request->is('dashboard*', 'pos*') ? route('client.login') : '/');
         $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -17,8 +17,8 @@ class ApplyBranchScope
 
     public function handle(Request $request, Closure $next): Response
     {
-        $user = $request->user();
-        if ($user && tenant() && $user->tenant_id === tenant()->id) {
+        $user = $request->user('web');
+        if ($user instanceof \App\Models\User && tenant() && $user->tenant_id === tenant()->id) {
             $allowed = $user->restrictedBranchIds();
             $this->context->restrictToBranches($allowed);
 

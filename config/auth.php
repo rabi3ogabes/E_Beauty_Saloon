@@ -42,6 +42,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // Salon end clients on the salon website (phone OTP). Scoped to the current tenant.
+        'client' => [
+            'driver' => 'session',
+            'provider' => 'clients',
+        ],
     ],
 
     /*
@@ -65,6 +71,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+
+        'clients' => [
+            'driver' => 'eloquent',
+            'model' => App\Domain\CRM\Models\Client::class,
         ],
 
         // 'users' => [

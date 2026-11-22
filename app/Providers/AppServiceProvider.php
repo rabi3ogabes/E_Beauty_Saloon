@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(TenantContext::class);
+        $this->app->singleton(\App\Support\Account\AccountSections::class);
 
         // Each domain may ship its own provider: app/Domain/{Domain}/{Domain}ServiceProvider.php
         // (relations onto core models via resolveRelationUsing, listeners, bindings...).
@@ -29,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
             $class = 'App\\Domain\\'.basename(dirname($file)).'\\'.basename($file, '.php');
             $this->app->register($class);
         }
+
+        $this->app->bindIf(\App\Domain\AIStudio\Contracts\GeneratesMarketingContent::class, \App\Domain\AIStudio\NullMarketingContentGenerator::class);
 
         $this->app->bind(DomainProvisioner::class, fn () => match (config('salon.domains.provisioner')) {
             'caddy' => new CaddyOnDemandProvisioner,
