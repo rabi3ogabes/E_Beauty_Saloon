@@ -55,3 +55,25 @@ Append-only log. Newest last.
     for both central and tenant hosts; salon custom pages live at `/pages/{slug}`.
 22. **POS ↔ Marketing**: `SellableRegistry::register(..., onSold:)` lets modules fulfil items sold at the POS (packages
     create active client packages).
+23. **Smart layer (Phase 9) — reports**: `App\Domain\Insights\Reports\ReportService` is the single read-only, tenant + branch
+    scoped query layer (pure methods, no writes). Dates are grouped in PHP with the tenant/branch timezone so results match on
+    SQLite and MySQL (no DB date functions). Revenue = net of refunds, excluding tips (POS by `completed_at`, shop by order time).
+    Utilization = booked service minutes ÷ scheduled staff minutes using the availability engine's rules (`Support\Capacity`).
+24. **AI insights** are generated nightly per tenant (`GenerateTenantInsights` → `GenerateInsights` inside `TenantContext::run`):
+    `MetricsSnapshot` (aggregates only, never client PII) → deterministic `InsightRules` → `InsightCopywriter` (one AI call per
+    run for en+ar copy, template fallback) → `insight_cards` upserted by `(tenant, type:scope:ISO-week)`; one `insight_runs` row
+    per tenant per local day. One-click actions only create drafts (campaign, purchase order); pricing hints are owner-approved
+    records, prices never change automatically.
+25. **Ask your data** never lets AI write SQL: the AI (or a keyword fallback planner) returns a JSON plan `{metric, filters, period}`
+    that `Ask\QueryCatalog` validates against a whitelist of ReportService methods; filter values are names resolved through the
+    tenant's own scoped catalog. Answers are composed by templates from the numbers, which are shown alongside.
+26. **Smart-layer AI calls** go through `Insights\Support\SmartText` (AI Studio router, `text` capability, credits debited after
+    success with idempotency keys). Small hook: `AbstractDriver::completeText()` exposes a plain completion to other modules.
+27. **WhatsApp AI receptionist**: Marketing dispatches `WhatsAppMessageReceived` for every non-STOP inbound message (hook);
+    `Assistant` queues `ProcessInboundWhatsApp`, logs the conversation and, when the owner switch + hours allow, runs a
+    provider-agnostic tool-calling loop (`AssistantModel`, default JSON protocol over the router). Booking uses the same
+    HoldSlot + CreateBooking actions (source `whatsapp_ai`). Handoff on request, low confidence, tool call or AI unavailable.
+28. **Operations**: consultation answers are encrypted and signatures stored as PNG on the private `local` disk, streamed via an
+    authorised dashboard media route. Client sharing between branches is a tenant setting enforced by a global Client scope that
+    only affects branch-restricted team members. Owner alerts are database notifications (+ optional WhatsApp) de-duplicated by
+    fingerprint in `owner_alerts`; bad reviews only add the WhatsApp ping because Marketing already notifies low ratings.
