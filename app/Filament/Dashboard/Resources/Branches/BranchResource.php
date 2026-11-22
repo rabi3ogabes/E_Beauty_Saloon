@@ -145,7 +145,7 @@ class BranchResource extends Resource
             ->columns([
                 TextColumn::make('name')->label(__('fields.name'))->weight('semibold')->searchable()
                     ->description(fn (Branch $r) => collect([$r->area, $r->city])->filter()->join(', ') ?: null),
-                TextColumn::make('phone')->label(__('fields.phone'))->placeholder('—')->toggleable(),
+                TextColumn::make('phone')->extraAttributes(['dir' => 'ltr'])->label(__('fields.phone'))->placeholder('—')->toggleable(),
                 TextColumn::make('status')->label(__('fields.status'))->badge()
                     ->formatStateUsing(fn ($state) => __('workspace.common.'.$state))->color(fn ($state) => $state === 'active' ? 'success' : 'gray'),
                 TextColumn::make('open_now')->label(__('workspace.branches.today'))->state(fn (Branch $r) => $r->isOpenNow() ? __('workspace.branches.open_now') : __('workspace.branches.closed_now'))

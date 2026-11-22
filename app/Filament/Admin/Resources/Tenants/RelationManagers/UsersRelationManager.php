@@ -22,7 +22,7 @@ class UsersRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('name')->label(__('fields.name'))->weight('semibold')->searchable(),
                 TextColumn::make('email')->label(__('fields.email'))->copyable()->searchable(),
-                TextColumn::make('phone')->label(__('fields.phone'))->placeholder('—'),
+                TextColumn::make('phone')->extraAttributes(['dir' => 'ltr'])->label(__('fields.phone'))->placeholder('—'),
                 IconColumn::make('is_active')->label(__('fields.is_active'))->boolean(),
                 TextColumn::make('last_login_at')->label(__('admin.last_login'))->since()->placeholder(__('admin.never')),
             ]);

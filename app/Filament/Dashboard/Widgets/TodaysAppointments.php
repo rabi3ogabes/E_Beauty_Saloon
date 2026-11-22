@@ -11,6 +11,7 @@ use Carbon\CarbonImmutable;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
+use Illuminate\Support\HtmlString;
 
 /** "Today's appointments" on the owner command center, with one-tap check-in. */
 class TodaysAppointments extends TableWidget
@@ -46,7 +47,7 @@ class TodaysAppointments extends TableWidget
             ->columns([
                 TextColumn::make('starts_at')->label(__('booking.widget.time'))
                     ->formatStateUsing(fn (Booking $record) => $record->starts_at->copy()->setTimezone($record->branch?->timezone ?? 'UTC')->format('H:i'))->weight('semibold'),
-                TextColumn::make('client.name')->label(__('booking.admin.client'))->placeholder(__('booking.admin.walk_in'))->description(fn (Booking $record) => $record->client?->phone),
+                TextColumn::make('client.name')->label(__('booking.admin.client'))->placeholder(__('booking.admin.walk_in'))->description(fn (Booking $record) => $record->client?->phone ? new HtmlString('<span dir="ltr">'.e($record->client->phone).'</span>') : null),
                 TextColumn::make('services')->label(__('booking.admin.services'))->state(fn (Booking $record) => $record->items->map(fn ($i) => $i->service?->name)->filter()->implode(' + '))->wrap(),
                 TextColumn::make('staff')->label(__('booking.admin.staff'))->state(fn (Booking $record) => $record->items->map(fn ($i) => $i->staff?->name)->filter()->unique()->implode(', ')),
                 TextColumn::make('status')->label(__('salon.ui.status'))->badge(),

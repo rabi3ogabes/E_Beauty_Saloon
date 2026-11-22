@@ -8,7 +8,7 @@ return [
         'arr' => 'ARR :amount', 'active_salons' => 'Active salons', 'trials' => ':count on trial', 'churn' => 'Churn',
         'last_30' => 'Last 30 days', 'renewals' => 'Renewals in the next 7 days', 'overdue' => ':count overdue invoices',
         'revenue_by_module' => 'Monthly revenue by module', 'collected' => 'Collected revenue — last 12 months',
-        'plan' => 'Base plans', 'branches' => 'Extra branches', 'no_renewals' => 'No renewals due soon',
+        'plan' => 'Base plans', 'branches' => 'Extra branches', 'no_renewals' => 'No renewals due soon', 'upcoming_renewals' => 'Upcoming renewals — next 14 days',
     ],
     'tenant' => [
         'label' => 'Salon', 'plural' => 'Salons', 'new' => 'New salon', 'trials_badge' => 'Salons on trial',

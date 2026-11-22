@@ -163,7 +163,7 @@ class ClientResource extends Resource
                 TextColumn::make('name')->label(__('fields.name'))->weight('semibold')->searchable()->sortable()
                     ->description(fn (Client $r) => $r->phone)
                     ->icon(fn (Client $r) => $r->is_vip ? 'heroicon-m-star' : null)->iconColor('primary'),
-                TextColumn::make('phone')->label(__('fields.phone'))->searchable()->hidden(),
+                TextColumn::make('phone')->extraAttributes(['dir' => 'ltr'])->label(__('fields.phone'))->searchable()->hidden(),
                 TextColumn::make('email')->label(__('fields.email'))->searchable()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('tags.name')->label(__('workspace.clients.tags'))->badge()->color('gray')->limitList(3),
                 TextColumn::make('visits_count')->label(__('workspace.clients.visits'))->alignCenter()->sortable(),

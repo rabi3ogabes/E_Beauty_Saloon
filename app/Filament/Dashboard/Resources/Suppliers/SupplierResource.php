@@ -58,7 +58,7 @@ class SupplierResource extends Resource
     {
         return $table->defaultSort('name')->columns([
             TextColumn::make('name')->label(__('fields.name'))->weight('semibold')->searchable()->sortable()->description(fn ($record) => $record->contact_name),
-            TextColumn::make('phone')->label(__('fields.phone'))->placeholder('—')->copyable(),
+            TextColumn::make('phone')->extraAttributes(['dir' => 'ltr'])->label(__('fields.phone'))->placeholder('—')->copyable(),
             TextColumn::make('email')->label(__('fields.email'))->placeholder('—')->copyable(),
             TextColumn::make('orders')->label(__('workspace.purchase_orders.plural'))->alignCenter()
                 ->state(fn ($record) => PurchaseOrder::where('supplier_id', $record->id)->count()),

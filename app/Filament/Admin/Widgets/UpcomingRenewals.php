@@ -16,7 +16,7 @@ class UpcomingRenewals extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->heading(__('admin.dashboard.renewals'))
+            ->heading(__('admin.dashboard.upcoming_renewals'))
             ->query(fn () => Subscription::query()->with(['tenant', 'plan'])->whereIn('status', ['active', 'trialing'])
                 ->whereBetween('ends_at', [now(), now()->addDays(14)])->orderBy('ends_at'))
             ->paginated([5, 10])

@@ -2,25 +2,22 @@
 
 namespace App\Filament\Admin\Resources\Leads;
 
-use App\Filament\Admin\Resources\Leads\Pages\ManageLeads;
-use App\Filament\Support\Money;
-use App\Filament\Support\Translatable;
 use App\Domain\Websites\Models\Lead;
+use App\Filament\Admin\Resources\Leads\Pages\ManageLeads;
+use App\Models\User;
 use BackedEnum;
 use Filament\Actions;
 use Filament\Forms\Components;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns;
 use Filament\Tables\Filters;
 use Filament\Tables\Table;
-use Filament\Notifications\Notification;
 
 class LeadResource extends Resource
 {
-    protected static ?string $model = \App\Domain\Websites\Models\Lead::class;
+    protected static ?string $model = Lead::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserPlus;
 
@@ -53,9 +50,8 @@ class LeadResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) \App\Domain\Websites\Models\Lead::where('stage', 'new')->count() ?: null;
+        return (string) Lead::where('stage', 'new')->count() ?: null;
     }
-
 
     public static function form(Schema $schema): Schema
     {
@@ -66,7 +62,7 @@ class LeadResource extends Resource
             Components\TextInput::make('phone')->label(__('fields.phone'))->tel(),
             Components\TextInput::make('branches')->label(__('fields.branches'))->numeric(),
             Components\Select::make('stage')->label(__('fields.stage'))->required()->default('new')->options(static::stages()),
-            Components\Select::make('assigned_to')->label(__('fields.assigned_to'))->options(fn () => \App\Models\User::where('is_platform', true)->pluck('name', 'id')),
+            Components\Select::make('assigned_to')->label(__('fields.assigned_to'))->options(fn () => User::where('is_platform', true)->pluck('name', 'id')),
             Components\TextInput::make('source')->label(__('fields.source')),
             Components\Textarea::make('message')->label(__('fields.message'))->columnSpanFull()->rows(3),
         ]);
@@ -82,7 +78,7 @@ class LeadResource extends Resource
         return $table->defaultSort('id', 'desc')->columns([
             Columns\TextColumn::make('name')->label(__('fields.name'))->weight('semibold')->searchable()->description(fn ($record) => $record->salon_name),
             Columns\TextColumn::make('email')->label(__('fields.email'))->copyable()->searchable(),
-            Columns\TextColumn::make('phone')->label(__('fields.phone'))->copyable(),
+            Columns\TextColumn::make('phone')->extraAttributes(['dir' => 'ltr'])->label(__('fields.phone'))->copyable(),
             Columns\SelectColumn::make('stage')->label(__('fields.stage'))->options(static::stages()),
             Columns\TextColumn::make('source')->label(__('fields.source'))->badge()->color('gray')->placeholder('—'),
             Columns\TextColumn::make('created_at')->label(__('salon.ui.created'))->since()->sortable(),

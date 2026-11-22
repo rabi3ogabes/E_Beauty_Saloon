@@ -2,6 +2,11 @@
 
 namespace App\Filament\Concerns;
 
+use App\Filament\Support\InitialsAvatarProvider;
+use App\Http\Middleware\ApplyBranchScope;
+use App\Http\Middleware\ResolveTenant;
+use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\SetLocale;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -34,6 +39,7 @@ trait ConfiguresLuxePanel
                 'info' => Color::hex('#6B7FA3'),
             ])
             ->font('Inter')
+            ->defaultAvatarProvider(InitialsAvatarProvider::class)
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->darkMode(true)
             ->spa()
@@ -44,7 +50,7 @@ trait ConfiguresLuxePanel
             ->renderHook(PanelsRenderHook::HEAD_END, fn () => Blade::render('<x-luxe.panel-head />'))
             ->renderHook(PanelsRenderHook::USER_MENU_BEFORE, fn () => Blade::render('<x-luxe.locale-switcher />'))
             ->middleware([
-                \App\Http\Middleware\ResolveTenant::class,
+                ResolveTenant::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -54,9 +60,9 @@ trait ConfiguresLuxePanel
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                \App\Http\Middleware\SetLocale::class,
-                \App\Http\Middleware\ApplyBranchScope::class,
-                \App\Http\Middleware\SecurityHeaders::class,
+                SetLocale::class,
+                ApplyBranchScope::class,
+                SecurityHeaders::class,
             ])
             ->authMiddleware([Authenticate::class]);
     }
