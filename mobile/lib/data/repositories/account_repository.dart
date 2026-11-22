@@ -95,7 +95,7 @@ class ApiProfileRepository implements ProfileRepository {
   }
 }
 
-/// `POST /devices` — TODO(backend): FCM token registration endpoint in progress.
+/// `POST /devices` (live) — FCM token of a client installation; `DELETE /devices/{token}` on sign-out.
 abstract class DeviceRepository {
   Future<void> register({required String token, required String platform, required String app});
 }

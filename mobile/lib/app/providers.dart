@@ -150,7 +150,7 @@ final profileRepositoryProvider = Provider<ProfileRepository>(
 );
 
 final deviceRepositoryProvider = Provider<DeviceRepository>(
-  (ref) => _mockPending ? MockDeviceRepository() : ApiDeviceRepository(ref.watch(apiClientProvider)),
+  (ref) => _mockLive ? MockDeviceRepository() : ApiDeviceRepository(ref.watch(apiClientProvider)),
 );
 
 final bookingRepositoryProvider = Provider<BookingRepository>(
@@ -158,7 +158,7 @@ final bookingRepositoryProvider = Provider<BookingRepository>(
 );
 
 final shopRepositoryProvider = Provider<ShopRepository>(
-  (ref) => _mockPending ? MockShopRepository() : ApiShopRepository(ref.watch(apiClientProvider)),
+  (ref) => _mockLive ? MockShopRepository() : ApiShopRepository(ref.watch(apiClientProvider)),
 );
 
 final studioRepositoryProvider = Provider<StudioRepository>(

@@ -106,12 +106,15 @@ class _PushListenerState extends ConsumerState<_PushListener> {
 
   Future<void> _register(String token) async {
     if (!ref.read(sessionProvider).isSignedIn) return;
+    // `POST /devices` registers client installations (marketing + booking push). Staff/owner tokens
+    // are not client tokens, so those apps skip registration.
+    if (ref.read(flavorProvider) != AppFlavor.client) return;
     try {
       await ref
           .read(deviceRepositoryProvider)
           .register(token: token, platform: PushService.platformName, app: ref.read(flavorProvider).name);
     } catch (_) {
-      // TODO(backend): POST /devices pending; failures are non-fatal.
+      // Push is best effort: a failed registration never blocks the app.
     }
   }
 
