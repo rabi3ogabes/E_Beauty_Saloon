@@ -2,6 +2,7 @@
 
 namespace App\Domain\Payments\Models;
 
+use App\Domain\CRM\Models\Client;
 use App\Support\Tenancy\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,7 +18,7 @@ class WalletTransaction extends Model
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(\App\Domain\CRM\Models\Client::class);
+        return $this->belongsTo(Client::class);
     }
 
     public function reference(): MorphTo

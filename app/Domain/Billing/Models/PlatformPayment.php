@@ -2,6 +2,7 @@
 
 namespace App\Domain\Billing\Models;
 
+use App\Domain\Tenancy\Models\Tenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -21,7 +22,7 @@ class PlatformPayment extends Model
 
     public function tenant(): BelongsTo
     {
-        return $this->belongsTo(\App\Domain\Tenancy\Models\Tenant::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function invoice(): BelongsTo

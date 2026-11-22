@@ -3,6 +3,7 @@
 namespace App\Domain\Payments\Gateways;
 
 use App\Domain\Payments\DTOs\WebhookEvent;
+use App\Support\Money\Money;
 use Illuminate\Http\Request;
 
 abstract class AbstractGateway implements PaymentGateway
@@ -22,12 +23,12 @@ abstract class AbstractGateway implements PaymentGateway
     /** Minor units -> decimal string the provider expects. */
     protected function decimal(int $minor, string $currency): string
     {
-        return \App\Support\Money\Money::of($minor, $currency)->toDecimal();
+        return Money::of($minor, $currency)->toDecimal();
     }
 
     protected function toMinor(string|float|int $decimal, string $currency): int
     {
-        return \App\Support\Money\Money::fromDecimal($decimal, $currency)->amount;
+        return Money::fromDecimal($decimal, $currency)->amount;
     }
 
     protected function requireHmac(Request $request, string $header, string $secret, string $algo = 'sha256'): void

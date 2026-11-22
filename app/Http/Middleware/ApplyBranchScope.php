@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use App\Support\Tenancy\TenantContext;
 use Closure;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class ApplyBranchScope
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user('web');
-        if ($user instanceof \App\Models\User && tenant() && $user->tenant_id === tenant()->id) {
+        if ($user instanceof User && tenant() && $user->tenant_id === tenant()->id) {
             $allowed = $user->restrictedBranchIds();
             $this->context->restrictToBranches($allowed);
 

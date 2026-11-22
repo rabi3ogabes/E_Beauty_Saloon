@@ -7,6 +7,7 @@ use App\Domain\CRM\Models\Client;
 use App\Domain\Payments\Models\Payment;
 use App\Support\Tenancy\BelongsToBranch;
 use App\Support\Tenancy\BelongsToTenant;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -77,7 +78,7 @@ class Booking extends Model
         return max(0, $this->total - $this->amount_paid);
     }
 
-    public function localStart(): \Carbon\CarbonInterface
+    public function localStart(): CarbonInterface
     {
         return $this->starts_at->copy()->setTimezone($this->branch?->timezone ?? config('salon.defaults.timezone'));
     }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PurchaseOrder extends Model
 {
-    use BelongsToTenant, BelongsToBranch;
+    use BelongsToBranch, BelongsToTenant;
 
     protected $table = 'purchase_orders';
 

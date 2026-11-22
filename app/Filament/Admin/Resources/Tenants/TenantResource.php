@@ -32,6 +32,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -154,8 +155,8 @@ class TenantResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('status')->label(__('fields.status'))->options(TenantStatus::class),
-                \Filament\Tables\Filters\Filter::make('plan')
-                    ->schema([\Filament\Forms\Components\Select::make('plan_id')->label(__('fields.plan'))->options(fn () => Plan::all()->pluck('name', 'id'))])
+                Filter::make('plan')
+                    ->schema([Select::make('plan_id')->label(__('fields.plan'))->options(fn () => Plan::all()->pluck('name', 'id'))])
                     ->query(fn (Builder $query, array $data) => filled($data['plan_id'] ?? null)
                         ? $query->whereHas('subscriptions', fn ($s) => $s->where('plan_id', $data['plan_id'])->whereIn('status', ['active', 'trialing', 'grace', 'past_due']))
                         : $query),

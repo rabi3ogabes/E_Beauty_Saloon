@@ -1,6 +1,7 @@
 <?php
 
 use App\Domain\Tenancy\Models\Tenant;
+use App\Support\Money\Money;
 use App\Support\Tenancy\TenantContext;
 
 if (! function_exists('tenant')) {
@@ -15,6 +16,6 @@ if (! function_exists('money')) {
     /** Format integer minor units as a localized money string. */
     function money(?int $minor, ?string $currency = null): string
     {
-        return \App\Support\Money\Money::of($minor ?? 0, $currency ?? tenant()?->currency ?? config('salon.defaults.currency'))->format();
+        return Money::of($minor ?? 0, $currency ?? tenant()?->currency ?? config('salon.defaults.currency'))->format();
     }
 }

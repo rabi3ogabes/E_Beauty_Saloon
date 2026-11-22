@@ -2,25 +2,20 @@
 
 namespace App\Filament\Admin\Resources\Coupons;
 
-use App\Filament\Admin\Resources\Coupons\Pages\ManageCoupons;
-use App\Filament\Support\Money;
-use App\Filament\Support\Translatable;
 use App\Domain\Billing\Models\Coupon;
+use App\Filament\Admin\Resources\Coupons\Pages\ManageCoupons;
 use BackedEnum;
 use Filament\Actions;
 use Filament\Forms\Components;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns;
-use Filament\Tables\Filters;
 use Filament\Tables\Table;
-use Filament\Notifications\Notification;
 
 class CouponResource extends Resource
 {
-    protected static ?string $model = \App\Domain\Billing\Models\Coupon::class;
+    protected static ?string $model = Coupon::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
 
@@ -50,7 +45,6 @@ class CouponResource extends Resource
     {
         return true && static::canViewAny();
     }
-
 
     public static function form(Schema $schema): Schema
     {

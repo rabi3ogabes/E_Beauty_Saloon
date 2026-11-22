@@ -5,6 +5,7 @@ namespace App\Domain\Marketing;
 use App\Domain\Booking\Enums\BookingStatus;
 use App\Domain\Booking\Models\Booking;
 use App\Domain\CRM\Models\Client;
+use App\Domain\Marketing\Actions\ActivateClientPackage;
 use App\Domain\Marketing\Actions\AttributeBooking;
 use App\Domain\Marketing\Actions\EarnLoyaltyForBooking;
 use App\Domain\Marketing\Actions\RegisterReferral;
@@ -15,14 +16,17 @@ use App\Domain\Marketing\Automation\TriggerScanners;
 use App\Domain\Marketing\Models\CampaignMessage;
 use App\Domain\Marketing\Models\ClientMembership;
 use App\Domain\Marketing\Models\ClientPackage;
+use App\Domain\Marketing\Models\Package;
 use App\Domain\Marketing\Models\Referral;
 use App\Domain\Marketing\Models\Review;
 use App\Domain\Marketing\Services\ChannelResolver;
 use App\Domain\Marketing\Support\AccountViews;
 use App\Domain\Marketing\Support\MarketingUrl;
 use App\Domain\Messaging\MessagingManager;
+use App\Domain\POS\Support\SellableRegistry;
 use App\Domain\Tenancy\Models\Tenant;
 use App\Support\Account\AccountSections;
+use App\Support\Exceptions\DomainException;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -59,34 +63,34 @@ class MarketingServiceProvider extends ServiceProvider
     /** Packages are sellable at the POS (Packages tab appears automatically). */
     protected function registerPosSellables(): void
     {
-        if (! class_exists(\App\Domain\POS\Support\SellableRegistry::class)) {
+        if (! class_exists(SellableRegistry::class)) {
             return;
         }
         $this->app->booted(function () {
-            app(\App\Domain\POS\Support\SellableRegistry::class)->register('package',
+            app(SellableRegistry::class)->register('package',
                 resolve: function (int $id, $branch) {
-                    $package = \App\Domain\Marketing\Models\Package::with('items.itemable')->where('is_active', true)->where('sellable_pos', true)->findOrFail($id);
+                    $package = Package::with('items.itemable')->where('is_active', true)->where('sellable_pos', true)->findOrFail($id);
                     if (! empty($package->branch_ids) && ! in_array($branch->id, $package->branch_ids)) {
-                        throw new \App\Support\Exceptions\DomainException(__('marketing.packages.errors.not_available'));
+                        throw new DomainException(__('marketing.packages.errors.not_available'));
                     }
 
                     return ['model' => $package, 'name' => $package->name, 'unit_price' => $package->effectivePrice(), 'tax_percent' => null, 'track_stock' => false];
                 },
-                catalog: fn ($branch) => \App\Domain\Marketing\Models\Package::with('items.itemable')->where('is_active', true)->where('sellable_pos', true)->get()
+                catalog: fn ($branch) => Package::with('items.itemable')->where('is_active', true)->where('sellable_pos', true)->get()
                     ->filter(fn ($p) => empty($p->branch_ids) || in_array($branch->id, $p->branch_ids))
                     ->map(fn ($p) => ['id' => $p->id, 'name' => $p->name, 'price' => $p->effectivePrice(), 'category' => null])->values()->all(),
                 onSold: function ($item, $sale, $client) {
                     if (! $client) {
-                        throw new \App\Support\Exceptions\DomainException(__('marketing.packages.errors.client_required'));
+                        throw new DomainException(__('marketing.packages.errors.client_required'));
                     }
-                    $package = \App\Domain\Marketing\Models\Package::findOrFail($item->sellable_id);
+                    $package = Package::findOrFail($item->sellable_id);
                     for ($i = 0; $i < max(1, (int) $item->qty); $i++) {
-                        $cp = \App\Domain\Marketing\Models\ClientPackage::create([
+                        $cp = ClientPackage::create([
                             'client_id' => $client->id, 'package_id' => $package->id, 'status' => 'pending',
                             'sessions_total' => $package->sessions_count, 'sessions_remaining' => $package->sessions_count,
                             'price_paid' => (int) $item->unit_price, 'currency' => tenant()?->currency ?? 'QAR', 'channel' => 'pos',
                         ]);
-                        app(\App\Domain\Marketing\Actions\ActivateClientPackage::class)->handle($cp, (int) $item->unit_price);
+                        app(ActivateClientPackage::class)->handle($cp, (int) $item->unit_price);
                     }
                 },
             );

@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Tenants\Pages;
 
 use App\Domain\Tenancy\Enums\TenantStatus;
+use App\Domain\Tenancy\Models\Tenant;
 use App\Filament\Admin\Resources\Tenants\TenantResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
@@ -24,7 +25,7 @@ class ListTenants extends ListRecords
         foreach ([TenantStatus::Active, TenantStatus::Trial, TenantStatus::Grace, TenantStatus::Suspended] as $status) {
             $tabs[$status->value] = Tab::make($status->getLabel())
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', $status))
-                ->badge(fn () => \App\Domain\Tenancy\Models\Tenant::where('status', $status)->count() ?: null);
+                ->badge(fn () => Tenant::where('status', $status)->count() ?: null);
         }
 
         return $tabs;

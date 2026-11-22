@@ -2,9 +2,11 @@
 
 use App\Domain\Billing\Actions\ChangeSubscription;
 use App\Domain\Billing\Actions\MarkInvoicePaid;
+use App\Domain\Billing\Actions\RenewSubscription;
 use App\Domain\Billing\Enums\SubscriptionStatus;
 use App\Domain\Billing\Jobs\ProcessSubscriptionLifecycle;
 use App\Domain\Billing\Models\Plan;
+use App\Domain\Billing\Notifications\SubscriptionRenewalReminder;
 use App\Domain\Tenancy\Enums\TenantStatus;
 use Illuminate\Support\Facades\Notification;
 
@@ -14,19 +16,19 @@ it('issues a renewal invoice and reminders, then grace, then suspension', functi
     $sub = $tenant->currentSubscription;
 
     $this->travelTo($sub->ends_at->copy()->subDays(7)->addHour());
-    (new ProcessSubscriptionLifecycle)->handle(app(\App\Domain\Billing\Actions\RenewSubscription::class));
+    (new ProcessSubscriptionLifecycle)->handle(app(RenewSubscription::class));
     expect($tenant->invoices()->where('type', 'renewal')->count())->toBe(1);
-    Notification::assertSentTo($tenant->owner, \App\Domain\Billing\Notifications\SubscriptionRenewalReminder::class);
+    Notification::assertSentTo($tenant->owner, SubscriptionRenewalReminder::class);
 
     $this->travelTo($sub->ends_at->copy()->addHour());
-    (new ProcessSubscriptionLifecycle)->handle(app(\App\Domain\Billing\Actions\RenewSubscription::class));
+    (new ProcessSubscriptionLifecycle)->handle(app(RenewSubscription::class));
     expect($tenant->fresh()->status)->toBe(TenantStatus::Grace)->and($sub->fresh()->status)->toBe(SubscriptionStatus::Grace);
 
     // Grace = read-only dashboard
     $this->actingAs($tenant->owner)->get(tenantUrl($tenant, 'dashboard'))->assertOk()->assertSee(__('salon.billing.pay_now'));
 
     $this->travelTo($sub->ends_at->copy()->addDays(config('salon.grace_days') + 1));
-    (new ProcessSubscriptionLifecycle)->handle(app(\App\Domain\Billing\Actions\RenewSubscription::class));
+    (new ProcessSubscriptionLifecycle)->handle(app(RenewSubscription::class));
     expect($tenant->fresh()->status)->toBe(TenantStatus::Suspended);
 
     // Public site shows a polite unavailable page; dashboard is locked.

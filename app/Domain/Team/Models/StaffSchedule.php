@@ -2,6 +2,7 @@
 
 namespace App\Domain\Team\Models;
 
+use App\Domain\Branches\Models\Branch;
 use App\Support\Tenancy\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +29,6 @@ class StaffSchedule extends Model
 
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(\App\Domain\Branches\Models\Branch::class);
+        return $this->belongsTo(Branch::class);
     }
 }

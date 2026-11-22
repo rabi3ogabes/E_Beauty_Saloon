@@ -2,6 +2,7 @@
 
 use App\Domain\Tenancy\Actions\StartImpersonation;
 use App\Domain\Tenancy\Models\ImpersonationLog;
+use App\Support\Exceptions\DomainException;
 
 it('lets platform staff open a tenant dashboard as the owner, logs it, and exits back to /admin', function () {
     $tenant = createTenant(slug: 'lumiere');
@@ -45,4 +46,4 @@ it('rejects reused, expired or foreign impersonation tokens', function () {
 it('refuses impersonation by non-platform users', function () {
     $tenant = createTenant();
     app(StartImpersonation::class)->handle($tenant->owner, $tenant, 'nope');
-})->throws(\App\Support\Exceptions\DomainException::class);
+})->throws(DomainException::class);

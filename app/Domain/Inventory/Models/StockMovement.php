@@ -2,6 +2,8 @@
 
 namespace App\Domain\Inventory\Models;
 
+use App\Domain\Catalog\Models\ProductVariant;
+use App\Models\User;
 use App\Support\Tenancy\BelongsToBranch;
 use App\Support\Tenancy\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class StockMovement extends Model
 {
-    use BelongsToTenant, BelongsToBranch;
+    use BelongsToBranch, BelongsToTenant;
 
     protected $table = 'stock_movements';
 
@@ -18,7 +20,7 @@ class StockMovement extends Model
 
     public function variant(): BelongsTo
     {
-        return $this->belongsTo(\App\Domain\Catalog\Models\ProductVariant::class, 'product_variant_id');
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 
     public function reference(): MorphTo
@@ -28,6 +30,6 @@ class StockMovement extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 }

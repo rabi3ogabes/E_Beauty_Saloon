@@ -2,10 +2,12 @@
 
 use App\Domain\Billing\Enums\InvoiceStatus;
 use App\Domain\Billing\Enums\SubscriptionStatus;
+use App\Domain\Billing\Models\Invoice;
 use App\Domain\Billing\Models\Plan;
 use App\Domain\Tenancy\Actions\CreateTenant;
 use App\Domain\Tenancy\Enums\TenantStatus;
 use App\Domain\Tenancy\Models\Tenant;
+use App\Support\Exceptions\DomainException;
 
 it('creates a tenant with 3 branches + POS + Booking for 6 months and a correct invoice', function () {
     $plan = Plan::where('slug', 'essential')->first();
@@ -43,7 +45,7 @@ it('activates the subscription and entitles modules once the invoice is paid', f
 it('numbers invoices sequentially per year', function () {
     createTenant();
     createTenant();
-    $numbers = \App\Domain\Billing\Models\Invoice::orderBy('id')->pluck('number')->all();
+    $numbers = Invoice::orderBy('id')->pluck('number')->all();
 
     expect($numbers[0])->toEndWith('000001')->and($numbers[1])->toEndWith('000002');
 });
@@ -61,9 +63,9 @@ it('makes a trial tenant usable immediately without payment', function () {
 it('rejects reserved slugs and duplicate owner emails', function () {
     $plan = Plan::first();
     expect(fn () => app(CreateTenant::class)->handle(['name' => 'admin', 'owner_name' => 'x', 'owner_email' => 'x@example.com']))
-        ->toThrow(\App\Support\Exceptions\DomainException::class);
+        ->toThrow(DomainException::class);
 
     createTenant(slug: 'one');
     expect(fn () => app(CreateTenant::class)->handle(['name' => 'Two', 'owner_name' => 'x', 'owner_email' => 'one@example.com']))
-        ->toThrow(\App\Support\Exceptions\DomainException::class);
+        ->toThrow(DomainException::class);
 });

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ApplyBranchScope;
+use App\Http\Middleware\EnsureClientBelongsToTenant;
 use App\Http\Middleware\EnsureModuleEnabled;
 use App\Http\Middleware\EnsureTenantIsAccessible;
 use App\Http\Middleware\ResolveTenant;
@@ -30,7 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'module' => EnsureModuleEnabled::class,
             'tenant.access' => EnsureTenantIsAccessible::class,
             'tenant' => ResolveTenant::class,
-            'client.tenant' => \App\Http\Middleware\EnsureClientBelongsToTenant::class,
+            'client.tenant' => EnsureClientBelongsToTenant::class,
         ]);
         $middleware->validateCsrfTokens(except: ['webhooks/*']);
         $middleware->redirectGuestsTo(fn (Request $request) => tenant() && ! $request->is('dashboard*', 'pos*') ? route('client.login') : '/');

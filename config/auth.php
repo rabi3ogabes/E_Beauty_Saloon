@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\CRM\Models\Client;
 use App\Models\User;
 
 return [
@@ -75,7 +76,7 @@ return [
 
         'clients' => [
             'driver' => 'eloquent',
-            'model' => App\Domain\CRM\Models\Client::class,
+            'model' => Client::class,
         ],
 
         // 'users' => [

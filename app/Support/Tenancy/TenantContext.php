@@ -4,6 +4,7 @@ namespace App\Support\Tenancy;
 
 use App\Domain\Tenancy\Models\Tenant;
 use Closure;
+use Spatie\Permission\PermissionRegistrar;
 
 /**
  * Holds the tenant (and optionally the branch) the current request / job runs for.
@@ -27,8 +28,8 @@ class TenantContext
         $this->branchId = null;
         $this->allowedBranchIds = null;
 
-        if (class_exists(\Spatie\Permission\PermissionRegistrar::class)) {
-            app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($tenant?->getKey() ?? 0);
+        if (class_exists(PermissionRegistrar::class)) {
+            app(PermissionRegistrar::class)->setPermissionsTeamId($tenant?->getKey() ?? 0);
         }
     }
 
@@ -84,6 +85,7 @@ class TenantContext
      * Run a callback as a given tenant and restore the previous context afterwards.
      *
      * @template T
+     *
      * @param  Closure(): T  $callback
      * @return T
      */

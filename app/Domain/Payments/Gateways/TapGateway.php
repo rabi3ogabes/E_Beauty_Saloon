@@ -49,7 +49,9 @@ class TapGateway extends AbstractGateway
         return new WebhookEvent(
             eventId: (string) ($d['id'] ?? uniqid('tap_')).':'.($d['status'] ?? ''),
             type: 'charge',
-            status: match ($d['status'] ?? '') { 'CAPTURED' => 'succeeded', 'FAILED', 'DECLINED', 'CANCELLED' => 'failed', default => 'pending' },
+            status: match ($d['status'] ?? '') {
+                'CAPTURED' => 'succeeded', 'FAILED', 'DECLINED', 'CANCELLED' => 'failed', default => 'pending'
+            },
             reference: $d['id'] ?? null,
             merchantReference: $d['reference']['transaction'] ?? null,
             amount: isset($d['amount']) ? $this->toMinor($d['amount'], $d['currency'] ?? 'QAR') : null,
@@ -59,7 +61,9 @@ class TapGateway extends AbstractGateway
 
     public function status(string $reference): string
     {
-        return match ($this->http()->get('/charges/'.$reference)->json('status')) { 'CAPTURED' => 'succeeded', 'FAILED', 'DECLINED', 'CANCELLED' => 'failed', default => 'pending' };
+        return match ($this->http()->get('/charges/'.$reference)->json('status')) {
+            'CAPTURED' => 'succeeded', 'FAILED', 'DECLINED', 'CANCELLED' => 'failed', default => 'pending'
+        };
     }
 
     public function refund(string $reference, int $amount, string $currency): bool

@@ -2,6 +2,7 @@
 
 use App\Domain\Branches\Models\Branch;
 use App\Domain\CRM\Models\Client;
+use Illuminate\Support\Facades\Route;
 
 it('never leaks tenant B rows into tenant A queries', function () {
     $a = createTenant(slug: 'alpha');
@@ -42,12 +43,12 @@ it('keeps platform admins out of tenant dashboards and owners out of /admin', fu
 
 it('keeps branch restrictions on tenant routes after tenant re-resolution', function () {
     $tenant = createTenant(slug: 'alpha');
-    $other = asTenant($tenant, fn () => \App\Domain\Branches\Models\Branch::create(['name' => ['en' => 'Second'], 'slug' => 'second']));
-    $main = asTenant($tenant, fn () => \App\Domain\Branches\Models\Branch::where('slug', 'main')->first());
+    $other = asTenant($tenant, fn () => Branch::create(['name' => ['en' => 'Second'], 'slug' => 'second']));
+    $main = asTenant($tenant, fn () => Branch::where('slug', 'main')->first());
     $manager = tenantUser($tenant, 'branch_manager', [$main->id]);
 
-    \Illuminate\Support\Facades\Route::middleware(['web', 'tenant:required', 'auth'])
-        ->get('/__test/branches', fn () => \App\Domain\Branches\Models\Branch::pluck('slug'));
+    Route::middleware(['web', 'tenant:required', 'auth'])
+        ->get('/__test/branches', fn () => Branch::pluck('slug'));
 
     $this->actingAs($manager)->get(tenantUrl($tenant, '__test/branches'))->assertExactJson(['main']);
 });

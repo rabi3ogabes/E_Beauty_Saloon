@@ -33,7 +33,9 @@ class DomainsRelationManager extends RelationManager
                 TextColumn::make('type')->label(__('fields.type'))->badge()->color('gray'),
                 IconColumn::make('is_primary')->label(__('admin.domain.primary'))->boolean(),
                 TextColumn::make('verified_at')->label(__('admin.domain.verified'))->since()->placeholder(__('admin.domain.pending')),
-                TextColumn::make('ssl_status')->label('SSL')->badge()->color(fn ($state) => match ($state) { 'active' => 'success', 'failed' => 'danger', default => 'warning' }),
+                TextColumn::make('ssl_status')->label('SSL')->badge()->color(fn ($state) => match ($state) {
+                    'active' => 'success', 'failed' => 'danger', default => 'warning'
+                }),
                 TextColumn::make('last_error')->label(__('admin.domain.last_check'))->color('gray')->wrap()->placeholder('—'),
             ])
             ->headerActions([

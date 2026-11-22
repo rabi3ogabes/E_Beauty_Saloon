@@ -3,6 +3,7 @@
 use App\Domain\Tenancy\Actions\AddCustomDomain;
 use App\Domain\Tenancy\Domains\DnsResolver;
 use App\Domain\Tenancy\Jobs\VerifyCustomDomain;
+use App\Support\Exceptions\DomainException;
 
 it('serves the salon website on its subdomain and the platform site on the central domain', function () {
     $tenant = createTenant(slug: 'lumiere');
@@ -53,8 +54,8 @@ it('verifies a custom domain through DNS and then serves the tenant there', func
 
 it('rejects invalid, reserved and duplicate domains', function () {
     $tenant = createTenant();
-    expect(fn () => app(AddCustomDomain::class)->handle($tenant, 'not a domain'))->toThrow(\App\Support\Exceptions\DomainException::class)
-        ->and(fn () => app(AddCustomDomain::class)->handle($tenant, 'other.salon.test'))->toThrow(\App\Support\Exceptions\DomainException::class);
+    expect(fn () => app(AddCustomDomain::class)->handle($tenant, 'not a domain'))->toThrow(DomainException::class)
+        ->and(fn () => app(AddCustomDomain::class)->handle($tenant, 'other.salon.test'))->toThrow(DomainException::class);
     app(AddCustomDomain::class)->handle($tenant, 'mine.com');
-    expect(fn () => app(AddCustomDomain::class)->handle(createTenant(), 'mine.com'))->toThrow(\App\Support\Exceptions\DomainException::class);
+    expect(fn () => app(AddCustomDomain::class)->handle(createTenant(), 'mine.com'))->toThrow(DomainException::class);
 });

@@ -56,7 +56,9 @@ class SkipCashGateway extends AbstractGateway
         return new WebhookEvent(
             eventId: (string) ($d['PaymentId'] ?? uniqid('sc_')).':'.($d['StatusId'] ?? ''),
             type: 'payment',
-            status: match ((int) ($d['StatusId'] ?? 0)) { 2 => 'succeeded', 3, 4, 5 => 'failed', 6 => 'refunded', default => 'pending' },
+            status: match ((int) ($d['StatusId'] ?? 0)) {
+                2 => 'succeeded', 3, 4, 5 => 'failed', 6 => 'refunded', default => 'pending'
+            },
             reference: $d['PaymentId'] ?? null,
             merchantReference: $d['TransactionId'] ?? null,
             amount: isset($d['Amount']) ? $this->toMinor($d['Amount'], 'QAR') : null,
@@ -68,7 +70,9 @@ class SkipCashGateway extends AbstractGateway
     {
         $res = Http::withHeaders(['Authorization' => $this->cred('client_id')])->get($this->base().'/api/v1/payments/'.$reference);
 
-        return match ((int) $res->json('resultObj.statusId')) { 2 => 'succeeded', 3, 4, 5 => 'failed', default => 'pending' };
+        return match ((int) $res->json('resultObj.statusId')) {
+            2 => 'succeeded', 3, 4, 5 => 'failed', default => 'pending'
+        };
     }
 
     public function refund(string $reference, int $amount, string $currency): bool

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Inventory\Models;
 
+use App\Domain\Catalog\Models\ProductVariant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,6 +19,6 @@ class PurchaseOrderItem extends Model
 
     public function variant(): BelongsTo
     {
-        return $this->belongsTo(\App\Domain\Catalog\Models\ProductVariant::class, 'product_variant_id');
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 }

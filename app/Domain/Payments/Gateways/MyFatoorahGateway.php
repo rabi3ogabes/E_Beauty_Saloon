@@ -55,7 +55,9 @@ class MyFatoorahGateway extends AbstractGateway
         return new WebhookEvent(
             eventId: (string) ($d['InvoiceId'] ?? '').':'.($d['TransactionStatus'] ?? ''),
             type: (string) $request->input('EventType', 'TransactionsStatusChanged'),
-            status: match ($d['TransactionStatus'] ?? '') { 'SUCCESS' => 'succeeded', 'FAILED', 'CANCELED' => 'failed', default => 'pending' },
+            status: match ($d['TransactionStatus'] ?? '') {
+                'SUCCESS' => 'succeeded', 'FAILED', 'CANCELED' => 'failed', default => 'pending'
+            },
             reference: isset($d['InvoiceId']) ? (string) $d['InvoiceId'] : null,
             merchantReference: $d['CustomerReference'] ?? null,
             raw: $request->all(),
@@ -66,7 +68,9 @@ class MyFatoorahGateway extends AbstractGateway
     {
         $res = $this->http()->post('/GetPaymentStatus', ['Key' => $reference, 'KeyType' => 'InvoiceId']);
 
-        return match ($res->json('Data.InvoiceStatus')) { 'Paid' => 'succeeded', 'Expired', 'Failed' => 'failed', default => 'pending' };
+        return match ($res->json('Data.InvoiceStatus')) {
+            'Paid' => 'succeeded', 'Expired', 'Failed' => 'failed', default => 'pending'
+        };
     }
 
     public function refund(string $reference, int $amount, string $currency): bool

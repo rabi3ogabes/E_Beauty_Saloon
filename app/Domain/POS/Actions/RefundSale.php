@@ -4,6 +4,8 @@ namespace App\Domain\POS\Actions;
 
 use App\Domain\CRM\Models\Client;
 use App\Domain\Inventory\Actions\StockLedger;
+use App\Domain\Loyalty\Actions\LoyaltyLedger;
+use App\Domain\Loyalty\Models\LoyaltyEntry;
 use App\Domain\Payments\Actions\RefundPayment;
 use App\Domain\Payments\Actions\WalletLedger;
 use App\Domain\POS\Enums\SaleStatus;
@@ -142,9 +144,9 @@ class RefundSale
                 $client->forceFill(['lifetime_value' => max(0, $client->lifetime_value - $amount)])->save();
 
                 // Reverse points earned on the refunded share of the sale (proportional for partial refunds).
-                $earned = (int) \App\Domain\Loyalty\Models\LoyaltyEntry::withoutGlobalScopes()->where('idempotency_key', "sale-earn:{$sale->id}")->value('points');
+                $earned = (int) LoyaltyEntry::withoutGlobalScopes()->where('idempotency_key', "sale-earn:{$sale->id}")->value('points');
                 if ($earned > 0 && (int) $sale->total > 0) {
-                    app(\App\Domain\Loyalty\Actions\LoyaltyLedger::class)->reverse($client, (int) floor($earned * $amount / (int) $sale->total), $sale, "sale-reverse:{$refund->id}");
+                    app(LoyaltyLedger::class)->reverse($client, (int) floor($earned * $amount / (int) $sale->total), $sale, "sale-reverse:{$refund->id}");
                 }
             }
 

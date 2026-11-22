@@ -2,10 +2,10 @@
 
 namespace App\Filament\Admin\Resources\Modules;
 
+use App\Domain\Billing\Models\Module;
 use App\Filament\Admin\Resources\Modules\Pages\ManageModules;
 use App\Filament\Support\Money;
 use App\Filament\Support\Translatable;
-use App\Domain\Billing\Models\Module;
 use BackedEnum;
 use Filament\Actions;
 use Filament\Forms\Components;
@@ -14,13 +14,11 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns;
-use Filament\Tables\Filters;
 use Filament\Tables\Table;
-use Filament\Notifications\Notification;
 
 class ModuleResource extends Resource
 {
-    protected static ?string $model = \App\Domain\Billing\Models\Module::class;
+    protected static ?string $model = Module::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
 
@@ -50,7 +48,6 @@ class ModuleResource extends Resource
     {
         return false && static::canViewAny();
     }
-
 
     public static function form(Schema $schema): Schema
     {

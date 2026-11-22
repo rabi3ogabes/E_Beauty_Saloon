@@ -2,6 +2,7 @@
 
 namespace App\Domain\Tenancy\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -21,12 +22,12 @@ class ImpersonationLog extends Model
 
     public function admin(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class, 'admin_user_id');
+        return $this->belongsTo(User::class, 'admin_user_id');
     }
 
     public function impersonated(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class, 'impersonated_user_id');
+        return $this->belongsTo(User::class, 'impersonated_user_id');
     }
 
     public function tenant(): BelongsTo

@@ -1,11 +1,14 @@
 <?php
 
+use App\Domain\Billing\Models\Plan;
+use App\Domain\Tenancy\Models\ImpersonationLog;
+use App\Domain\Tenancy\Models\Tenant;
 use App\Filament\Admin\Resources\Tenants\Pages\CreateTenant;
 use App\Filament\Admin\Resources\Tenants\Pages\ViewTenant;
-use App\Domain\Billing\Models\Plan;
-use App\Domain\Tenancy\Models\Tenant;
+use App\Models\User;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
+use Spatie\Permission\PermissionRegistrar;
 
 beforeEach(function () {
     $this->actingAs(platformAdmin());
@@ -43,12 +46,12 @@ it('starts an impersonation from the tenant page and logs the reason', function 
         ->callAction('impersonate', data: ['reason' => 'Helping with booking setup'])
         ->assertHasNoActionErrors();
 
-    expect(\App\Domain\Tenancy\Models\ImpersonationLog::where('tenant_id', $tenant->id)->value('reason'))->toBe('Helping with booking setup');
+    expect(ImpersonationLog::where('tenant_id', $tenant->id)->value('reason'))->toBe('Helping with booking setup');
 });
 
 it('denies support staff access to billing resources', function () {
-    $support = \App\Models\User::forceCreate(['name' => 'Sam', 'email' => 'sam@luxe.test', 'password' => bcrypt('x'), 'is_platform' => true]);
-    app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId(0);
+    $support = User::forceCreate(['name' => 'Sam', 'email' => 'sam@luxe.test', 'password' => bcrypt('x'), 'is_platform' => true]);
+    app(PermissionRegistrar::class)->setPermissionsTeamId(0);
     $support->assignRole('support');
 
     $this->actingAs($support)->get(centralUrl('admin/tenants'))->assertOk();

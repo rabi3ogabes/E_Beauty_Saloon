@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Domain\CRM\Models\Client;
 use App\Http\Controllers\Controller;
 use App\Support\Account\AccountSections;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ class AccountController extends Controller
             'consents' => ['array'],
         ]);
         $client->update(collect($data)->except('consents')->all());
-        foreach (\App\Domain\CRM\Models\Client::CHANNELS as $channel) {
+        foreach (Client::CHANNELS as $channel) {
             $client->setConsent($channel, in_array($channel, $data['consents'] ?? [], true), 'account', $request->ip());
         }
 

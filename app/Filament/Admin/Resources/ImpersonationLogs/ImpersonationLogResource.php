@@ -2,25 +2,17 @@
 
 namespace App\Filament\Admin\Resources\ImpersonationLogs;
 
-use App\Filament\Admin\Resources\ImpersonationLogs\Pages\ManageImpersonationLogs;
-use App\Filament\Support\Money;
-use App\Filament\Support\Translatable;
 use App\Domain\Tenancy\Models\ImpersonationLog;
+use App\Filament\Admin\Resources\ImpersonationLogs\Pages\ManageImpersonationLogs;
 use BackedEnum;
-use Filament\Actions;
-use Filament\Forms\Components;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns;
-use Filament\Tables\Filters;
 use Filament\Tables\Table;
-use Filament\Notifications\Notification;
 
 class ImpersonationLogResource extends Resource
 {
-    protected static ?string $model = \App\Domain\Tenancy\Models\ImpersonationLog::class;
+    protected static ?string $model = ImpersonationLog::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEye;
 
@@ -50,7 +42,6 @@ class ImpersonationLogResource extends Resource
     {
         return false && static::canViewAny();
     }
-
 
     public static function table(Table $table): Table
     {

@@ -10,6 +10,7 @@ use App\Support\Tenancy\TenantContext;
 use Database\Seeders\PlatformSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Tests\TestCase;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,7 @@ use Illuminate\Support\Str;
 | platform catalog (modules, plans, roles) seeded.
 */
 
-pest()->extend(Tests\TestCase::class)
+pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(function () {
         $this->seed(PlatformSeeder::class);
@@ -27,7 +28,7 @@ pest()->extend(Tests\TestCase::class)
     })
     ->in('Feature', 'Domain');
 
-pest()->extend(Tests\TestCase::class)->in('Unit');
+pest()->extend(TestCase::class)->in('Unit');
 
 /**
  * Create a paid, active salon. $modules are add-ons on top of the plan (default plan: maison = all modules).
