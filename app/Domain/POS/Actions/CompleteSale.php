@@ -76,7 +76,7 @@ class CompleteSale
             if ($shift && ! $offline && ! $shift->isOpen()) {
                 throw new DomainException(__('pos.errors.shift_closed'));
             }
-            $createdAt = ! empty($payload['offline_created_at']) ? CarbonImmutable::parse($payload['offline_created_at']) : CarbonImmutable::now();
+            $createdAt = ! empty($payload['offline_created_at']) ? CarbonImmutable::parse($payload['offline_created_at'])->utc() : CarbonImmutable::now('UTC');
             if ($createdAt->isFuture()) {
                 $createdAt = CarbonImmutable::now();
             }

@@ -45,7 +45,10 @@ class CalculateCommission
 
         $amount = $rule->type === 'fixed' ? $value * (int) $item->qty : (int) round($base * $value / 10000);
 
-        return Commission::withoutGlobalScopes()->create([
+        $commission = new Commission;
+        $commission->timestamps = false; // accrues when the sale happened (offline / back-dated sales)
+
+        $commission->forceFill([
             'tenant_id' => $sale->tenant_id,
             'branch_id' => $sale->branch_id,
             'sale_id' => $sale->id,
@@ -56,7 +59,11 @@ class CalculateCommission
             'amount' => $amount,
             'period' => $period,
             'rule_snapshot' => ['type' => $rule->type, 'value' => $value, 'applies_to' => $rule->applies_to, 'staff_id' => $rule->staff_id, 'target' => $rule->target_type ? class_basename($rule->target_type).'#'.$rule->target_id : null],
-        ]);
+            'created_at' => $sale->completed_at ?? now(),
+            'updated_at' => now(),
+        ])->save();
+
+        return $commission;
     }
 
     public function ruleFor(SaleItem $item, Collection $rules): ?CommissionRule
