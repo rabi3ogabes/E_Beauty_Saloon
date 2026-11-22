@@ -2,10 +2,6 @@
 
 require_once __DIR__.'/PosTestHelpers.php';
 
-// Production-like strictness: catch N+1 / lazy loading in POS code paths.
-beforeEach(fn () => Model::preventLazyLoading());
-afterEach(fn () => Model::preventLazyLoading(false));
-
 use App\Domain\Branches\Models\Branch;
 use App\Domain\POS\Actions\CompleteSale;
 use App\Domain\POS\Actions\OpenShift;
@@ -17,6 +13,10 @@ use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 use Maatwebsite\Excel\Facades\Excel;
+
+// Production-like strictness: catch N+1 / lazy loading in POS code paths.
+beforeEach(fn () => Model::preventLazyLoading());
+afterEach(fn () => Model::preventLazyLoading(false));
 
 it('forbids the POS when the module is disabled', function () {
     $tenant = createTenant('essential'); // no POS

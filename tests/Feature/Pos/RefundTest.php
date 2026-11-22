@@ -2,10 +2,6 @@
 
 require_once __DIR__.'/PosTestHelpers.php';
 
-// Production-like strictness: catch N+1 / lazy loading in POS code paths.
-beforeEach(fn () => Model::preventLazyLoading());
-afterEach(fn () => Model::preventLazyLoading(false));
-
 use App\Domain\Payments\Models\Payment;
 use App\Domain\Payments\Models\WalletTransaction;
 use App\Domain\POS\Actions\CompleteSale;
@@ -19,6 +15,10 @@ use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 use Spatie\Activitylog\Models\Activity;
+
+// Production-like strictness: catch N+1 / lazy loading in POS code paths.
+beforeEach(fn () => Model::preventLazyLoading());
+afterEach(fn () => Model::preventLazyLoading(false));
 
 function productSale(object $s, $cashier = null): Sale
 {

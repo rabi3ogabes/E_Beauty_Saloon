@@ -2,13 +2,13 @@
 
 require_once __DIR__.'/PosTestHelpers.php';
 
-// Production-like strictness: catch N+1 / lazy loading in POS code paths.
-beforeEach(fn () => Model::preventLazyLoading());
-afterEach(fn () => Model::preventLazyLoading(false));
-
 use App\Domain\Payments\Models\Payment;
 use App\Domain\POS\Models\Sale;
 use Illuminate\Database\Eloquent\Model;
+
+// Production-like strictness: catch N+1 / lazy loading in POS code paths.
+beforeEach(fn () => Model::preventLazyLoading());
+afterEach(fn () => Model::preventLazyLoading(false));
 
 function offlineSale(object $s, array $override = []): array
 {

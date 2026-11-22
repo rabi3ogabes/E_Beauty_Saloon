@@ -2,10 +2,6 @@
 
 require_once __DIR__.'/PosTestHelpers.php';
 
-// Production-like strictness: catch N+1 / lazy loading in POS code paths.
-beforeEach(fn () => Model::preventLazyLoading());
-afterEach(fn () => Model::preventLazyLoading(false));
-
 use App\Domain\Booking\Models\Booking;
 use App\Domain\CRM\Models\Client;
 use App\Domain\Payments\Gateways\GatewayManager;
@@ -19,6 +15,10 @@ use App\Filament\Pos\Pages\Terminal;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
+
+// Production-like strictness: catch N+1 / lazy loading in POS code paths.
+beforeEach(fn () => Model::preventLazyLoading());
+afterEach(fn () => Model::preventLazyLoading(false));
 
 beforeEach(function () {
     Filament::setCurrentPanel('pos');

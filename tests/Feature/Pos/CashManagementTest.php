@@ -2,10 +2,6 @@
 
 require_once __DIR__.'/PosTestHelpers.php';
 
-// Production-like strictness: catch N+1 / lazy loading in POS code paths.
-beforeEach(fn () => Model::preventLazyLoading());
-afterEach(fn () => Model::preventLazyLoading(false));
-
 use App\Domain\POS\Actions\CloseShift;
 use App\Domain\POS\Actions\CompleteSale;
 use App\Domain\POS\Actions\OpenShift;
@@ -18,6 +14,10 @@ use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
+
+// Production-like strictness: catch N+1 / lazy loading in POS code paths.
+beforeEach(fn () => Model::preventLazyLoading());
+afterEach(fn () => Model::preventLazyLoading(false));
 
 function cashSale(object $s, int $amountTendered, array $lines): Sale
 {
