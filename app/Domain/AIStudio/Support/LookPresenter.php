@@ -47,7 +47,7 @@ class LookPresenter
             return null;
         }
 
-        return url('/shop/products/'.$variant->product->slug).'?variant='.$variant->id;
+        return url('/shop/p/'.$variant->product->slug).'?variant='.$variant->id;
     }
 
     public static function mediaUrl(ClientLook $look, string $which, int $minutes = 60): string

@@ -12,7 +12,7 @@
         </div>
         <div class="mt-10 grid grid-cols-2 gap-5 md:grid-cols-4">
             @foreach ($products as $product)
-                <a href="{{ url('/shop/products/'.$product->slug) }}" class="card-hover group overflow-hidden" data-reveal>
+                <a href="{{ url('/shop/p/'.$product->slug) }}" class="card-hover group overflow-hidden" data-reveal>
                     <div class="aspect-square bg-gradient-to-br from-ivory to-rose/50">
                         @if ($img = data_get($product->images, 0))
                             <x-site.picture :path="$img" :alt="$product->name" class="h-full w-full object-cover" sizes="(min-width: 768px) 22vw, 45vw" />

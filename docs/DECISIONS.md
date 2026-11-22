@@ -48,3 +48,10 @@ Append-only log. Newest last.
 19. **Marketing**: platform message prices + shared sender credentials in `platform_message_channels`; tenant channel
     credentials encrypted in `tenant_channel_settings`; quiet hours in `settings.marketing.quiet_hours`; loyalty/referral
     rules in `settings.loyalty.*`. Loyalty points for bookings use idempotency key `loyalty:booking:{id}`.
+20. **AI Studio**: provider router (own keys → task preference → priority/cost/latency/health) with automatic fallback;
+    credits charged only on success; env keys prefixed `AI_` to avoid leaking host variables. Web push sending and real
+    content moderation sit behind interfaces (`WebPushSender`, `ModeratesContent`) with safe defaults.
+21. **Websites**: themes are Blade + CSS variables (no build per tenant); `/sitemap.xml` and `/robots.txt` are dynamic
+    for both central and tenant hosts; salon custom pages live at `/pages/{slug}`.
+22. **POS ↔ Marketing**: `SellableRegistry::register(..., onSold:)` lets modules fulfil items sold at the POS (packages
+    create active client packages).
