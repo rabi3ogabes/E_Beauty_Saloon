@@ -359,17 +359,17 @@ class MockBookingRepository implements BookingRepository {
   }
 
   @override
-  Future<Booking> cancel(int id, {String? reason}) async {
+  Future<Booking> cancel(Booking booking, {String? reason}) async {
     await _latency(latency);
-    final i = _bookings.indexWhere((b) => b.id == id);
+    final i = _bookings.indexWhere((b) => b.id == booking.id);
     if (i < 0) throw const ApiException(kind: ApiErrorKind.notFound, message: 'Booking not found', statusCode: 404);
     return _bookings[i] = _bookings[i].copyWith(status: BookingStatus.cancelled);
   }
 
   @override
-  Future<Booking> reschedule(int id, DateTime startsAt) async {
+  Future<Booking> reschedule(Booking booking, DateTime startsAt) async {
     await _latency(latency);
-    final i = _bookings.indexWhere((b) => b.id == id);
+    final i = _bookings.indexWhere((b) => b.id == booking.id);
     if (i < 0) throw const ApiException(kind: ApiErrorKind.notFound, message: 'Booking not found', statusCode: 404);
     final b = _bookings[i];
     return _bookings[i] = b.copyWith(startsAt: startsAt, endsAt: startsAt.add(b.endsAt.difference(b.startsAt)));
@@ -391,7 +391,13 @@ class MockShopRepository implements ShopRepository {
   }
 
   @override
-  Future<Order> placeOrder({required List<CartLine> lines, required Fulfilment fulfilment, int? branchId, String? address}) async {
+  Future<Order> placeOrder({
+    required List<CartLine> lines,
+    required Fulfilment fulfilment,
+    int? branchId,
+    String? address,
+    String? paymentMethod,
+  }) async {
     await _latency(600);
     final total = lines.fold<Money>(Money.zero(MockData.currency), (sum, l) => sum + l.total);
     return Order(id: 901, reference: 'ORD-901', status: 'pending_payment', total: total);

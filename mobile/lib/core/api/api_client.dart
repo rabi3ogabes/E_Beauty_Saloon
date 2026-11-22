@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 
 import '../storage/key_value_store.dart';
@@ -42,8 +44,16 @@ class ApiClient {
 
   Future<dynamic> get(String path, {Map<String, dynamic>? query}) => _guard(() => dio.get<dynamic>(path, queryParameters: _clean(query)));
 
-  Future<dynamic> post(String path, {Object? data, Map<String, dynamic>? query}) =>
-      _guard(() => dio.post<dynamic>(path, data: data, queryParameters: _clean(query)));
+  /// [idempotencyKey] is sent as `Idempotency-Key`: the backend replays the first response on retries
+  /// (POST /bookings, /shop/orders, purchases), so a flaky network never books twice.
+  Future<dynamic> post(String path, {Object? data, Map<String, dynamic>? query, String? idempotencyKey}) => _guard(
+    () => dio.post<dynamic>(
+      path,
+      data: data,
+      queryParameters: _clean(query),
+      options: idempotencyKey == null ? null : Options(headers: {'Idempotency-Key': idempotencyKey}),
+    ),
+  );
 
   Future<dynamic> patch(String path, {Object? data}) => _guard(() => dio.patch<dynamic>(path, data: data));
 
@@ -81,6 +91,12 @@ class ApiClient {
 }
 
 /// Unwraps Laravel's `{data: ...}` resource envelope.
+/// Random 128-bit hex key for `Idempotency-Key` (one per user action, reused on retry).
+String newIdempotencyKey() {
+  final r = Random.secure();
+  return List.generate(16, (_) => r.nextInt(256).toRadixString(16).padLeft(2, '0')).join();
+}
+
 dynamic unwrapData(dynamic body) => body is Map && body.containsKey('data') ? body['data'] : body;
 
 List<Map<String, dynamic>> unwrapList(dynamic body) {

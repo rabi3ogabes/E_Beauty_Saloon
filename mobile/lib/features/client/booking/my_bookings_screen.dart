@@ -191,7 +191,7 @@ class BookingCard extends ConsumerWidget {
     );
     if (ok != true) return;
     try {
-      await ref.read(bookingRepositoryProvider).cancel(booking.id);
+      await ref.read(bookingRepositoryProvider).cancel(booking);
       Haptics.success();
       ref.invalidate(myBookingsProvider);
       if (context.mounted) context.showSnack(l10n.bookingCancelled);
@@ -243,7 +243,7 @@ class _RescheduleSheetState extends ConsumerState<RescheduleSheet> {
     if (_slot == null) return;
     setState(() => _busy = true);
     try {
-      await ref.read(bookingRepositoryProvider).reschedule(widget.booking.id, _slot!.startsAt);
+      await ref.read(bookingRepositoryProvider).reschedule(widget.booking, _slot!.startsAt);
       Haptics.success();
       if (mounted) Navigator.pop(context, true);
     } catch (e) {

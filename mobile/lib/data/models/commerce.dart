@@ -1,12 +1,14 @@
 import '../../core/money/money.dart';
 import 'json.dart';
 
-/// `GET /products` — TODO(backend): shop endpoints in progress.
+/// `GET /shop/products`, `GET /shop/products/{id|slug}` (ShopApiController).
 class Product {
   const Product({
     required this.id,
     required this.name,
     required this.price,
+    this.slug,
+    this.defaultVariantId,
     this.brand,
     this.description,
     this.imageUrl,
@@ -14,18 +16,29 @@ class Product {
     this.originalPrice,
   });
 
-  factory Product.fromJson(Json j) => Product(
-    id: asInt(j['id']),
-    name: asString(j['name']),
-    brand: asStringOrNull(j['brand']),
-    description: asStringOrNull(j['description']),
-    price: Money.fromJson(j['price']),
-    originalPrice: j['original_price'] == null ? null : Money.fromJson(j['original_price']),
-    imageUrl: asStringOrNull(j['image_url']),
-    inStock: asBool(j['in_stock'], true),
-  );
+  factory Product.fromJson(Json j) {
+    final currency = asStringOrNull(j['currency']) ?? 'QAR';
+    final variants = asJsonList(j['variants']);
+    return Product(
+      id: asInt(j['id']),
+      slug: asStringOrNull(j['slug']),
+      name: asString(j['name']),
+      brand: asStringOrNull(j['brand']),
+      description: asStringOrNull(j['description']),
+      // `price` is Money; `price_from` (minor units) is the legacy field.
+      price: Money.fromJson(j['price'] ?? j['price_from'], fallbackCurrency: currency),
+      originalPrice: j['original_price'] == null ? null : Money.fromJson(j['original_price'], fallbackCurrency: currency),
+      imageUrl: asStringOrNull(j['image_url'] ?? j['image']),
+      defaultVariantId: asIntOrNull(j['default_variant_id']) ?? (variants.isEmpty ? null : asIntOrNull(variants.first['id'])),
+      inStock: asBool(j['in_stock'], true),
+    );
+  }
 
   final int id;
+  final String? slug;
+
+  /// Variant added to the cart / order (`items[].variant_id`).
+  final int? defaultVariantId;
   final String name;
   final String? brand;
   final String? description;
@@ -48,7 +61,7 @@ class CartLine {
 
 enum Fulfilment { delivery, pickup }
 
-/// `POST /orders` response.
+/// `POST /shop/orders` response.
 class Order {
   const Order({required this.id, required this.total, this.reference, this.status, this.checkoutUrl});
 
@@ -56,9 +69,9 @@ class Order {
     final payment = asJson(j['payment']);
     return Order(
       id: asInt(j['id']),
-      reference: asStringOrNull(j['reference']),
+      reference: asStringOrNull(j['reference'] ?? j['number']),
       status: asStringOrNull(j['status']),
-      total: Money.fromJson(j['total']),
+      total: Money.fromJson(j['total'], fallbackCurrency: asStringOrNull(j['currency']) ?? 'QAR'),
       checkoutUrl: asStringOrNull(j['checkout_url'] ?? payment['checkout_url']),
     );
   }

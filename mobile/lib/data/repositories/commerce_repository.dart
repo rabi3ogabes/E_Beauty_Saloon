@@ -7,11 +7,21 @@ import '../models/catalog.dart';
 import '../models/commerce.dart';
 import '../models/studio.dart';
 
-/// Shop & packages — TODO(backend): `GET /products`, `POST /orders`, `GET /packages` in progress.
+/// Shop & packages — live: `routes/api/shop.php` (`/shop/products`, `/shop/orders`) and
+/// `routes/api/marketing.php` (`/packages`).
 abstract class ShopRepository {
   Future<List<Product>> products({String? query});
   Future<Product> product(int id);
-  Future<Order> placeOrder({required List<CartLine> lines, required Fulfilment fulfilment, int? branchId, String? address});
+
+  /// [paymentMethod]: `online` (hosted page → [Order.checkoutUrl]) or null for the salon default
+  /// (cash on delivery / pay at pickup).
+  Future<Order> placeOrder({
+    required List<CartLine> lines,
+    required Fulfilment fulfilment,
+    int? branchId,
+    String? address,
+    String? paymentMethod,
+  });
   Future<List<SalonPackage>> packages();
 }
 
@@ -22,23 +32,32 @@ class ApiShopRepository implements ShopRepository {
 
   @override
   Future<List<Product>> products({String? query}) async =>
-      unwrapList(await _api.get('/products', query: {'q': query})).map(Product.fromJson).toList();
+      unwrapList(await _api.get('/shop/products', query: {'q': query})).map(Product.fromJson).toList();
+
+  /// The API resolves a numeric id as well as a slug.
+  @override
+  Future<Product> product(int id) async => Product.fromJson(unwrapMap(await _api.get('/shop/products/$id')));
 
   @override
-  Future<Product> product(int id) async => Product.fromJson(unwrapMap(await _api.get('/products/$id')));
-
-  @override
-  Future<Order> placeOrder({required List<CartLine> lines, required Fulfilment fulfilment, int? branchId, String? address}) async {
+  Future<Order> placeOrder({
+    required List<CartLine> lines,
+    required Fulfilment fulfilment,
+    int? branchId,
+    String? address,
+    String? paymentMethod,
+  }) async {
     final body = await _api.post(
-      '/orders',
+      '/shop/orders',
       data: {
         'items': [
-          for (final l in lines) {'product_id': l.product.id, 'quantity': l.quantity},
+          for (final l in lines) {'variant_id': l.product.defaultVariantId ?? l.product.id, 'qty': l.quantity},
         ],
         'fulfilment': fulfilment.name,
         'branch_id': ?branchId,
         'address': ?address,
+        'payment_method': ?paymentMethod,
       },
+      idempotencyKey: newIdempotencyKey(),
     );
     return Order.fromJson(unwrapMap(body));
   }

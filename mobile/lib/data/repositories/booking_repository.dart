@@ -32,24 +32,24 @@ class AvailabilityQuery {
   }
 }
 
-/// Booking engine — TODO(backend): availability & bookings endpoints are being
-/// built in parallel. [ApiBookingRepository] codes against the agreed contract;
-/// [MockBookingRepository] (lib/data/mock) is used until `MOCK_PENDING_APIS=false`.
+/// Booking engine — live (`routes/api/booking.php`, module `booking`). Bookings are addressed by
+/// their `reference` (e.g. `K7Q2XM`), never by database id.
 abstract class BookingRepository {
   /// `GET /availability?branch_id&services[]&staff_id&date`
   Future<Availability> availability(AvailabilityQuery query);
 
-  /// `POST /bookings`
+  /// `POST /bookings` (with `Idempotency-Key`). For deposit/full the booking is `pending_payment`
+  /// and `payment.checkout_url` is the hosted payment page.
   Future<Booking> create(BookingRequest request);
 
   /// `GET /bookings`
   Future<List<Booking>> list();
 
-  /// `POST /bookings/{id}/cancel`
-  Future<Booking> cancel(int id, {String? reason});
+  /// `POST /bookings/{reference}/cancel`
+  Future<Booking> cancel(Booking booking, {String? reason});
 
-  /// `POST /bookings/{id}/reschedule`
-  Future<Booking> reschedule(int id, DateTime startsAt);
+  /// `POST /bookings/{reference}/reschedule`
+  Future<Booking> reschedule(Booking booking, DateTime startsAt);
 }
 
 class ApiBookingRepository implements BookingRepository {
@@ -72,18 +72,23 @@ class ApiBookingRepository implements BookingRepository {
   }
 
   @override
-  Future<Booking> create(BookingRequest request) async => Booking.fromJson(unwrapMap(await _api.post('/bookings', data: request.toJson())));
+  Future<Booking> create(BookingRequest request) async => Booking.fromJson(
+    unwrapMap(await _api.post('/bookings', data: request.toJson(), idempotencyKey: request.idempotencyKey ?? newIdempotencyKey())),
+  );
 
   @override
-  Future<List<Booking>> list() async => unwrapList(await _api.get('/bookings')).map(Booking.fromJson).toList();
+  Future<List<Booking>> list() async => unwrapList(await _api.get('/bookings', query: {'per_page': 50})).map(Booking.fromJson).toList();
 
   @override
-  Future<Booking> cancel(int id, {String? reason}) async =>
-      Booking.fromJson(unwrapMap(await _api.post('/bookings/$id/cancel', data: {'reason': ?reason})));
+  Future<Booking> cancel(Booking booking, {String? reason}) async =>
+      Booking.fromJson(unwrapMap(await _api.post('/bookings/${_ref(booking)}/cancel', data: {'reason': ?reason})));
 
   @override
-  Future<Booking> reschedule(int id, DateTime startsAt) async =>
-      Booking.fromJson(unwrapMap(await _api.post('/bookings/$id/reschedule', data: {'starts_at': startsAt.toIso8601String()})));
+  Future<Booking> reschedule(Booking booking, DateTime startsAt) async => Booking.fromJson(
+    unwrapMap(await _api.post('/bookings/${_ref(booking)}/reschedule', data: {'starts_at': startsAt.toUtc().toIso8601String()})),
+  );
+
+  static String _ref(Booking b) => Uri.encodeComponent(b.reference ?? '${b.id}');
 }
 
 /// Helper so UI code can build the date param consistently.

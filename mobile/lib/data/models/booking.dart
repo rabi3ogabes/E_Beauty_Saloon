@@ -35,7 +35,7 @@ class TimeSlot {
   int get hashCode => Object.hash(startsAt, endsAt);
 }
 
-/// `GET /availability` — TODO(backend): endpoint in progress.
+/// `GET /availability` (`App\Domain\Api\Support\AvailabilityPresenter`).
 class Availability {
   const Availability({required this.date, required this.groups, this.nextAvailableDate});
 
@@ -95,6 +95,7 @@ class BookingRequest {
     required this.startsAt,
     required this.paymentPreference,
     this.notes,
+    this.idempotencyKey,
   });
 
   final int branchId;
@@ -103,10 +104,13 @@ class BookingRequest {
   final PaymentPreference paymentPreference;
   final String? notes;
 
+  /// Sent as the `Idempotency-Key` header; keep it stable while retrying the same submission.
+  final String? idempotencyKey;
+
   Json toJson() => {
     'branch_id': branchId,
     'items': items.map((i) => i.toJson()).toList(),
-    'starts_at': startsAt.toIso8601String(),
+    'starts_at': startsAt.toUtc().toIso8601String(),
     'payment_preference': paymentPreference.wire,
     if (notes != null && notes!.trim().isNotEmpty) 'notes': notes!.trim(),
   };
@@ -159,17 +163,19 @@ class BookingPayment {
 
 enum BookingStatus { pending, confirmed, checkedIn, completed, cancelled, noShow, unknown }
 
+/// Backend values: pending_payment, confirmed, checked_in, in_service, completed, no_show,
+/// cancelled_by_client, cancelled_by_salon (`App\Domain\Booking\Enums\BookingStatus`).
 BookingStatus bookingStatusFrom(String? s) => switch (s) {
-  'pending' || 'awaiting_payment' => BookingStatus.pending,
+  'pending' || 'awaiting_payment' || 'pending_payment' => BookingStatus.pending,
   'confirmed' => BookingStatus.confirmed,
-  'checked_in' || 'in_progress' => BookingStatus.checkedIn,
+  'checked_in' || 'in_progress' || 'in_service' => BookingStatus.checkedIn,
   'completed' => BookingStatus.completed,
-  'cancelled' || 'canceled' => BookingStatus.cancelled,
+  'cancelled' || 'canceled' || 'cancelled_by_client' || 'cancelled_by_salon' => BookingStatus.cancelled,
   'no_show' => BookingStatus.noShow,
   _ => BookingStatus.unknown,
 };
 
-/// Booking resource — TODO(backend): contract from the bookings engineer, may evolve.
+/// `App\Http\Resources\V1\BookingResource`.
 class Booking {
   const Booking({
     required this.id,
