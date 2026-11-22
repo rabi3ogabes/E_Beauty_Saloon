@@ -10,6 +10,8 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/css/filament/admin/theme.css',
                 'resources/js/shop.js',
+                'resources/css/pos.css',
+                'resources/js/pos-offline.js',
             ],
             refresh: true,
         }),
