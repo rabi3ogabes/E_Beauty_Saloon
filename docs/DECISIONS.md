@@ -55,3 +55,12 @@ Append-only log. Newest last.
     for both central and tenant hosts; salon custom pages live at `/pages/{slug}`.
 22. **POS ↔ Marketing**: `SellableRegistry::register(..., onSold:)` lets modules fulfil items sold at the POS (packages
     create active client packages).
+23. **Mobile API (Phase 10)** lives in `app/Domain/Api` + `Api/V1` controllers and only orchestrates other modules'
+    Actions. One Sanctum guard for three apps: token *abilities* (`client` / `staff` / `owner`) + model type are checked
+    by `api.actor:*`, which also applies the team member's branch restrictions. Staff/owner sign in with the dashboard
+    password and the same Filament app-MFA secret/recovery codes. Errors share one envelope
+    (`ApiResponseEnvelope`, prepended to the `api` group so priority-sorted auth middleware is covered too).
+    `Idempotency-Key` replays are stored per tenant + actor in `api_idempotency_keys` (24 h, 2xx only). Push tokens live
+    in `client_devices` (unique per tenant) and feed `MarketingMessenger::resolvePushTokenUsing()`. AI Studio photos
+    for the app are served from a relative-signed API route on the salon host (image loaders cannot send `X-Tenant`).
+    Owner KPIs are a deliberately small query service (`TodayKpis`), not the reporting engine.

@@ -33,11 +33,24 @@ class ApiResponseEnvelope
         if (isset($body['error']['code'])) {
             return $response;
         }
-        $body['message'] = (string) (($body['message'] ?? '') ?: __('api.errors.'.$this->code($status, $body)));
-        $body['error'] = ['code' => $body['code'] ?? $this->code($status, $body), 'status' => $status];
+        $code = $body['code'] ?? $this->code($status, $body);
+        $message = (string) ($body['message'] ?? '');
+        // Framework defaults are English-only (and 404s name the model class): use our translated text.
+        if ($message === '' || $this->isFrameworkDefault($message)) {
+            $message = __('api.errors.'.$this->code($status, $body));
+        }
+        $body['message'] = $message;
+        $body['error'] = ['code' => $code, 'status' => $status];
         unset($body['code']);
 
         return $response->setData($body);
+    }
+
+    protected function isFrameworkDefault(string $message): bool
+    {
+        return in_array($message, ['Unauthenticated.', 'This action is unauthorized.', 'Not Found', 'Too Many Attempts.', 'Server Error', 'Forbidden', 'Method Not Allowed', 'Invalid signature.'], true)
+            || str_starts_with($message, 'No query results for model')
+            || str_starts_with($message, 'The route ');
     }
 
     protected function code(int $status, array $body): string
