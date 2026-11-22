@@ -1,9 +1,11 @@
 # Luxe Salon OS — mobile API (v1)
 
 Base: `https://{salon-domain}/api/v1` or the platform domain with `X-Tenant: {salon-slug}`.
-Reference: `php artisan scribe:generate` → `public/docs` (static HTML, served at `/docs`) + `public/docs/collection.json`
-(Postman) + `public/docs/openapi.yaml`. A hand-maintained Postman collection lives next to this file:
-`docs/api/luxe-salon-api.postman_collection.json`.
+Reference: `php artisan scribe:generate` → `public/docs` (static HTML ≈ 1 MB, served at `/docs`; generated, not committed —
+run it against a seeded database so GET examples are real) + `public/docs/collection.json`
+(Postman) + `public/docs/openapi.yaml`. Snapshots of both are committed next to this file:
+`docs/api/luxe-salon-api.postman_collection.json` (import into Postman; set `baseUrl`, `X-Tenant` and the Bearer token) and
+`docs/api/openapi.yaml`. Regenerate and copy them when endpoints change.
 
 ## Conventions
 

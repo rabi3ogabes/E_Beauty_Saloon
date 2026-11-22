@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
  * @group Salon catalog
  *
  * Public, cacheable salon information (ETag supported).
+ *
+ * @unauthenticated
  */
 class CatalogController extends Controller
 {
