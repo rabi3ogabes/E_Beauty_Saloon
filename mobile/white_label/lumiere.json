@@ -1,0 +1,21 @@
+{
+  "tenant": "lumiere",
+  "appName": "Maison Lumière",
+  "bundleId": "app.luxesalon.lumiere",
+  "apiBaseUrl": "https://lumiere.luxesalon.app",
+  "defaultLocale": "en",
+  "colors": {
+    "primary": "#C8A96A",
+    "primaryDark": "#A88B4F",
+    "accent": "#E9D6CF",
+    "ink": "#1C1A17",
+    "background": "#FAF7F2"
+  },
+  "splashColor": "#FAF7F2",
+  "splashColorDark": "#141014",
+  "logo": "white_label/assets/lumiere/logo.png",
+  "icon": "white_label/assets/lumiere/icon.png",
+  "iconForeground": "white_label/assets/lumiere/icon_foreground.png",
+  "iconBackground": "#FAF7F2",
+  "supportWhatsapp": "97444000000"
+}
