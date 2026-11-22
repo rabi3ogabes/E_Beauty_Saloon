@@ -1,5 +1,4 @@
-  final flavor = ref.watch(flavorProvider);
-  return _mockLive ?const bool _mockLive = Env.demoMode;import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';

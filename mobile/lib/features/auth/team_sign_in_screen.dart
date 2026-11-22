@@ -49,7 +49,10 @@ class _TeamSignInScreenState extends ConsumerState<TeamSignInScreen> {
   }
 
   bool get _valid =>
-      _salon.text.trim().isNotEmpty && _email.text.contains('@') && _password.text.isNotEmpty && (!_needsCode || _code.text.trim().length >= 6);
+      _salon.text.trim().isNotEmpty &&
+      _email.text.contains('@') &&
+      _password.text.isNotEmpty &&
+      (!_needsCode || _code.text.trim().length >= 6);
 
   Future<void> _submit() async {
     if (!_valid || _busy) return;
@@ -101,7 +104,11 @@ class _TeamSignInScreenState extends ConsumerState<TeamSignInScreen> {
               const SizedBox(height: 28),
               Text(l10n.signInTitle, style: text.headlineMedium, textAlign: TextAlign.center),
               const SizedBox(height: 10),
-              Text(l10n.teamSignInSubtitle, style: text.bodyMedium?.copyWith(color: tokens.muted), textAlign: TextAlign.center),
+              Text(
+                l10n.teamSignInSubtitle,
+                style: text.bodyMedium?.copyWith(color: tokens.muted),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 32),
               TextField(
                 controller: _salon,

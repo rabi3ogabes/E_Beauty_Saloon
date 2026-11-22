@@ -35,8 +35,12 @@ class FakeAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<AuthResult> signInWithPassword({required String email, required String password, String? code, required String deviceName}) async =>
-      const AuthResult(token: 'tok-team');
+  Future<AuthResult> signInWithPassword({
+    required String email,
+    required String password,
+    String? code,
+    required String deviceName,
+  }) async => const AuthResult(token: 'tok-team');
 
   @override
   Future<void> logout() async {}

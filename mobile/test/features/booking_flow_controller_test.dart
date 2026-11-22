@@ -101,7 +101,7 @@ void main() {
     expect(state().result?.id, booking!.id);
     final body = bookings.requests.single.toJson();
     expect(body['branch_id'], 1);
-    expect(body['starts_at'], '2026-11-23T16:30:00.000');
+    expect(body['starts_at'], DateTime(2026, 11, 23, 16, 30).toUtc().toIso8601String());
     expect(body['payment_preference'], 'full');
     expect(body['notes'], 'Low heat please');
     expect(body['items'], [
