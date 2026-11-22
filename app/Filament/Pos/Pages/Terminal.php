@@ -166,6 +166,12 @@ class Terminal extends Page
         $this->openingFloat = Money::of((int) ($this->register?->default_float ?? 0), $this->currency())->toDecimal();
     }
 
+    /** Actions mutate the ticket after totals were read; always render fresh numbers. */
+    public function rendering(): void
+    {
+        unset($this->totals, $this->quickCash, $this->client, $this->onlinePayment);
+    }
+
     // ───────────────────────────── Register & shift ─────────────────────────────
 
     #[Computed]

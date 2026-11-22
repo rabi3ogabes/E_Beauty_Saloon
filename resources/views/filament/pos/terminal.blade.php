@@ -13,7 +13,7 @@
         focusSearch() { this.$refs.search?.focus(); this.$refs.search?.select(); },
         onKey(e) {
             const typing = ['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName);
-            if (e.key === 'Escape') { $wire.closeModal(); return; }
+            if (e.key === 'Escape') { if ($wire.modal) $wire.closeModal(); return; }
             if (e.key === 'F2' || (e.key === '/' && ! typing)) { e.preventDefault(); this.focusSearch(); }
             if (e.key === 'F4') { e.preventDefault(); $wire.tenderCash(); }
             if (e.key === 'F6') { e.preventDefault(); $wire.openModal('bookings'); }
@@ -79,8 +79,8 @@
                         <x-filament::icon icon="heroicon-o-arrows-right-left" />
                     </button>
                     <button type="button" class="pos-icon-btn" x-on:click="toggleTheme()" title="{{ __('pos.theme') }}" aria-label="{{ __('pos.theme') }}">
-                        <x-filament::icon icon="heroicon-o-moon" class="dark:hidden" />
-                        <x-filament::icon icon="heroicon-o-sun" class="hidden dark:block" />
+                        <span x-show="$store.theme !== 'dark'"><x-filament::icon icon="heroicon-o-moon" /></span>
+                        <span x-show="$store.theme === 'dark'" x-cloak><x-filament::icon icon="heroicon-o-sun" /></span>
                     </button>
                 </div>
 
@@ -101,7 +101,7 @@
                 @endif
 
                 {{-- Skeletons while the catalog changes --}}
-                <div class="pos-tiles" wire:loading.delay.grid wire:target="setTab,search,categoryId">
+                <div class="pos-tiles hidden" wire:loading.delay.grid wire:target="setTab,search,categoryId" aria-hidden="true">
                     @for ($i = 0; $i < 8; $i++)<div class="pos-skeleton"></div>@endfor
                 </div>
 
@@ -304,7 +304,7 @@
                         <div class="pos-modal-head"><h2>{{ __('pos.client.title') }}</h2><button type="button" class="pos-icon-btn" wire:click="closeModal" aria-label="{{ __('salon.ui.cancel') }}"><x-filament::icon icon="heroicon-o-x-mark" /></button></div>
                         <div class="pos-stack">
                             <input class="pos-input" autofocus placeholder="{{ __('pos.client.search') }}" wire:model.live.debounce.250ms="clientSearch">
-                            <div wire:loading.delay wire:target="clientSearch" class="pos-stack">
+                            <div wire:loading.delay.grid wire:target="clientSearch" class="pos-stack hidden">
                                 <div class="pos-skeleton" style="min-height: 56px"></div><div class="pos-skeleton" style="min-height: 56px"></div>
                             </div>
                             <div wire:loading.remove wire:target="clientSearch" class="pos-stack">

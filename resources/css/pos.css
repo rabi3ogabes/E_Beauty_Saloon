@@ -20,9 +20,12 @@
     align-items: start;
 }
 
-@media (min-width: 900px) {
-    .pos-grid { grid-template-columns: minmax(0, 1fr) minmax(360px, 440px); }
-    .pos-ticket { position: sticky; top: 76px; max-height: calc(100vh - 92px); }
+@media (min-width: 760px) {
+    .pos-grid { grid-template-columns: minmax(0, 1fr) minmax(300px, 340px); }
+    .pos-ticket { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow-y: auto; overscroll-behavior: contain; }
+}
+@media (min-width: 1100px) {
+    .pos-grid { grid-template-columns: minmax(0, 1fr) minmax(380px, 440px); }
 }
 
 .pos-card {
@@ -77,7 +80,7 @@ select.pos-input { padding-inline-end: 32px; }
 .pos-pill-status { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border-radius: 999px; font-size: .8rem; font-weight: 600; background: color-mix(in srgb, #c48a3a 16%, transparent); color: #9a6a2a; }
 
 /* Catalog tiles */
-.pos-tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); margin-top: 12px; }
+.pos-tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); margin-top: 12px; }
 .pos-tile {
     position: relative; min-height: 104px; text-align: start; display: flex; flex-direction: column; justify-content: space-between; gap: 8px;
     padding: 14px; border-radius: var(--pos-radius); border: 1px solid var(--luxe-line, #ece6dd); background: var(--luxe-surface, #fff);
@@ -102,10 +105,11 @@ select.pos-input { padding-inline-end: 32px; }
 @keyframes pos-shimmer-rtl { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
 /* Ticket */
-.pos-ticket { display: flex; flex-direction: column; gap: 12px; overflow: hidden; padding: 0; }
+.pos-ticket { display: flex; flex-direction: column; padding: 0; }
+.pos-ticket > * { flex-shrink: 0; }
 .pos-ticket-section { padding: 14px 16px; }
 .pos-ticket-section + .pos-ticket-section { border-top: 1px solid var(--luxe-line, #ece6dd); }
-.pos-ticket-lines { overflow-y: auto; flex: 1 1 auto; min-height: 120px; }
+.pos-ticket-lines { min-height: 120px; }
 .pos-client { display: flex; align-items: center; gap: 12px; }
 .pos-avatar { width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; background: var(--luxe-rose, #e9d6cf); color: #1c1a17; font-weight: 700; flex: none; }
 .pos-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; padding: 10px 0; border-bottom: 1px dashed var(--luxe-line, #ece6dd); align-items: center; }
@@ -168,3 +172,7 @@ select.pos-input { padding-inline-end: 32px; }
 @media (prefers-reduced-motion: reduce) {
     .pos-shell *, .pos-modal, .pos-modal-backdrop { animation: none !important; transition: none !important; }
 }
+
+/* Utility `hidden` must win over the component display rules above (Livewire's wire:loading sets an inline display). */
+.pos-shell .hidden { display: none; }
+.pos-keypad button.pos-gold { background: var(--luxe-gold, #c8a96a); color: #1c1a17; border-color: var(--luxe-gold, #c8a96a); }
