@@ -13,6 +13,15 @@ class Dashboard extends BaseDashboard
 {
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedSparkles;
 
+    public function mount(): void
+    {
+        // First login of the owner: finish the onboarding wizard before the command center.
+        // Client-side redirect keeps the dashboard response itself a 200 (health checks, support sessions).
+        if (tenant() && tenant()->onboarded_at === null && Onboarding::canAccess()) {
+            $this->js('window.location.replace('.json_encode(Onboarding::getUrl(), JSON_UNESCAPED_SLASHES).')');
+        }
+    }
+
     public static function getNavigationLabel(): string
     {
         return __('salon.nav.today');
