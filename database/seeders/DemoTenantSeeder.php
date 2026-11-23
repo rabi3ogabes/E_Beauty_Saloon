@@ -30,7 +30,13 @@ class DemoTenantSeeder extends Seeder
 {
     public function run(): void
     {
-        if (Tenant::where('slug', 'lumiere')->exists()) {
+        $existing = Tenant::where('slug', 'lumiere')->first();
+        if ($existing && $existing->branches()->exists()) {
+            return;
+        }
+        if ($existing) { // a previous run stopped half-way: finish seeding it
+            app(TenantContext::class)->run($existing, fn () => $this->seedTenant($existing));
+
             return;
         }
 

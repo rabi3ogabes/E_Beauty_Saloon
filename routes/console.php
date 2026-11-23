@@ -1,8 +1,11 @@
 <?php
 
 use App\Domain\Billing\Jobs\ProcessSubscriptionLifecycle;
+use App\Domain\Branches\Models\Branch;
 use App\Domain\Tenancy\Jobs\VerifyCustomDomain;
 use App\Domain\Tenancy\Models\Domain;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schedule;
 
 // Billing: reminders (7/3/1 days), renewal invoices, grace, suspension.
@@ -27,11 +30,12 @@ Schedule::command('backup:run')->dailyAt('02:00')->onOneServer();
 Schedule::command('backup:monitor')->dailyAt('08:00')->onOneServer();
 
 // First-install seeding for hosted deploys: seeds the platform catalog + demo salon only once.
-\Illuminate\Support\Facades\Artisan::command('app:seed-once', function () {
-    if (\App\Domain\Billing\Models\Plan::query()->exists()) {
+Artisan::command('app:seed-once', function () {
+    if (Branch::withoutGlobalScopes()->exists()) {
         $this->info('Already seeded — skipping.');
 
         return;
     }
-    $this->call('db:seed', ['--force' => true]);
+    // One transaction: a failure leaves nothing half-seeded, so the next deploy simply tries again.
+    DB::transaction(fn () => $this->call('db:seed', ['--force' => true]));
 })->purpose('Seed the database on the first deploy only');
