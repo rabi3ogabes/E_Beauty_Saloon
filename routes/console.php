@@ -31,6 +31,12 @@ Schedule::command('backup:monitor')->dailyAt('08:00')->onOneServer();
 
 // First-install seeding for hosted deploys: seeds the platform catalog + demo salon only once.
 Artisan::command('app:seed-once', function () {
+    if (blank(config('app.key'))) {
+        // Hosts that write APP_KEY when a release goes live: seed on the next deploy instead of failing this one.
+        $this->warn('No APP_KEY yet — seeding will run on the next deploy.');
+
+        return;
+    }
     if (Branch::withoutGlobalScopes()->exists()) {
         $this->info('Already seeded — skipping.');
 
