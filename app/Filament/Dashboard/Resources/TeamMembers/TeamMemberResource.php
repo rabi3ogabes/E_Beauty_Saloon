@@ -4,6 +4,7 @@ namespace App\Filament\Dashboard\Resources\TeamMembers;
 
 use App\Domain\Branches\Models\Branch;
 use App\Domain\Team\Actions\InviteTeamMember;
+use App\Domain\Team\Actions\SetPosPin;
 use App\Domain\Team\Actions\UpdateTeamMember;
 use App\Domain\Team\Models\Staff;
 use App\Filament\Dashboard\Concerns\WorkspaceResource;
@@ -97,6 +98,10 @@ class TeamMemberResource extends Resource
                 TextColumn::make('branches.name')->label(__('fields.branches'))->badge()->color('gray')
                     ->placeholder(fn (User $r) => $r->restrictedBranchIds() === null ? __('salon.ui.all_branches') : '—'),
                 TextColumn::make('last_login_at')->label(__('workspace.team.last_login'))->since()->placeholder(__('workspace.team.never'))->sortable(),
+                IconColumn::make('pos_pin_set')->label(__('workspace.pin.column'))
+                    ->state(fn (User $r) => filled($r->pos_pin))->boolean()
+                    ->trueIcon(Heroicon::OutlinedLockClosed)->falseIcon(Heroicon::OutlinedMinus)->falseColor('gray')
+                    ->visible(fn () => (bool) tenant()?->hasModule('pos')),
                 IconColumn::make('is_active')->label(__('workspace.team.active'))->boolean(fn ($state) => $state !== false),
             ])
             ->filters([
@@ -114,6 +119,34 @@ class TeamMemberResource extends Resource
                             Notification::make()->success()->title(__('workspace.team.updated'))->send();
                         } catch (DomainException $e) {
                             Notification::make()->danger()->title($e->getMessage())->send();
+                        }
+                    }),
+                Action::make('setPosPin')->label(__('workspace.pin.set'))->icon(Heroicon::OutlinedLockClosed)->color('gray')
+                    ->visible(fn (User $record) => static::canManage() && (bool) tenant()?->hasModule('pos')
+                        && ($record->isOwner() ? $record->is(auth()->user()) : $record->can('pos.access')))
+                    ->modalHeading(fn (User $record) => __('workspace.pin.set_heading', ['name' => $record->name]))
+                    ->modalDescription(__('workspace.pin.set_body'))
+                    ->modalWidth('md')
+                    ->schema([
+                        TextInput::make('pin')->label(__('workspace.pin.new'))
+                            ->helperText(__('workspace.pin.help', ['min' => SetPosPin::MIN, 'max' => SetPosPin::MAX]))
+                            ->password()->revealable()->autocomplete('off')
+                            ->extraInputAttributes(['inputmode' => 'numeric', 'maxlength' => SetPosPin::MAX])
+                            ->required(fn (Get $get) => ! $get('remove'))
+                            ->regex('/^\d{'.SetPosPin::MIN.','.SetPosPin::MAX.'}$/')
+                            ->validationMessages(['regex' => __('workspace.pin.format', ['min' => SetPosPin::MIN, 'max' => SetPosPin::MAX])])
+                            ->disabled(fn (Get $get) => (bool) $get('remove')),
+                        Toggle::make('remove')->label(__('workspace.pin.remove'))->live()
+                            ->visible(fn (User $record) => filled($record->pos_pin)),
+                    ])
+                    ->action(function (User $record, array $data, Action $action) {
+                        try {
+                            $remove = (bool) ($data['remove'] ?? false);
+                            app(SetPosPin::class)->handle($record, $remove ? null : (string) $data['pin']);
+                            Notification::make()->success()->title(__($remove ? 'workspace.pin.removed' : 'workspace.pin.saved_for', ['name' => $record->name]))->send();
+                        } catch (DomainException $e) {
+                            Notification::make()->danger()->title($e->getMessage())->send();
+                            $action->halt();
                         }
                     }),
                 Action::make('resendInvite')->label(__('workspace.team.resend'))->icon(Heroicon::OutlinedEnvelope)->color('gray')

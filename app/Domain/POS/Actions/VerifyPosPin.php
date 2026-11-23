@@ -21,11 +21,13 @@ class VerifyPosPin
         }
 
         $pin = preg_replace('/\D/', '', $pin);
-        $match = strlen($pin) < 4 ? null : User::query()
+        $matches = strlen($pin) < 4 ? collect() : User::query()
             ->where('tenant_id', tenant()?->id)->where('is_platform', false)->whereNotNull('pos_pin')
             ->where(fn ($q) => $q->whereNull('is_active')->orWhere('is_active', true))
-            ->get()
-            ->first(fn (User $u) => $u->checkPosPin($pin));
+            ->orderBy('id')->get()
+            ->filter(fn (User $u) => $u->checkPosPin($pin));
+        // PINs are unique per salon (SetPosPin); older data may still share one, so prefer a holder who can approve.
+        $match = $matches->first(fn (User $u) => ! $permission || $u->can($permission)) ?? $matches->first();
 
         if (! $match) {
             RateLimiter::hit($throttle, 60);

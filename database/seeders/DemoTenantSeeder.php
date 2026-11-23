@@ -23,7 +23,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 /**
- * Demo salon "Maison Lumière" (lumiere.{base_domain}):
+ * Demo salon "E Beauty Saloon" (lumiere.{base_domain}):
  * 2 branches, 8 staff, 30 services, 40 products, 200 clients. Owner: owner@lumiere.test / password
  */
 class DemoTenantSeeder extends Seeder
@@ -42,7 +42,7 @@ class DemoTenantSeeder extends Seeder
 
         $plan = Plan::where('slug', 'maison')->firstOrFail();
         $tenant = app(CreateTenant::class)->handle([
-            'name' => 'Maison Lumière',
+            'name' => 'E Beauty Saloon',
             'slug' => 'lumiere',
             'email' => 'hello@lumiere.test',
             'phone' => '+97444001122',
@@ -56,11 +56,11 @@ class DemoTenantSeeder extends Seeder
 
         $tenant->update([
             'onboarded_at' => now(),
-            'legal_name' => 'Maison Lumière Beauty W.L.L.',
+            'legal_name' => 'E Beauty Saloon W.L.L.',
             'branding' => array_merge(Tenant::DEFAULT_BRANDING, [
                 'about' => 'A sanctuary of considered beauty in Doha — couture hair, flawless nails and skin rituals by an award-winning team.',
                 'social' => ['instagram' => 'https://instagram.com/', 'tiktok' => 'https://tiktok.com/'],
-                'receipt_footer' => 'Thank you for choosing Maison Lumière ✦',
+                'receipt_footer' => 'Thank you for choosing E Beauty Saloon ✦',
             ]),
         ]);
 
@@ -217,20 +217,20 @@ class DemoTenantSeeder extends Seeder
         $layla = Staff::where('color', '#C8A96A')->first();
         $layla->services()->updateExistingPivot($services->firstWhere('slug', 'precision-cut-style')->id, ['price' => 38000]);
 
-        // Team logins
-        $mk = function (string $name, string $email, string $role, array $branchIds) use ($tenant) {
+        // Team logins — each with its own POS PIN (a PIN identifies its holder at the till, so no two share one)
+        $mk = function (string $name, string $email, string $role, array $branchIds, string $pin) use ($tenant) {
             $u = new User(['name' => $name, 'email' => $email, 'password' => 'password']);
             $u->tenant_id = $tenant->id;
             $u->save();
             $u->assignRole($role);
             $u->branches()->sync($branchIds);
-            $u->setPosPin('1234');
+            $u->setPosPin($pin);
 
             return $u;
         };
-        $mk('Rania Saeed', 'manager@lumiere.test', 'branch_manager', [$westBay->id]);
-        $mk('Fatima Ali', 'reception@lumiere.test', 'receptionist', [$westBay->id]);
-        $stylistUser = $mk('Sofia Moreau', 'stylist@lumiere.test', 'stylist', [$westBay->id, $pearl->id]);
+        $mk('Rania Saeed', 'manager@lumiere.test', 'branch_manager', [$westBay->id], '1234');
+        $mk('Fatima Ali', 'reception@lumiere.test', 'receptionist', [$westBay->id], '5678');
+        $stylistUser = $mk('Sofia Moreau', 'stylist@lumiere.test', 'stylist', [$westBay->id, $pearl->id], '2468');
         Staff::where('color', '#B07D62')->update(['user_id' => $stylistUser->id]);
         $tenant->owner->setPosPin('0000');
 

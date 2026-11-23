@@ -8,7 +8,7 @@ use App\Domain\Tenancy\Models\Tenant;
 use Database\Seeders\Demo\PosDemoSeeder;
 use Database\Seeders\DemoTenantSeeder;
 
-it('seeds the POS demo for Maison Lumière without the booking demo', function () {
+it('seeds the POS demo for E Beauty Saloon without the booking demo', function () {
     $this->seed(DemoTenantSeeder::class);
     $this->seed(PosDemoSeeder::class);
     $this->seed(PosDemoSeeder::class); // idempotent

@@ -18,7 +18,7 @@ use App\Domain\Tenancy\Models\Tenant;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Database\Seeder;
 
-/** AI Studio demo: platform providers/prices/packs + Maison Lumière's style library, wallet and past jobs. */
+/** AI Studio demo: platform providers/prices/packs + E Beauty Saloon's style library, wallet and past jobs. */
 class AIStudioDemoSeeder extends Seeder
 {
     public static int $order = 70;

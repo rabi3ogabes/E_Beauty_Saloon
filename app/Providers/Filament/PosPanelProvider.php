@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\EditProfile;
 use App\Filament\Concerns\ConfiguresLuxePanel;
 use App\Http\Middleware\EnsureModuleEnabled;
 use App\Http\Middleware\EnsureTenantIsAccessible;
@@ -22,6 +23,7 @@ class PosPanelProvider extends PanelProvider
             ->id('pos')
             ->path('pos')
             ->login()
+            ->profile(EditProfile::class, isSimple: false)
             ->brandName(fn () => (tenant()?->name ?? config('salon.name')).' · POS')
             ->topNavigation()
             ->renderHook(PanelsRenderHook::BODY_START, fn () => Blade::render('<x-luxe.impersonation-banner />'))

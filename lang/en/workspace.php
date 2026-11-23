@@ -119,6 +119,19 @@ return [
         'empty' => 'Only you so far', 'empty_body' => 'Invite managers, receptionists and stylists to share the work.',
     ],
 
+    'pin' => [
+        'title' => 'POS PIN', 'column' => 'POS PIN',
+        'has_pin' => 'You have a PIN. Use it at the till to approve discounts and refunds, close shifts or switch cashier.',
+        'no_pin' => 'Set a PIN to approve discounts and refunds, close shifts or switch cashier at the till.',
+        'new' => 'New PIN', 'confirm' => 'Confirm PIN', 'remove' => 'Remove PIN',
+        'help' => ':min–:max digits. Keep it private: it acts as your signature at the till.',
+        'format' => 'The PIN must be :min to :max digits.',
+        'rejected' => 'This PIN can’t be used. Avoid repeated or sequential digits and choose another.',
+        'set' => 'POS PIN', 'set_heading' => 'POS PIN for :name',
+        'set_body' => 'They enter it at the till for approvals and to switch cashier. Tell them in person — it is never emailed.',
+        'saved_for' => 'PIN saved for :name', 'removed' => 'PIN removed',
+    ],
+
     'roles' => [
         'title' => 'Roles & permissions', 'subheading' => 'Fine-tune what each role can see and do. Changes apply instantly.',
         'permission' => 'Permission', 'all_access' => 'All access',
