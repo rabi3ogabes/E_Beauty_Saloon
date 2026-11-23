@@ -1,0 +1,416 @@
+{
+  "@@locale": "en",
+  "accountDeleted": "Your account has been deleted.",
+  "addToCalendar": "Add to calendar",
+  "addToCart": "Add to bag",
+  "addYourName": "Add your name",
+  "addedToCart": "{name} added to your bag",
+  "@addedToCart": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "after": "After",
+  "afternoon": "Afternoon",
+  "agreeAndContinue": "Agree and continue",
+  "aiStudio": "AI Studio",
+  "alerts": "Alerts",
+  "all": "All",
+  "allBranches": "All branches",
+  "appTitle": "Luxe Salon",
+  "appearance": "Appearance",
+  "appointment": "Appointment",
+  "audience": "Audience",
+  "authenticatorCode": "Authenticator code",
+  "authenticatorCodeHint": "6-digit code, or one of your recovery codes",
+  "audienceAll": "All opted-in clients",
+  "audienceBirthday": "Birthdays this month",
+  "audienceLapsed": "Not seen in 60 days",
+  "audienceVip": "VIP (Gold+)",
+  "averageTicket": "Average ticket",
+  "before": "Before",
+  "bookAppointment": "Book an appointment",
+  "bookHere": "Book at this branch",
+  "bookNow": "Book now",
+  "bookThisLook": "Book this look",
+  "bookThisService": "Book this service",
+  "bookingCancelled": "Your booking was cancelled.",
+  "bookingConfirmed": "You're booked",
+  "bookingConfirmedSubtitle": "We've sent the details by WhatsApp. We can't wait to see you.",
+  "bookingPendingPayment": "Almost there",
+  "bookingRescheduled": "Your booking was moved.",
+  "bookingsLabel": "Bookings",
+  "browseShop": "Browse the shop",
+  "call": "Call",
+  "cameraUnavailable": "Camera unavailable",
+  "campaignHint": "e.g. This week only: 20% off blow-dries before noon",
+  "campaignQueued": "Campaign queued for sending.",
+  "campaigns": "Campaigns",
+  "cancel": "Cancel",
+  "cancelBooking": "Cancel booking",
+  "cancelBookingMessage": "Cancellations within 24 hours may forfeit the deposit.",
+  "cancelBookingTitle": "Cancel this booking?",
+  "cancellationPolicy": "Free cancellation up to 24 hours before your appointment.",
+  "cart": "Bag",
+  "cartEmpty": "Your bag is empty",
+  "categoryBridal": "Bridal",
+  "categoryBrows": "Brows",
+  "categoryColor": "Colour",
+  "categoryEyes": "Eyes",
+  "categoryHair": "Hair",
+  "categoryLips": "Lips",
+  "categoryMakeup": "Makeup",
+  "categoryNails": "Nails",
+  "categoryPedicure": "Pedicure",
+  "channel": "Channel",
+  "chatWhatsapp": "Chat on WhatsApp",
+  "checkIn": "Check in",
+  "checkedInMessage": "{name} is checked in.",
+  "@checkedInMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "checkout": "Checkout",
+  "chooseDates": "Choose dates",
+  "chooseFromGallery": "Gallery",
+  "clientNotes": "Client notes",
+  "closedNow": "Closed now",
+  "codeResent": "A new code is on its way.",
+  "commissions": "Commissions",
+  "communication": "Communication",
+  "completePayment": "Complete payment",
+  "confirmAndPay": "Confirm & pay",
+  "confirmBooking": "Confirm booking",
+  "confirmNewTime": "Confirm new time",
+  "consentEmail": "Email",
+  "consentPush": "Push",
+  "consentRespectedNote": "Only clients who opted in to this channel will receive it.",
+  "consentSms": "SMS",
+  "consentWhatsapp": "WhatsApp",
+  "continueLabel": "Continue",
+  "deleteAccount": "Delete account",
+  "deleteAccountMessage": "Your personal data will be erased. Invoices are kept as required by law. This cannot be undone.",
+  "deleteAccountTitle": "Delete your account?",
+  "delivery": "Delivery",
+  "depositRequiredNote": "A deposit secures this appointment.",
+  "done": "Done",
+  "emailLabel": "Email",
+  "durationHours": "{h} h",
+  "@durationHours": {
+    "placeholders": {
+      "h": {
+        "type": "int"
+      }
+    }
+  },
+  "durationHoursMinutes": "{h} h {m} min",
+  "@durationHoursMinutes": {
+    "placeholders": {
+      "h": {
+        "type": "int"
+      },
+      "m": {
+        "type": "int"
+      }
+    }
+  },
+  "durationMinutes": "{m} min",
+  "@durationMinutes": {
+    "placeholders": {
+      "m": {
+        "type": "int"
+      }
+    }
+  },
+  "editProfile": "Edit profile",
+  "errorGeneric": "Something went wrong. Please try again.",
+  "errorModuleDisabled": "This feature isn't available at this salon yet.",
+  "errorNetwork": "You're offline. Check your connection and try again.",
+  "errorRateLimited": "Too many attempts. Please wait a moment.",
+  "errorServer": "We're having trouble on our side. Please try again shortly.",
+  "errorTimeout": "That took too long. Please try again.",
+  "errorTitle": "Something went wrong",
+  "errorUnauthorized": "Please sign in again.",
+  "evening": "Evening",
+  "exportData": "Export my data",
+  "firstVisit": "First visit",
+  "framePhoto": "Frame your face",
+  "framingHint": "Face the light, hair off your face, look straight ahead.",
+  "fromPrice": "From {price}",
+  "@fromPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "fulfilment": "How would you like it?",
+  "fullName": "Full name",
+  "generateLook": "Create my look",
+  "generating1": "Studying your features…",
+  "generating2": "Styling with care…",
+  "generating3": "Adding the finishing touches…",
+  "getStarted": "Get started",
+  "goHome": "Back to home",
+  "greeting": "Hello, {name}",
+  "@greeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "heroTitle": "Time for you.",
+  "jumpToDate": "Next available: {date}",
+  "@jumpToDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "keepBooking": "Keep it",
+  "language": "Language",
+  "lookFailedMessage": "We couldn't create this look. Try another photo with good light.",
+  "lookFailedTitle": "Let's try that again",
+  "loyalty": "Loyalty",
+  "message": "Message",
+  "moduleUnavailableTitle": "Not available",
+  "morning": "Morning",
+  "myBookings": "My bookings",
+  "myCalendar": "My day",
+  "myLooks": "My looks",
+  "newClients": "New clients",
+  "next": "Next",
+  "noAlerts": "All calm. No alerts.",
+  "noAppointments": "No appointments this day",
+  "noBookingTitle": "No booking to show",
+  "noClientNotes": "No notes yet.",
+  "noLooksMessage": "Try a new style with AI before you book.",
+  "noLooksTitle": "No looks yet",
+  "noPastTitle": "No past visits yet",
+  "noPointsYet": "Your points will appear here.",
+  "noPreference": "No preference",
+  "noPreferenceHint": "First available specialist",
+  "noServicesFound": "No services found",
+  "noSlotsMessage": "This day is fully booked.",
+  "noSlotsTitle": "No times left",
+  "noStyles": "No styles in this category yet",
+  "noTransactions": "No transactions yet",
+  "noUpcomingMessage": "Treat yourself — your next ritual is a tap away.",
+  "noUpcomingTitle": "Nothing booked yet",
+  "notesHint": "Allergies, preferences, inspiration…",
+  "notesLabel": "Notes for your specialist",
+  "onboarding1Body": "Book your favourite services and specialists in seconds, any time.",
+  "onboarding1Title": "Your salon, in your pocket",
+  "onboarding2Body": "Preview a new colour or cut on your own photo before you commit.",
+  "onboarding2Title": "Try before you transform",
+  "onboarding3Body": "Earn points on every visit and unlock members-only treats.",
+  "onboarding3Title": "Rewards that feel special",
+  "openNow": "Open now",
+  "options": "Options",
+  "orderPlaced": "Order placed",
+  "orderPlacedMessage": "Order {reference} is confirmed. We'll let you know when it's ready.",
+  "@orderPlacedMessage": {
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "otherServices": "Other",
+  "otpSubtitle": "Enter the 6-digit code sent to {phone}",
+  "@otpSubtitle": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "otpTitle": "Check your messages",
+  "ourBranches": "Our salons",
+  "outOfStock": "Out of stock",
+  "packages": "Packages",
+  "pageNotFound": "We couldn't find that page",
+  "passwordLabel": "Password",
+  "past": "Past",
+  "payAtSalon": "Pay at the salon",
+  "payAtSalonHint": "Nothing to pay now",
+  "payDeposit": "Pay a deposit",
+  "payDepositHint": "{amount} now, the rest at the salon",
+  "@payDepositHint": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payFull": "Pay in full",
+  "payFullHint": "{amount} now — skip the till",
+  "@payFullHint": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentTitle": "Payment",
+  "phoneHint": "Mobile number",
+  "photoAccessDenied": "Allow photo access in Settings to continue.",
+  "photoTip": "A clear, front-facing photo in natural light works best.",
+  "pickup": "Pick up",
+  "pickupBranch": "Pick-up salon",
+  "pointsCount": "{count, plural, =0{0 points} =1{1 point} other{{count} points}}",
+  "@pointsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsHistory": "Points history",
+  "popularServices": "Most loved",
+  "preferences": "Preferences",
+  "previewDisclaimer": "AI previews are illustrative. Your stylist will tailor the final result to you.",
+  "privacy": "Privacy",
+  "products": "Products",
+  "profile": "Profile",
+  "reasonOptional": "Reason (optional)",
+  "rebook": "Book again",
+  "recent": "Recent",
+  "referFriend": "Invite a friend",
+  "referralCodeLabel": "Your code: {code}",
+  "@referralCodeLabel": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "referralShareText": "Join me at {salon}! Use my code {code} for a welcome treat.",
+  "@referralShareText": {
+    "placeholders": {
+      "salon": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "reschedule": "Reschedule",
+  "resendCode": "Resend code",
+  "resendIn": "Resend in {seconds}s",
+  "@resendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "retail": "Retail",
+  "retry": "Try again",
+  "revenueToday": "Revenue today",
+  "salonCode": "Salon code",
+  "save": "Save",
+  "searchServices": "Search services",
+  "securePaymentNote": "You'll complete payment on our secure payment page.",
+  "seeAll": "See all",
+  "sendCampaign": "Send campaign",
+  "sendCode": "Send code",
+  "sendRequest": "Send request",
+  "services": "Services",
+  "servicesLabel": "Services",
+  "sessionsCount": "{count, plural, =1{1 session} other{{count} sessions}}",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settings": "Settings",
+  "share": "Share",
+  "shop": "Shop",
+  "signIn": "Sign in",
+  "signInBenefits": "Manage bookings, earn points and save your looks.",
+  "signInLegal": "By continuing you agree to our Terms and Privacy Policy.",
+  "signInSubtitle": "We'll send a one-time code by WhatsApp or SMS.",
+  "signInTitle": "Welcome",
+  "signInToContinue": "Sign in to continue",
+  "signOut": "Sign out",
+  "skip": "Skip",
+  "statusCancelled": "Cancelled",
+  "statusCheckedIn": "Checked in",
+  "statusCompleted": "Completed",
+  "statusConfirmed": "Confirmed",
+  "statusNoShow": "No-show",
+  "statusPending": "Pending",
+  "step1Photo": "1 · Your photo",
+  "step2Style": "2 · Choose a style",
+  "stepBranch": "Choose a salon",
+  "stepReview": "Review",
+  "stepServices": "Choose services",
+  "stepStaff": "Choose a specialist",
+  "stepTime": "Pick a time",
+  "studioConsentCheckbox": "I am 18 or older and agree to the AI Studio photo terms.",
+  "studioConsentDelete": "You can delete your photos and looks at any time.",
+  "studioConsentNoTraining": "We never use your photos to train AI models.",
+  "studioConsentPreview": "Results are a preview to help you choose — not a guarantee.",
+  "studioConsentPrivate": "Your photo is private and only used to create your look.",
+  "studioConsentTitle": "Before we begin",
+  "switchCamera": "Switch camera",
+  "tabBookings": "Bookings",
+  "tabCalendar": "Calendar",
+  "teamSignInSubtitle": "Use the e-mail and password of your salon account.",
+  "tabDashboard": "Dashboard",
+  "tabHome": "Home",
+  "tabProfile": "Me",
+  "tabServices": "Services",
+  "tabShop": "Shop",
+  "takePhoto": "Camera",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeSystem": "System",
+  "tierDiamond": "Diamond",
+  "tierGold": "Gold member",
+  "tierMember": "Member",
+  "tierPlatinum": "Platinum member",
+  "tierSilver": "Silver member",
+  "timeOff": "Time off",
+  "timeOffIntro": "Requests go to your manager for approval. Existing bookings are not moved automatically.",
+  "timeOffSent": "Request sent for approval.",
+  "tips": "Tips",
+  "today": "Today",
+  "total": "Total",
+  "transactions": "Transactions",
+  "tryALook": "Try a look",
+  "tryALookSubtitle": "See a new colour or cut on you, instantly.",
+  "tryAgain": "Try again",
+  "upcoming": "Upcoming",
+  "utilization": "Utilisation",
+  "verify": "Verify",
+  "view": "View",
+  "viewMyBookings": "View my bookings",
+  "vsYesterday": "vs {amount} yesterday",
+  "@vsYesterday": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "wallet": "Wallet",
+  "walletBalance": "Wallet balance",
+  "walletHint": "Use your balance at checkout or in the salon.",
+  "welcome": "Welcome",
+  "when": "When",
+  "where": "Where",
+  "withWhom": "With",
+  "yourLook": "Your look"
+}

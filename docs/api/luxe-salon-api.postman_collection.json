@@ -1,0 +1,3865 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/localhost:8000"
+        }
+    ],
+    "info": {
+        "name": "Luxe Salon OS API",
+        "_postman_id": "fce4a98f-0629-41ad-9f18-ec3bc69181a9",
+        "description": "REST API for salon client, staff and owner apps. Identify the salon with the X-Tenant header (salon slug) or call the salon domain. Authenticate clients with phone OTP to receive a Bearer token.",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "AI Studio",
+            "description": "\nVirtual try-on for the client app. Same safety gates as the website (consent, minors, moderation, client quota,\nsalon credit wallet) because every job goes through RequestTryOn. Photos are encrypted at rest and only served\nthrough short-lived signed URLs on the salon's own domain.",
+            "item": [
+                {
+                    "name": "Style library.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/studio\/styles",
+                            "query": [
+                                {
+                                    "key": "category",
+                                    "value": "hair",
+                                    "description": "hair|eyes|lips|nails|pedicure|makeup|bridal.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/studio\/styles?category=hair"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"category\":\"bngzmiyvdljnikhw\"}"
+                        },
+                        "description": "Signed-in clients also get their remaining tries and consent state in `meta`.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":1,\"category\":\"hair\",\"option\":\"balayage\",\"name\":\"Honey balayage\",\"description\":\"Curated by our artists \\u2014 honey balayage.\",\"thumbnail_url\":null,\"swatch\":\"#C9A06A\",\"framing\":\"face\",\"face\":true,\"service_id\":4,\"price\":{\"amount\":120000,\"currency\":\"QAR\",\"formatted\":\"QAR 1,200.00\"},\"duration_minutes\":180},{\"id\":2,\"category\":\"hair\",\"option\":\"balayage\",\"name\":\"Caramel ribbons\",\"description\":\"Curated by our artists \\u2014 caramel ribbons.\",\"thumbnail_url\":null,\"swatch\":\"#A86B3C\",\"framing\":\"face\",\"face\":true,\"service_id\":4,\"price\":{\"amount\":120000,\"currency\":\"QAR\",\"formatted\":\"QAR 1,200.00\"},\"duration_minutes\":180},{\"id\":3,\"category\":\"hair\",\"option\":\"highlights\",\"name\":\"Champagne highlights\",\"description\":\"Curated by our artists \\u2014 champagne highlights.\",\"thumbnail_url\":null,\"swatch\":\"#E8D4A8\",\"framing\":\"face\",\"face\":true,\"service_id\":5,\"price\":{\"amount\":95000,\"currency\":\"QAR\",\"formatted\":\"QAR 950.00\"},\"duration_minutes\":150},{\"id\":4,\"category\":\"hair\",\"option\":\"color\",\"name\":\"Espresso gloss\",\"description\":\"Curated by our artists \\u2014 espresso gloss.\",\"thumbnail_url\":null,\"swatch\":\"#3B2418\",\"framing\":\"face\",\"face\":true,\"service_id\":3,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"duration_minutes\":90},{\"id\":5,\"category\":\"hair\",\"option\":\"color\",\"name\":\"Copper glow\",\"description\":\"Curated by our artists \\u2014 copper glow.\",\"thumbnail_url\":null,\"swatch\":\"#B5562E\",\"framing\":\"face\",\"face\":true,\"service_id\":3,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"duration_minutes\":90},{\"id\":6,\"category\":\"hair\",\"option\":\"cut\",\"name\":\"Parisian bob\",\"description\":\"Curated by our artists \\u2014 parisian bob.\",\"thumbnail_url\":null,\"swatch\":null,\"framing\":\"face\",\"face\":true,\"service_id\":2,\"price\":{\"amount\":28000,\"currency\":\"QAR\",\"formatted\":\"QAR 280.00\"},\"duration_minutes\":60},{\"id\":7,\"category\":\"hair\",\"option\":\"length\",\"name\":\"Long layers\",\"description\":\"Curated by our artists \\u2014 long layers.\",\"thumbnail_url\":null,\"swatch\":null,\"framing\":\"face\",\"face\":true,\"service_id\":2,\"price\":{\"amount\":28000,\"currency\":\"QAR\",\"formatted\":\"QAR 280.00\"},\"duration_minutes\":60},{\"id\":8,\"category\":\"hair\",\"option\":\"curls\",\"name\":\"Hollywood waves\",\"description\":\"Curated by our artists \\u2014 hollywood waves.\",\"thumbnail_url\":null,\"swatch\":null,\"framing\":\"face\",\"face\":true,\"service_id\":1,\"price\":{\"amount\":15000,\"currency\":\"QAR\",\"formatted\":\"QAR 150.00\"},\"duration_minutes\":45},{\"id\":9,\"category\":\"hair\",\"option\":\"curls\",\"name\":\"Soft beach waves\",\"description\":\"Curated by our artists \\u2014 soft beach waves.\",\"thumbnail_url\":null,\"swatch\":null,\"framing\":\"face\",\"face\":true,\"service_id\":1,\"price\":{\"amount\":15000,\"currency\":\"QAR\",\"formatted\":\"QAR 150.00\"},\"duration_minutes\":45}],\"meta\":{\"categories\":[\"hair\",\"eyes\",\"lips\",\"nails\",\"pedicure\",\"makeup\",\"bridal\"],\"consent_version\":\"2026-07\",\"consent_given\":null,\"quota\":null,\"price_per_look\":{\"amount\":1000,\"currency\":\"QAR\",\"formatted\":\"QAR 10.00\"}}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Look photo (signed URL from the job \/ look payload).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/studio\/looks\/:reference\/media\/:which",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/studio\/looks\/:reference\/media\/:which",
+                            "variable": [
+                                {
+                                    "id": "reference",
+                                    "key": "reference",
+                                    "value": "architecto",
+                                    "description": ""
+                                },
+                                {
+                                    "id": "which",
+                                    "key": "which",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have access to this.\",\n    \"error\": {\n        \"code\": \"forbidden\",\n        \"status\": 403\n    }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Give AI photo consent.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/studio\/consent",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/studio\/consent"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"accept\":true,\"adult\":true}"
+                        },
+                        "description": "Required once (per consent version) before the first try-on; `adult=false` blocks face styles."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Withdraw AI photo consent.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/studio\/consent",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/studio\/consent"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Start a try-on.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/studio\/jobs",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/studio\/jobs"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "style_id",
+                                    "value": "4",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "hair",
+                                    "type": "text",
+                                    "description": "Must match the style's category."
+                                },
+                                {
+                                    "key": "consent",
+                                    "value": "1",
+                                    "type": "text",
+                                    "description": "Records consent first when true."
+                                },
+                                {
+                                    "key": "adult",
+                                    "value": "1",
+                                    "type": "text",
+                                    "description": "Age confirmation for the inline consent."
+                                },
+                                {
+                                    "key": "photo",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Multipart upload. Poll GET \/studio\/jobs\/{id} until `status` is succeeded or failed. Credits are charged\nonly when the look succeeds. `consent`\/`adult` may be sent here instead of calling POST \/studio\/consent."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Try-on status and result.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/studio\/jobs\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/studio\/jobs\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "564",
+                                    "description": "The ID of the job."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "My looks.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/looks",
+                            "query": [
+                                {
+                                    "key": "saved",
+                                    "value": "1",
+                                    "description": "Only saved looks.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/looks?saved=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Save a look (kept until deleted instead of expiring with the retention window).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/looks\/:reference\/save",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/looks\/:reference\/save",
+                            "variable": [
+                                {
+                                    "id": "reference",
+                                    "key": "reference",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete a look and its photos.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/looks\/:reference",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/looks\/:reference",
+                            "variable": [
+                                {
+                                    "id": "reference",
+                                    "key": "reference",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Authentication",
+            "description": "\nClients sign in with a one-time code sent by WhatsApp\/SMS and receive a Sanctum token.\nSend `X-Tenant: {salon-slug}` (or call the salon's own domain).",
+            "item": [
+                {
+                    "name": "Request a code.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/auth\/otp",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/auth\/otp"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"phone\":\"55551234\"}"
+                        },
+                        "description": "The App Review phone (salon settings `api.review_phone` \/ `api.review_code`) gets no message: its fixed code works.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Verify the code and receive an API token.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/auth\/verify",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/auth\/verify"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"phone\":\"+97455551234\",\"code\":\"123456\",\"name\":\"Reem\",\"device_name\":\"Reem's iPhone\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Revoke the current token.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/auth\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/auth\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Booking",
+            "description": "\nAvailability, booking, payment hand-off, cancel and reschedule for the client app. Every write goes through\nthe same Booking Actions as the salon website (HoldSlot \u2192 CreateBooking \u2192 StartBookingPayment), so the same\ndomain events fire and the same rules apply.",
+            "item": [
+                {
+                    "name": "Available times for one day.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/availability",
+                            "query": [
+                                {
+                                    "key": "branch_id",
+                                    "value": "1",
+                                    "description": "Branch.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "services[0]",
+                                    "value": "3",
+                                    "description": "Service ids, booked back-to-back in this order.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "staff_id",
+                                    "value": "2",
+                                    "description": "Preferred stylist for every service (omit = no preference).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "date",
+                                    "value": "2026-12-01",
+                                    "description": "Branch-local date (Y-m-d).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "variants[]",
+                                    "value": "",
+                                    "description": "Variant per service: variants[{service_id}]={variant_id}.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "addons[]",
+                                    "value": "",
+                                    "description": "Add-ons per service: addons[{service_id}][]={addon_id}.",
+                                    "disabled": true
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/availability?branch_id=1&services%5B0%5D=3&staff_id=2&date=2026-12-01&variants%5B%5D=&addons%5B%5D="
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Slots are grouped by part of day in the branch timezone; `starts_at` is UTC and must be posted back unchanged.\nWhen the day is empty `next_available_date` points to the next date with a free slot.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":{\"date\":\"2026-12-01\",\"date_label\":\"Tuesday 1 December\",\"timezone\":\"Asia\\\/Qatar\",\"closed\":false,\"count\":10,\"next_available_date\":null,\"payment_options\":[\"full\",\"pay_at_salon\"],\"groups\":{\"morning\":[{\"starts_at\":\"2026-12-01T07:00:00Z\",\"ends_at\":\"2026-12-01T08:30:00Z\",\"time\":\"10:00\",\"label\":\"10:00 AM\",\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"deposit\":{\"amount\":0,\"currency\":\"QAR\",\"formatted\":\"QAR 0.00\"},\"duration_minutes\":90,\"staff_ids\":[2],\"items\":[{\"service_id\":3,\"variant_id\":null,\"addon_ids\":[],\"staff_id\":2,\"staff_name\":\"Sofia Moreau\",\"starts_at\":\"2026-12-01T07:00:00Z\",\"ends_at\":\"2026-12-01T08:30:00Z\",\"duration_minutes\":90,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"}}]},{\"starts_at\":\"2026-12-01T07:15:00Z\",\"ends_at\":\"2026-12-01T08:45:00Z\",\"time\":\"10:15\",\"label\":\"10:15 AM\",\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"deposit\":{\"amount\":0,\"currency\":\"QAR\",\"formatted\":\"QAR 0.00\"},\"duration_minutes\":90,\"staff_ids\":[2],\"items\":[{\"service_id\":3,\"variant_id\":null,\"addon_ids\":[],\"staff_id\":2,\"staff_name\":\"Sofia Moreau\",\"starts_at\":\"2026-12-01T07:15:00Z\",\"ends_at\":\"2026-12-01T08:45:00Z\",\"duration_minutes\":90,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"}}]},{\"starts_at\":\"2026-12-01T07:30:00Z\",\"ends_at\":\"2026-12-01T09:00:00Z\",\"time\":\"10:30\",\"label\":\"10:30 AM\",\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"deposit\":{\"amount\":0,\"currency\":\"QAR\",\"formatted\":\"QAR 0.00\"},\"duration_minutes\":90,\"staff_ids\":[2],\"items\":[{\"service_id\":3,\"variant_id\":null,\"addon_ids\":[],\"staff_id\":2,\"staff_name\":\"Sofia Moreau\",\"starts_at\":\"2026-12-01T07:30:00Z\",\"ends_at\":\"2026-12-01T09:00:00Z\",\"duration_minutes\":90,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"}}]},{\"starts_at\":\"2026-12-01T07:45:00Z\",\"ends_at\":\"2026-12-01T09:15:00Z\",\"time\":\"10:45\",\"label\":\"10:45 AM\",\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"deposit\":{\"amount\":0,\"currency\":\"QAR\",\"formatted\":\"QAR 0.00\"},\"duration_minutes\":90,\"staff_ids\":[2],\"items\":[{\"service_id\":3,\"variant_id\":null,\"addon_ids\":[],\"staff_id\":2,\"staff_name\":\"Sofia Moreau\",\"starts_at\":\"2026-12-01T07:45:00Z\",\"ends_at\":\"2026-12-01T09:15:00Z\",\"duration_minutes\":90,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"}}]},{\"starts_at\":\"2026-12-01T08:00:00Z\",\"ends_at\":\"2026-12-01T09:30:00Z\",\"time\":\"11:00\",\"label\":\"11:00 AM\",\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"deposit\":{\"amount\":0,\"currency\":\"QAR\",\"formatted\":\"QAR 0.00\"},\"duration_minutes\":90,\"staff_ids\":[2],\"items\":[{\"service_id\":3,\"variant_id\":null,\"addon_ids\":[],\"staff_id\":2,\"staff_name\":\"Sofia Moreau\",\"starts_at\":\"2026-12-01T08:00:00Z\",\"ends_at\":\"2026-12-01T09:30:00Z\",\"duration_minutes\":90,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"}}]},{\"starts_at\":\"2026-12-01T08:15:00Z\",\"ends_at\":\"2026-12-01T09:45:00Z\",\"time\":\"11:15\",\"label\":\"11:15 AM\",\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"deposit\":{\"amount\":0,\"currency\":\"QAR\",\"formatted\":\"QAR 0.00\"},\"duration_minutes\":90,\"staff_ids\":[2],\"items\":[{\"service_id\":3,\"variant_id\":null,\"addon_ids\":[],\"staff_id\":2,\"staff_name\":\"Sofia Moreau\",\"starts_at\":\"2026-12-01T08:15:00Z\",\"ends_at\":\"2026-12-01T09:45:00Z\",\"duration_minutes\":90,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"}}]},{\"starts_at\":\"2026-12-01T08:30:00Z\",\"ends_at\":\"2026-12-01T10:00:00Z\",\"time\":\"11:30\",\"label\":\"11:30 AM\",\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"deposit\":{\"amount\":0,\"currency\":\"QAR\",\"formatted\":\"QAR 0.00\"},\"duration_minutes\":90,\"staff_ids\":[2],\"items\":[{\"service_id\":3,\"variant_id\":null,\"addon_ids\":[],\"staff_id\":2,\"staff_name\":\"Sofia Moreau\",\"starts_at\":\"2026-12-01T08:30:00Z\",\"ends_at\":\"2026-12-01T10:00:00Z\",\"duration_minutes\":90,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"}}]},{\"starts_at\":\"2026-12-01T08:45:00Z\",\"ends_at\":\"2026-12-01T10:15:00Z\",\"time\":\"11:45\",\"label\":\"11:45 AM\",\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"deposit\":{\"amount\":0,\"currency\":\"QAR\",\"formatted\":\"QAR 0.00\"},\"duration_minutes\":90,\"staff_ids\":[2],\"items\":[{\"service_id\":3,\"variant_id\":null,\"addon_ids\":[],\"staff_id\":2,\"staff_name\":\"Sofia Moreau\",\"starts_at\":\"2026-12-01T08:45:00Z\",\"ends_at\":\"2026-12-01T10:15:00Z\",\"duration_minutes\":90,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"}}]}],\"afternoon\":[{\"starts_at\":\"2026-12-01T09:00:00Z\",\"ends_at\":\"2026-12-01T10:30:00Z\",\"time\":\"12:00\",\"label\":\"12:00 PM\",\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"deposit\":{\"amount\":0,\"currency\":\"QAR\",\"formatted\":\"QAR 0.00\"},\"duration_minutes\":90,\"staff_ids\":[2],\"items\":[{\"service_id\":3,\"variant_id\":null,\"addon_ids\":[],\"staff_id\":2,\"staff_name\":\"Sofia Moreau\",\"starts_at\":\"2026-12-01T09:00:00Z\",\"ends_at\":\"2026-12-01T10:30:00Z\",\"duration_minutes\":90,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"}}]},{\"starts_at\":\"2026-12-01T09:15:00Z\",\"ends_at\":\"2026-12-01T10:45:00Z\",\"time\":\"12:15\",\"label\":\"12:15 PM\",\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"},\"deposit\":{\"amount\":0,\"currency\":\"QAR\",\"formatted\":\"QAR 0.00\"},\"duration_minutes\":90,\"staff_ids\":[2],\"items\":[{\"service_id\":3,\"variant_id\":null,\"addon_ids\":[],\"staff_id\":2,\"staff_name\":\"Sofia Moreau\",\"starts_at\":\"2026-12-01T09:15:00Z\",\"ends_at\":\"2026-12-01T10:45:00Z\",\"duration_minutes\":90,\"price\":{\"amount\":42000,\"currency\":\"QAR\",\"formatted\":\"QAR 420.00\"}}]}],\"evening\":[]}}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Hold a time while the client reviews.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/bookings\/hold",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/bookings\/hold"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"branch_id\":1,\"items\":[[]],\"starts_at\":\"2026-12-01T08:00:00Z\",\"replace_token\":\"architecto\"}"
+                        },
+                        "description": "Optional: POST \/bookings holds the time itself. Returns the totals and the payment options the client may pick."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Book.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/bookings",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/bookings"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Idempotency-Key",
+                                "value": "6f1c0e0a-2b5e-4a53-9a39-0d8f1b2a1f00"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"branch_id\":1,\"items\":[[]],\"starts_at\":\"2026-12-01T08:00:00Z\",\"payment_preference\":\"pay_at_salon\",\"hold_token\":\"architecto\",\"notes\":\"architecto\",\"look_reference\":\"architecto\"}"
+                        },
+                        "description": "Holds the slot (unless `hold_token` is given) and creates the booking. With `payment_preference` deposit|full\nthe booking is `pending_payment` and `payment.checkout_url` is the hosted payment page; the booking is\nconfirmed by the payment webhook. Send an `Idempotency-Key` header: retries replay the first response."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "My bookings.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/bookings",
+                            "query": [
+                                {
+                                    "key": "scope",
+                                    "value": "upcoming",
+                                    "description": "upcoming|past|all (default all).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Max 50.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/bookings?scope=upcoming&per_page=20"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"scope\":\"upcoming\",\"per_page\":1}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "One booking.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/bookings\/:reference",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/bookings\/:reference",
+                            "variable": [
+                                {
+                                    "id": "reference",
+                                    "key": "reference",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Times to move a booking to (the booking's own time does not block).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/bookings\/:reference\/availability",
+                            "query": [
+                                {
+                                    "key": "date",
+                                    "value": "2026-12-02",
+                                    "description": "",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/bookings\/:reference\/availability?date=2026-12-02",
+                            "variable": [
+                                {
+                                    "id": "reference",
+                                    "key": "reference",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"date\":\"2026-11-22\",\"keep_staff\":false}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Cancel.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/bookings\/:reference\/cancel",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/bookings\/:reference\/cancel",
+                            "variable": [
+                                {
+                                    "id": "reference",
+                                    "key": "reference",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"reason\":\"Feeling unwell\"}"
+                        },
+                        "description": "Inside the cancellation window the late-cancel fee is kept and the rest of any online payment is refunded."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Reschedule.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/bookings\/:reference\/reschedule",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/bookings\/:reference\/reschedule",
+                            "variable": [
+                                {
+                                    "id": "reference",
+                                    "key": "reference",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"starts_at\":\"2026-12-02T09:00:00Z\",\"keep_staff\":false}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Owner app",
+            "description": "\nToday's KPIs per branch, alerts and quick campaigns. Branch restrictions of the member apply; KPIs need\nreports.view (revenue figures reports.revenue), campaigns marketing.send.",
+            "item": [
+                {
+                    "name": "Me.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/owner\/me",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/owner\/me"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Today's KPIs.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/owner\/kpis",
+                            "query": [
+                                {
+                                    "key": "branch_id",
+                                    "value": "1",
+                                    "description": "Omit for all branches the member can see.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "date",
+                                    "value": "2026-11-22",
+                                    "description": "Local date (default today).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/owner\/kpis?branch_id=1&date=2026-11-22"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"branch_id\":16,\"date\":\"2026-11-22\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Alerts.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/owner\/alerts",
+                            "query": [
+                                {
+                                    "key": "branch_id",
+                                    "value": "1",
+                                    "description": "",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/owner\/alerts?branch_id=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"branch_id\":16}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Saved audiences for quick campaigns.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/owner\/segments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/owner\/segments"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Quick campaign.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/owner\/campaigns",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/owner\/campaigns"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Idempotency-Key",
+                                "value": "7c3e1a9b-5d2f-4e8a-b6c4-0f1e2d3c4b5a"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"segment_id\":3,\"channel\":\"whatsapp\",\"channels\":[\"email\"],\"message\":\"Hi {first_name}, 20% off blow-dries today: {link}\",\"subject\":\"architecto\",\"name\":\"z\"}"
+                        },
+                        "description": "Sends a short message now to a saved segment through the Marketing module (consent, quiet hours and message\ncredits apply exactly as for dashboard campaigns). Send an Idempotency-Key."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Packages, notifications & referrals",
+            "description": "\nSession packages \/ bundles (Marketing module), push device registration, the client's campaign inbox and\nreferral share info.",
+            "item": [
+                {
+                    "name": "Packages for sale online.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/packages",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/packages"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":1,\"slug\":\"bridal-glow\",\"name\":\"Bridal Glow\",\"description\":\"Bridal hair, bridal makeup and a gel manicure \\u2014 the complete wedding-day ritual.\",\"price\":{\"amount\":355300,\"currency\":\"QAR\",\"formatted\":\"QAR 3,553.00\"},\"value\":{\"amount\":418000,\"currency\":\"QAR\",\"formatted\":\"QAR 4,180.00\"},\"savings\":{\"amount\":62700,\"currency\":\"QAR\",\"formatted\":\"QAR 627.00\"},\"sessions\":3,\"validity_days\":120,\"branch_ids\":null,\"image_url\":null,\"items\":[{\"type\":\"service\",\"id\":8,\"name\":\"Bridal hair\",\"quantity\":1},{\"type\":\"service\",\"id\":21,\"name\":\"Bridal makeup\",\"quantity\":1},{\"type\":\"service\",\"id\":9,\"name\":\"Gel manicure\",\"quantity\":1}]},{\"id\":2,\"slug\":\"six-blowdries\",\"name\":\"6 Signature blow-dries\",\"description\":\"Six signature blow-dries to use within 3 months.\",\"price\":{\"amount\":75000,\"currency\":\"QAR\",\"formatted\":\"QAR 750.00\"},\"value\":{\"amount\":90000,\"currency\":\"QAR\",\"formatted\":\"QAR 900.00\"},\"savings\":{\"amount\":15000,\"currency\":\"QAR\",\"formatted\":\"QAR 150.00\"},\"sessions\":6,\"validity_days\":90,\"branch_ids\":null,\"image_url\":null,\"items\":[{\"type\":\"service\",\"id\":1,\"name\":\"Signature blow-dry\",\"quantity\":6}]},{\"id\":3,\"slug\":\"spa-sanctuary\",\"name\":\"Spa Sanctuary\",\"description\":null,\"price\":{\"amount\":136000,\"currency\":\"QAR\",\"formatted\":\"QAR 1,360.00\"},\"value\":{\"amount\":170000,\"currency\":\"QAR\",\"formatted\":\"QAR 1,700.00\"},\"savings\":{\"amount\":34000,\"currency\":\"QAR\",\"formatted\":\"QAR 340.00\"},\"sessions\":3,\"validity_days\":180,\"branch_ids\":null,\"image_url\":null,\"items\":[{\"type\":\"service\",\"id\":26,\"name\":\"Moroccan bath\",\"quantity\":1},{\"type\":\"service\",\"id\":27,\"name\":\"Hot stone massage\",\"quantity\":1},{\"type\":\"service\",\"id\":24,\"name\":\"Gold radiance facial\",\"quantity\":1}]}]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "My packages (active first) with remaining sessions.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/me\/packages",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/me\/packages"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Buy a package.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/packages\/:id\/purchase",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/packages\/:id\/purchase",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "564",
+                                    "description": "The ID of the package."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Idempotency-Key",
+                                "value": "1f7d2c8e-9a4b-4c1e-8f3a-6b5d4e3c2a10"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Creates a pending package and returns the hosted payment page (`checkout_url`); the package activates when\nthe payment webhook arrives. Free packages activate immediately. Send an Idempotency-Key."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Notification inbox.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/notifications",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/notifications"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Campaign messages that reached the client (any channel), newest first, rendered in the client's language."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Register a push device.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/devices",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/devices"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"token\":\"architecto\",\"platform\":\"ios\",\"app\":\"client\",\"app_version\":\"1.4.0\",\"locale\":\"ar\"}"
+                        },
+                        "description": "Call after sign-in and whenever FCM rotates the token. Marketing push campaigns go to the most recently seen\ndevice of the client."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Unregister a push device (sign-out).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/devices\/:token",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/devices\/:token",
+                            "variable": [
+                                {
+                                    "id": "token",
+                                    "key": "token",
+                                    "value": "|{+",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Referral code, share link and rewards.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/me\/referral",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/me\/referral"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Profile, wallet & loyalty",
+            "description": "",
+            "item": [
+                {
+                    "name": "GET api\/v1\/me",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/me",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/me"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "PATCH api\/v1\/me",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/me",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/me"
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"birthday\":\"2022-12-17\",\"gender\":\"male\",\"locale\":\"ar\",\"consents\":[true]}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "GET api\/v1\/me\/wallet",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/me\/wallet",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/me\/wallet"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/v1\/me\/loyalty",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/me\/loyalty",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/me\/loyalty"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GDPR \/ Qatar PDPPL: export my data.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/me\/export",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/me\/export"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete my account (anonymises personal data, keeps financial records).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/me",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/me"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Salon catalog",
+            "description": "\nPublic, cacheable salon information (ETag supported).",
+            "item": [
+                {
+                    "name": "GET api\/v1\/salon",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/salon",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/salon"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":{\"name\":\"Maison Lumi\\u00e8re\",\"slug\":\"lumiere\",\"currency\":\"QAR\",\"timezone\":\"Asia\\\/Qatar\",\"locales\":[\"en\",\"ar\"],\"modules\":[\"website\",\"booking\",\"pos\",\"loyalty\",\"shop\",\"marketing\",\"ai_studio\"],\"branding\":{\"primary\":\"#C8A96A\",\"accent\":\"#E9D6CF\",\"ink\":\"#1C1A17\",\"background\":\"#FAF7F2\",\"font_display\":\"Playfair Display\",\"font_body\":\"Inter\",\"button_style\":\"pill\",\"about\":\"A sanctuary of considered beauty in Doha \\u2014 couture hair, flawless nails and skin rituals by an award-winning team.\",\"social\":{\"instagram\":\"https:\\\/\\\/instagram.com\\\/\",\"tiktok\":\"https:\\\/\\\/tiktok.com\\\/\"},\"logo_url\":null}}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/v1\/branches",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/branches",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/branches"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":1,\"slug\":\"west-bay\",\"name\":\"West Bay\",\"address\":\"Tower 3, Diplomatic Area, West Bay, Doha\",\"area\":\"West Bay\",\"city\":\"Doha\",\"location\":{\"lat\":25.3235,\"lng\":51.531},\"phone\":\"+97444001122\",\"whatsapp\":\"+97455001122\",\"timezone\":\"Asia\\\/Qatar\",\"opening_hours\":{\"sun\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]},\"mon\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]},\"tue\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]},\"wed\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]},\"thu\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]},\"fri\":{\"open\":\"14:00\",\"close\":\"23:00\",\"closed\":false,\"breaks\":[]},\"sat\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]}},\"is_open_now\":false,\"booking_enabled\":true,\"pickup_enabled\":true,\"cover_url\":null},{\"id\":2,\"slug\":\"the-pearl\",\"name\":\"The Pearl\",\"address\":\"Porto Arabia, Tower 21, The Pearl-Qatar\",\"area\":\"The Pearl\",\"city\":\"Doha\",\"location\":{\"lat\":25.37,\"lng\":51.551},\"phone\":\"+97444003344\",\"whatsapp\":\"+97455003344\",\"timezone\":\"Asia\\\/Qatar\",\"opening_hours\":{\"sun\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]},\"mon\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]},\"tue\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]},\"wed\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]},\"thu\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]},\"fri\":{\"open\":\"14:00\",\"close\":\"23:00\",\"closed\":false,\"breaks\":[]},\"sat\":{\"open\":\"10:00\",\"close\":\"22:00\",\"closed\":false,\"breaks\":[]}},\"is_open_now\":false,\"booking_enabled\":true,\"pickup_enabled\":true,\"cover_url\":null}]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/v1\/categories",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/categories"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":1,\"slug\":\"hair\",\"name\":\"Hair\",\"icon\":null},{\"id\":2,\"slug\":\"nails\",\"name\":\"Nails\",\"icon\":null},{\"id\":3,\"slug\":\"lashes\",\"name\":\"Lashes & brows\",\"icon\":null},{\"id\":4,\"slug\":\"makeup\",\"name\":\"Makeup\",\"icon\":null},{\"id\":5,\"slug\":\"skin\",\"name\":\"Skin\",\"icon\":null},{\"id\":6,\"slug\":\"spa\",\"name\":\"Spa\",\"icon\":null}]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/v1\/services",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/services",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/services"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"branch_id\":16,\"category_id\":16,\"q\":\"n\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"Not found.\",\n    \"error\": {\n        \"code\": \"not_found\",\n        \"status\": 404\n    }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/v1\/services\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/services\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/services\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "The ID of the service."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":{\"id\":1,\"slug\":\"signature-blow-dry\",\"category_id\":1,\"name\":\"Signature blow-dry\",\"description\":\"Our Signature blow-dry ritual, tailored to you by a senior artist.\",\"duration_minutes\":45,\"price\":{\"amount\":15000,\"currency\":\"QAR\",\"formatted\":\"QAR 150.00\"},\"original_price\":null,\"gender\":\"women\",\"image_url\":null,\"online_bookable\":true,\"deposit\":null,\"variants\":[{\"id\":1,\"name\":\"Short\",\"duration_minutes\":45,\"price\":{\"amount\":15000,\"currency\":\"QAR\",\"formatted\":\"QAR 150.00\"}},{\"id\":2,\"name\":\"Medium\",\"duration_minutes\":60,\"price\":{\"amount\":18000,\"currency\":\"QAR\",\"formatted\":\"QAR 180.00\"}},{\"id\":3,\"name\":\"Long\",\"duration_minutes\":75,\"price\":{\"amount\":22000,\"currency\":\"QAR\",\"formatted\":\"QAR 220.00\"}}],\"addons\":[]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/v1\/staff",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/staff",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/staff"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":1,\"name\":\"Layla Haddad\",\"title\":\"Creative Director\",\"bio\":\"Layla Haddad brings years of luxury salon experience.\",\"photo_url\":null,\"rating\":4.73,\"ratings_count\":151,\"branch_ids\":[1],\"service_ids\":[1,2,3,4,5,6,7,8,20,21,22]},{\"id\":2,\"name\":\"Sofia Moreau\",\"title\":\"Senior Colourist\",\"bio\":\"Sofia Moreau brings years of luxury salon experience.\",\"photo_url\":null,\"rating\":4.8,\"ratings_count\":194,\"branch_ids\":[2,1],\"service_ids\":[1,2,3,4,5,6,7,8]},{\"id\":3,\"name\":\"Mariam Khalil\",\"title\":\"Nail Artist\",\"bio\":\"Mariam Khalil brings years of luxury salon experience.\",\"photo_url\":null,\"rating\":4.8,\"ratings_count\":126,\"branch_ids\":[1],\"service_ids\":[9,10,11,12,13,14]},{\"id\":4,\"name\":\"Grace Santos\",\"title\":\"Nail Technician\",\"bio\":\"Grace Santos brings years of luxury salon experience.\",\"photo_url\":null,\"rating\":4.83,\"ratings_count\":172,\"branch_ids\":[2],\"service_ids\":[9,10,11,12,13,14]},{\"id\":5,\"name\":\"Hana Yousef\",\"title\":\"Lash & Brow Artist\",\"bio\":\"Hana Yousef brings years of luxury salon experience.\",\"photo_url\":null,\"rating\":4.64,\"ratings_count\":159,\"branch_ids\":[2,1],\"service_ids\":[15,16,17,18,19]},{\"id\":6,\"name\":\"Amira Nasser\",\"title\":\"Makeup Artist\",\"bio\":\"Amira Nasser brings years of luxury salon experience.\",\"photo_url\":null,\"rating\":4.88,\"ratings_count\":172,\"branch_ids\":[2],\"service_ids\":[15,16,17,18,19,20,21,22]},{\"id\":7,\"name\":\"Elena Petrova\",\"title\":\"Skin Therapist\",\"bio\":\"Elena Petrova brings years of luxury salon experience.\",\"photo_url\":null,\"rating\":4.68,\"ratings_count\":235,\"branch_ids\":[1],\"service_ids\":[23,24,25,26,27,28,29,30]},{\"id\":8,\"name\":\"Joy Reyes\",\"title\":\"Spa Therapist\",\"bio\":\"Joy Reyes brings years of luxury salon experience.\",\"photo_url\":null,\"rating\":4.88,\"ratings_count\":82,\"branch_ids\":[2],\"service_ids\":[23,24,25,26,27,28,29,30]}]}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Shop",
+            "description": "\nMobile app shop API (\/api\/v1\/shop\/...). Cart is identified by the X-Cart-Token header\n(returned by every cart response); client endpoints use Sanctum tokens. Orders are placed with the same\nPlaceOrder action as the website checkout.",
+            "item": [
+                {
+                    "name": "GET api\/v1\/shop\/categories",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/shop\/categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/shop\/categories"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[{\"id\":1,\"slug\":\"hair-care\",\"name\":\"Hair care\",\"parent_id\":null},{\"id\":2,\"slug\":\"styling\",\"name\":\"Styling\",\"parent_id\":null},{\"id\":3,\"slug\":\"nails\",\"name\":\"Nails\",\"parent_id\":null},{\"id\":4,\"slug\":\"skin\",\"name\":\"Skin care\",\"parent_id\":null},{\"id\":5,\"slug\":\"makeup\",\"name\":\"Makeup\",\"parent_id\":null}]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Products (search + filters).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/shop\/products",
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "oil",
+                                    "description": "Search (Arabic \/ English).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "architecto",
+                                    "description": "Category slug.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "architecto",
+                                    "description": "",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/shop\/products?q=oil&category=architecto&sort=architecto"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[],\"meta\":{\"current_page\":1,\"last_page\":1,\"per_page\":24,\"total\":0}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Product detail by slug (or numeric id).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/shop\/products\/:slug",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/shop\/products\/:slug",
+                            "variable": [
+                                {
+                                    "id": "slug",
+                                    "key": "slug",
+                                    "value": "architecto",
+                                    "description": "The slug of the product."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"Not found.\",\n    \"error\": {\n        \"code\": \"not_found\",\n        \"status\": 404\n    }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/v1\/shop\/fulfilment",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/shop\/fulfilment",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/shop\/fulfilment"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"zones\":[{\"id\":1,\"name\":\"West Bay\",\"areas\":[\"West Bay\",\"Dafna\",\"Diplomatic Area\",\"Corniche\"],\"fee\":1000,\"min_order\":10000,\"free_shipping_threshold\":25000,\"same_day\":true,\"same_day_slots\":[\"2026-11-23 04:00-06:00\",\"2026-11-23 06:00-08:00\",\"2026-11-23 08:00-10:00\",\"2026-11-23 10:00-12:00\",\"2026-11-23 12:00-14:00\",\"2026-11-23 14:00-16:00\"]},{\"id\":2,\"name\":\"The Pearl\",\"areas\":[\"The Pearl\",\"Porto Arabia\",\"Qanat Quartier\",\"Viva Bahriya\"],\"fee\":1000,\"min_order\":10000,\"free_shipping_threshold\":25000,\"same_day\":true,\"same_day_slots\":[\"2026-11-23 04:00-06:00\",\"2026-11-23 06:00-08:00\",\"2026-11-23 08:00-10:00\",\"2026-11-23 10:00-12:00\",\"2026-11-23 12:00-14:00\",\"2026-11-23 14:00-16:00\"]},{\"id\":3,\"name\":\"Lusail\",\"areas\":[\"Lusail\",\"Marina District\",\"Fox Hills\",\"Energy City\"],\"fee\":1500,\"min_order\":15000,\"free_shipping_threshold\":35000,\"same_day\":true,\"same_day_slots\":[\"2026-11-23 04:00-06:00\",\"2026-11-23 06:00-08:00\",\"2026-11-23 08:00-10:00\",\"2026-11-23 10:00-12:00\",\"2026-11-23 12:00-14:00\",\"2026-11-23 14:00-16:00\"]},{\"id\":4,\"name\":\"Al Waab\",\"areas\":[\"Al Waab\",\"Aspire Zone\",\"Al Aziziya\",\"Baaya\"],\"fee\":2000,\"min_order\":15000,\"free_shipping_threshold\":40000,\"same_day\":false,\"same_day_slots\":[]},{\"id\":5,\"name\":\"Al Sadd\",\"areas\":[\"Al Sadd\",\"Bin Mahmoud\",\"Fereej Bin Omran\",\"Musheireb\"],\"fee\":1500,\"min_order\":10000,\"free_shipping_threshold\":30000,\"same_day\":true,\"same_day_slots\":[\"2026-11-23 04:00-06:00\",\"2026-11-23 06:00-08:00\",\"2026-11-23 08:00-10:00\",\"2026-11-23 10:00-12:00\",\"2026-11-23 12:00-14:00\",\"2026-11-23 14:00-16:00\"]},{\"id\":6,\"name\":\"Al Rayyan\",\"areas\":[\"Al Rayyan\",\"Muaither\",\"Al Gharrafa\"],\"fee\":2500,\"min_order\":20000,\"free_shipping_threshold\":50000,\"same_day\":false,\"same_day_slots\":[]}],\"pickup_branches\":[{\"id\":1,\"name\":\"West Bay\",\"ready_at\":\"2026-11-23T08:00:00+00:00\"},{\"id\":2,\"name\":\"The Pearl\",\"ready_at\":\"2026-11-23T08:00:00+00:00\"}]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Cart (by X-Cart-Token).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/shop\/cart",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/shop\/cart"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "120"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "119"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"token\":null,\"count\":0,\"items\":[],\"subtotal\":0,\"discount\":0,\"gift_wrap\":false,\"gift_wrap_fee\":0,\"gift_message\":null,\"coupon\":null,\"total\":0,\"formatted\":{\"subtotal\":\"QAR 0.00\",\"discount\":\"QAR 0.00\",\"gift_wrap\":\"QAR 0.00\",\"total\":\"QAR 0.00\"},\"upsell\":[]}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "POST api\/v1\/shop\/cart\/items",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/shop\/cart\/items",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/shop\/cart\/items"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"variant_id\":16,\"qty\":12}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "PATCH api\/v1\/shop\/cart\/items\/{item}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/shop\/cart\/items\/:item",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/shop\/cart\/items\/:item",
+                            "variable": [
+                                {
+                                    "id": "item",
+                                    "key": "item",
+                                    "value": "architecto",
+                                    "description": "The item."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"qty\":1}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "My orders (latest 50).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/shop\/orders",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/shop\/orders"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "One of my orders by number (SO-10001).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/shop\/orders\/:number",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/shop\/orders\/:number",
+                            "variable": [
+                                {
+                                    "id": "number",
+                                    "key": "number",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Place an order.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/shop\/orders",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/shop\/orders"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Idempotency-Key",
+                                "value": "0b6f6a52-0f87-4d64-8f5e-2b8c9a0d1e11"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"items\":[{\"variant_id\":16,\"qty\":12}],\"fulfilment\":\"pickup\",\"branch_id\":1,\"address_id\":16,\"zone_id\":16,\"area\":\"West Bay\",\"street\":\"g\",\"building\":\"z\",\"unit\":\"m\",\"address\":\"i\",\"lat\":-90,\"lng\":-179,\"address_notes\":\"d\",\"save_address\":false,\"delivery_slot\":\"l\",\"customer_name\":\"j\",\"customer_email\":\"lafayette.considine@example.com\",\"payment_method\":\"online\",\"cod_method\":\"cash\",\"use_wallet\":false,\"gift_card_code\":\"aykcmyuwpwlvqwrs\",\"coupon_code\":\"i\",\"gift_message\":\"t\",\"notes\":\"c\"}"
+                        },
+                        "description": "Uses the X-Cart-Token cart, or builds one from `items` (the app keeps its cart locally). With\n`payment_method=online` the response carries `checkout_url` (hosted payment page). Send an Idempotency-Key."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Staff & owner authentication",
+            "description": "\nTeam members sign in with their dashboard e-mail and password. When app MFA (authenticator) is enabled on the\naccount, the first attempt answers 422 with `error.code = mfa_required`; repeat with `code`. Tokens carry the\nability of the app (`staff` or `owner`) and only work on that app's endpoints, for this salon.",
+            "item": [
+                {
+                    "name": "Owner app sign-in.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/owner\/auth\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/owner\/auth\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"owner@lumiere.test\",\"password\":\"password\",\"code\":\"architecto\",\"device_name\":\"Owner iPad\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Revoke the current staff \/ owner token.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/owner\/auth\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/owner\/auth\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Staff app sign-in.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/staff\/auth\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/staff\/auth\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"layla@lumiere.test\",\"password\":\"password\",\"code\":\"123456\",\"device_name\":\"Layla's iPhone\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Revoke the current staff \/ owner token.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/staff\/auth\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/staff\/auth\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Staff app",
+            "description": "\nThe signed-in stylist's day, check-in, commissions, time off and client cards. Branch restrictions of the\nteam member apply (same as the dashboard); bookings are shown in each branch's timezone.",
+            "item": [
+                {
+                    "name": "Me (profile, permissions, today's appointment count).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/staff\/me",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/staff\/me"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "My calendar for a day.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/staff\/me\/calendar",
+                            "query": [
+                                {
+                                    "key": "date",
+                                    "value": "2026-12-01",
+                                    "description": "Branch-local date (default: today).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/staff\/me\/calendar?date=2026-12-01"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"date\":\"2026-11-22\"}"
+                        },
+                        "description": "One entry per booking with my services of that day (branch-local date). Client notes \/ allergies need\nclients.view; first-visit flag from the client's visit count."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "My commissions and tips.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/staff\/me\/commissions",
+                            "query": [
+                                {
+                                    "key": "from",
+                                    "value": "2026-11-01",
+                                    "description": "Default: first day of this month.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "to",
+                                    "value": "2026-11-30",
+                                    "description": "Default: today.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/staff\/me\/commissions?from=2026-11-01&to=2026-11-30"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"from\":\"2026-11-22\",\"to\":\"2052-12-15\"}"
+                        },
+                        "description": "Same numbers as the dashboard payroll report (BuildCommissionReport); refunds reverse in the period they happen."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "My time-off requests (latest 50).",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/staff\/me\/time-off",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/staff\/me\/time-off"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Client card.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/staff\/clients\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/staff\/clients\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "564",
+                                    "description": "The ID of the client."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Needs clients.view. Stylists limited to their own appointments (bookings.own_only) only see their clients.\nPrivate notes need clients.private_notes."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "content-language",
+                                    "value": "en"
+                                },
+                                {
+                                    "key": "vary",
+                                    "value": "Accept-Language, X-Tenant, Authorization"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Please sign in again.\",\"error\":{\"code\":\"unauthenticated\",\"status\":401}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Request time off.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/staff\/me\/time-off",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/staff\/me\/time-off"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"from\":\"2026-12-10\",\"to\":\"2026-12-12\",\"reason\":\"Family trip\",\"type\":\"leave\"}"
+                        },
+                        "description": "Creates a pending request the owner approves in the dashboard."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Check a client in.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/staff\/bookings\/:reference\/check-in",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/staff\/bookings\/:reference\/check-in",
+                            "variable": [
+                                {
+                                    "id": "reference",
+                                    "key": "reference",
+                                    "value": "architecto",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "X-Tenant",
+                                "value": "lumiere"
+                            },
+                            {
+                                "key": "Accept-Language",
+                                "value": "en"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Allowed for my own appointments, or for anyone with bookings.manage (reception)."
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "Authorization",
+                "type": "string"
+            }
+        ]
+    }
+}

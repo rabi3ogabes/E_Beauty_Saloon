@@ -1,0 +1,155 @@
+# Codemagic CI/CD for the Luxe Salon mobile apps (Flutter project in mobile/).
+#
+# One workflow per platform; the salon is chosen with the TENANT variable
+# (mobile/white_label/<TENANT>.json) and the app with APP (client | staff | owner).
+# Start a build from the Codemagic UI or API with e.g. {"TENANT": "lumiere", "APP": "client"}.
+#
+# Environment groups to create in Codemagic (Team settings → Global variables):
+#   luxe_android_signing   CM_KEYSTORE (base64), CM_KEYSTORE_PASSWORD, CM_KEY_ALIAS, CM_KEY_PASSWORD
+#   luxe_google_play       GCLOUD_SERVICE_ACCOUNT_CREDENTIALS (JSON)
+#   luxe_app_store         APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_PRIVATE_KEY,
+#                          CERTIFICATE_PRIVATE_KEY
+#   luxe_firebase          (optional) FIREBASE_API_KEY, FIREBASE_APP_ID, FIREBASE_SENDER_ID, FIREBASE_PROJECT_ID
+#
+# Fastlane hand-off: if a salon already ships with Fastlane (metadata, screenshots, `deliver`/`supply`),
+# replace the `publishing:` blocks with a script step such as
+#   cd mobile/ios && bundle exec fastlane release tenant:$TENANT ipa:../build/ios/ipa/*.ipa
+#   cd mobile/android && bundle exec fastlane supply --aab ../build/app/outputs/bundle/${APP}Release/app-${APP}-release.aab
+# Codemagic keeps building/signing; Fastlane owns store metadata. Keep one source of truth for version numbers
+# (Codemagic's BUILD_NUMBER is passed via --build-number below).
+
+definitions:
+  env_versions: &env_versions
+    flutter: 3.50.1
+    xcode: latest
+    cocoapods: default
+    java: 17
+
+  vars: &vars
+    TENANT: lumiere
+    APP: client
+    DEMO_MODE: "false"
+
+  scripts:
+    - &white_label
+      name: Apply white-label config
+      working_directory: mobile
+      script: |
+        test -f "white_label/$TENANT.json" || { echo "white_label/$TENANT.json not found"; exit 1; }
+        dart run tool/white_label.dart --tenant "$TENANT" --app "$APP"
+    - &pub_get
+      name: Dependencies, icons & splash
+      working_directory: mobile
+      script: |
+        flutter pub get
+        dart run flutter_launcher_icons
+        dart run flutter_native_splash:create
+    - &analyze_test
+      name: Analyze & test
+      working_directory: mobile
+      script: |
+        flutter analyze
+        flutter test
+    - &dart_defines
+      name: Compose dart-defines
+      script: |
+        DEFINES="--dart-define=DEMO_MODE=$DEMO_MODE"
+        if [ -n "$FIREBASE_API_KEY" ]; then
+          DEFINES="$DEFINES --dart-define=FIREBASE_API_KEY=$FIREBASE_API_KEY --dart-define=FIREBASE_APP_ID=$FIREBASE_APP_ID"
+          DEFINES="$DEFINES --dart-define=FIREBASE_SENDER_ID=$FIREBASE_SENDER_ID --dart-define=FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID"
+        fi
+        echo "DART_DEFINES=$DEFINES" >> $CM_ENV
+
+workflows:
+  android:
+    name: Android (${TENANT} / ${APP})
+    instance_type: linux_x2
+    max_build_duration: 60
+    environment:
+      <<: *env_versions
+      vars:
+        <<: *vars
+      groups:
+        - luxe_android_signing
+        - luxe_google_play
+        - luxe_firebase
+    triggering:
+      events: [tag]
+      tag_patterns:
+        - pattern: 'mobile-v*'
+    scripts:
+      - *white_label
+      - *pub_get
+      - *analyze_test
+      - *dart_defines
+      - name: Android signing
+        working_directory: mobile
+        script: |
+          echo "$CM_KEYSTORE" | base64 --decode > android/app/upload.jks
+          cat > android/key.properties <<EOF
+          storeFile=upload.jks
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          keyPassword=$CM_KEY_PASSWORD
+          EOF
+      - name: Build app bundle
+        working_directory: mobile
+        script: |
+          flutter build appbundle --release \
+            --flavor "$APP" -t "lib/main_$APP.dart" \
+            --build-number "$BUILD_NUMBER" $DART_DEFINES
+    artifacts:
+      - mobile/build/app/outputs/bundle/**/*.aab
+      - mobile/build/app/outputs/mapping/**/mapping.txt
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: true
+
+  ios:
+    name: iOS (${TENANT} / ${APP})
+    instance_type: mac_mini_m2
+    max_build_duration: 90
+    integrations:
+      app_store_connect: Luxe App Store Connect
+    environment:
+      <<: *env_versions
+      vars:
+        <<: *vars
+      groups:
+        - luxe_app_store
+        - luxe_firebase
+      ios_signing:
+        distribution_type: app_store
+        # The bundle id written by tool/white_label.dart for $TENANT/$APP, e.g. app.luxesalon.lumiere.
+        bundle_identifier: app.luxesalon.lumiere
+    triggering:
+      events: [tag]
+      tag_patterns:
+        - pattern: 'mobile-v*'
+    scripts:
+      - *white_label
+      - *pub_get
+      - *analyze_test
+      - *dart_defines
+      - name: CocoaPods
+        working_directory: mobile/ios
+        script: pod install --repo-update
+      - name: Code signing profiles
+        working_directory: mobile
+        script: xcode-project use-profiles
+      - name: Build IPA
+        working_directory: mobile
+        script: |
+          flutter build ipa --release \
+            -t "lib/main_$APP.dart" \
+            --build-number "$BUILD_NUMBER" \
+            --export-options-plist=/Users/builder/export_options.plist $DART_DEFINES
+    artifacts:
+      - mobile/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true

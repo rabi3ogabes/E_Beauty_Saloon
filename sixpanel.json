@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "kind": "php",
+  "root": "public",
+  "keep": [
+    "storage/",
+    "bootstrap/cache/"
+  ],
+  "hooks": {
+    "deploy": [
+      "php artisan migrate --force",
+      "php artisan app:seed-once",
+      "php artisan app:sync-demo-domain",
+      "php artisan filament:assets",
+      "php artisan storage:link --force",
+      "php artisan optimize:clear"
+    ]
+  },
+  "env": {
+    "generate": [
+      "APP_KEY"
+    ],
+    "defaults": {
+      "APP_NAME": "Luxe Salon OS",
+      "APP_ENV": "production",
+      "APP_DEBUG": "false",
+      "APP_URL": "https://ebeauty.athardesign.qa",
+      "PLATFORM_NAME": "Luxe Salon OS",
+      "PLATFORM_BASE_DOMAIN": "ebeauty.athardesign.qa",
+      "PLATFORM_CENTRAL_DOMAINS": "ebeauty.athardesign.qa",
+      "SESSION_DRIVER": "database",
+      "CACHE_STORE": "database",
+      "QUEUE_CONNECTION": "database",
+      "PENNANT_STORE": "array",
+      "LOG_CHANNEL": "daily",
+      "DEMO_TENANT_DOMAIN": "lumiere.athardesign.qa"
+    }
+  },
+  "cron": [
+    {
+      "name": "scheduler",
+      "schedule": "* * * * *",
+      "command": "php artisan schedule:run"
+    },
+    {
+      "name": "queue",
+      "schedule": "@always",
+      "command": "php artisan queue:work --sleep=3 --tries=3 --max-time=3600"
+    }
+  ],
+  "php": {
+    "settings": {
+      "memory_limit": "512M",
+      "upload_max_filesize": "64M",
+      "post_max_size": "64M",
+      "max_execution_time": 120
+    }
+  }
+}
