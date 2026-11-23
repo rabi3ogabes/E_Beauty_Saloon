@@ -4,7 +4,9 @@ use App\Domain\Billing\Jobs\ProcessSubscriptionLifecycle;
 use App\Domain\Branches\Models\Branch;
 use App\Domain\Tenancy\Jobs\VerifyCustomDomain;
 use App\Domain\Tenancy\Models\Domain;
+use App\Domain\Tenancy\Models\Tenant;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schedule;
 
@@ -45,3 +47,26 @@ Artisan::command('app:seed-once', function () {
     // One transaction: a failure leaves nothing half-seeded, so the next deploy simply tries again.
     DB::transaction(fn () => $this->call('db:seed', ['--force' => true]));
 })->purpose('Seed the database on the first deploy only');
+
+// Hosted demo: attach DEMO_TENANT_DOMAIN (e.g. lumiere.athardesign.qa) to the demo salon as its verified primary domain.
+Artisan::command('app:sync-demo-domain', function () {
+    $host = strtolower(trim((string) env('DEMO_TENANT_DOMAIN', '')));
+    $tenant = Tenant::where('slug', env('DEMO_TENANT_SLUG', 'lumiere'))->first();
+    if ($host === '' || ! $tenant) {
+        $this->info('No demo domain to sync.');
+
+        return;
+    }
+    $other = Domain::where('domain', $host)->where('tenant_id', '!=', $tenant->id)->exists();
+    if ($other) {
+        $this->error("{$host} belongs to another salon — not changed.");
+
+        return;
+    }
+    $tenant->domains()->update(['is_primary' => false]);
+    $tenant->domains()->updateOrCreate(['domain' => $host], [
+        'type' => 'custom', 'is_primary' => true, 'verified_at' => now(), 'ssl_status' => 'active',
+    ]);
+    Cache::forget('tenant-domain:'.$host);
+    $this->info("{$host} → {$tenant->name}");
+})->purpose('Attach the hosted demo domain to the demo salon');
