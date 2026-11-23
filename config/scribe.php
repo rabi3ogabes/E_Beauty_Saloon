@@ -9,6 +9,11 @@ use function Knuckles\Scribe\Config\removeStrategies;
 
 // Only the most common configs are shown. See the https://scribe.knuckles.wtf/laravel/reference/config for all.
 
+// Scribe is a dev-only package: production installs (composer --no-dev) must still load the config.
+if (! class_exists(\Knuckles\Scribe\Config\Defaults::class)) {
+    return [];
+}
+
 return [
     // The HTML <title> for the generated documentation.
     'title' => env('PLATFORM_NAME', 'Luxe Salon OS').' API',
