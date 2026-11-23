@@ -26,7 +26,7 @@ use Illuminate\Support\Str;
 
 /**
  * POS demo for "Maison Lumière": a register per branch, commission rules, ~150 completed sales over the
- * last 60 days (split payments, tips, a few discounts and refunds) with closed daily shifts, and today's
+ * last ~60 days (split payments, tips, a few discounts and refunds) with closed daily shifts, and today's
  * shift left open so the terminal is ready. Independent of the booking demo seeder.
  */
 class PosDemoSeeder extends Seeder
@@ -75,7 +75,9 @@ class PosDemoSeeder extends Seeder
         $skipped = 0;
 
         // Newest first, so today and this week always look alive; older days fill up to the target.
-        for ($daysAgo = 0; $daysAgo <= 60 && $made < $salesTarget; $daysAgo++) {
+        // The window is generous on purpose: ~3 sales/day reach the target in ~50-60 days, and a hard 60-day cap
+        // made the count fall one short on some dates (fewer Fridays, a skipped ticket).
+        for ($daysAgo = 0; $daysAgo <= 120 && $made < $salesTarget; $daysAgo++) {
             $day = CarbonImmutable::now($tz)->subDays($daysAgo)->startOfDay();
             foreach ($branches as $bi => $branch) {
                 $register = $registers[$branch->id];
