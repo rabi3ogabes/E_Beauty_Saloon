@@ -85,7 +85,7 @@ it('deducts credits only on a successful result', function () {
     expect($wallet->balance)->toBe(96);
     $look = asTenant($this->tenant, fn () => ClientLook::first());
     expect($look->after_path)->not->toBeNull()
-        ->and(Storage::disk('local')->get($look->after_path))->not->toContain('PNG') // encrypted at rest
+        ->and(Storage::disk('local')->get($look->after_path))->not->toStartWith("\x89PNG") // encrypted at rest (ciphertext, not raw PNG bytes)
         ->and(app(PhotoVault::class)->get($look->after_path))->toStartWith("\x89PNG");
 });
 
