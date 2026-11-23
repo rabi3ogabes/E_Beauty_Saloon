@@ -18,41 +18,56 @@ class ProcessWhatsAppWebhook
 {
     public function __construct(protected TenantContext $context, protected Unsubscribe $unsubscribe) {}
 
-    /** X-Hub-Signature-256 = "sha256=" . HMAC_SHA256(app_secret, raw body). Secrets come from matching tenant(s) or the platform app. */
-    public function verifySignature(string $rawBody, ?string $header): bool
+    /**
+     * X-Hub-Signature-256 = "sha256=" . HMAC_SHA256(app_secret, raw body).
+     * Returns who signed: 'platform', 'tenant:{id}', or null. Changes are later processed ONLY for that signer,
+     * so one salon can never inject events into another salon's number.
+     */
+    public function verifiedSigner(string $rawBody, ?string $header): ?string
     {
         if (! $header || ! str_starts_with($header, 'sha256=')) {
-            return false;
+            return null;
         }
+        $platformSecret = PlatformMessageChannel::where('channel', 'whatsapp')->first()?->credential('app_secret');
+        if ($platformSecret && hash_equals('sha256='.hash_hmac('sha256', $rawBody, $platformSecret), $header)) {
+            return 'platform';
+        }
+
         $phoneNumberIds = collect(data_get(json_decode($rawBody, true) ?: [], 'entry', []))
             ->flatMap(fn ($e) => collect($e['changes'] ?? [])->pluck('value.metadata.phone_number_id'))->filter()->unique();
-
-        $secrets = TenantChannelSetting::withoutGlobalScopes()->where('channel', 'whatsapp')->whereIn('external_id', $phoneNumberIds->all() ?: ['-'])
-            ->get()->map(fn ($s) => $s->credential('app_secret'));
-        $platform = PlatformMessageChannel::where('channel', 'whatsapp')->first();
-        $secrets->push($platform?->credential('app_secret'));
-
-        foreach ($secrets->filter()->unique() as $secret) {
-            if (hash_equals('sha256='.hash_hmac('sha256', $rawBody, $secret), $header)) {
-                return true;
+        $settings = TenantChannelSetting::withoutGlobalScopes()->where('channel', 'whatsapp')->whereIn('external_id', $phoneNumberIds->all() ?: ['-'])->get();
+        foreach ($settings as $setting) {
+            $secret = $setting->credential('app_secret');
+            if ($secret && hash_equals('sha256='.hash_hmac('sha256', $rawBody, $secret), $header)) {
+                return 'tenant:'.$setting->tenant_id;
             }
         }
 
-        return false;
+        return null;
     }
 
-    public function handle(array $payload): array
+    public function verifySignature(string $rawBody, ?string $header): bool
+    {
+        return $this->verifiedSigner($rawBody, $header) !== null;
+    }
+
+    public function handle(array $payload, ?string $signer = null): array
     {
         $stats = ['statuses' => 0, 'unsubscribed' => 0];
+        $signerTenant = $signer && str_starts_with($signer, 'tenant:') ? (int) substr($signer, 7) : null;
         foreach ($payload['entry'] ?? [] as $entry) {
             foreach ($entry['changes'] ?? [] as $change) {
                 $value = $change['value'] ?? [];
                 $phoneNumberId = data_get($value, 'metadata.phone_number_id');
                 $tenantId = $phoneNumberId ? TenantChannelSetting::withoutGlobalScopes()->where('channel', 'whatsapp')->where('external_id', $phoneNumberId)->value('tenant_id') : null;
+                // A salon-signed payload may only touch that salon's own number.
+                if ($signerTenant !== null && (int) $tenantId !== $signerTenant) {
+                    continue;
+                }
 
                 foreach ($value['statuses'] ?? [] as $status) {
                     $message = CampaignMessage::withoutGlobalScopes()->where('provider_message_id', $status['id'] ?? '-')->first();
-                    if (! $message) {
+                    if (! $message || ($signerTenant !== null && (int) $message->tenant_id !== $signerTenant)) {
                         continue;
                     }
                     $this->context->run(Tenant::find($message->tenant_id), function () use ($message, $status) {

@@ -35,7 +35,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->validateCsrfTokens(except: ['webhooks/*']);
         $middleware->redirectGuestsTo(fn (Request $request) => tenant() && ! $request->is('dashboard*', 'pos*') ? route('client.login') : '/');
-        $middleware->trustProxies(at: '*');
+        // Only trust X-Forwarded-* from known proxies (comma-separated IPs/CIDRs); defaults to private ranges (load balancer / Caddy).
+        $middleware->trustProxies(at: env('TRUSTED_PROXIES', '10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.1'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

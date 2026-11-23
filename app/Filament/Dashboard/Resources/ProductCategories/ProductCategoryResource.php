@@ -6,6 +6,7 @@ use App\Domain\Catalog\Models\ProductCategory;
 use App\Filament\Dashboard\Concerns\WorkspaceResource;
 use App\Filament\Dashboard\Resources\ProductCategories\Pages\ManageProductCategories;
 use App\Filament\Support\Translatable;
+use App\Filament\Support\Uploads;
 use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -54,7 +55,7 @@ class ProductCategoryResource extends Resource
                 ->unique(ignoreRecord: true, modifyRuleUsing: fn ($rule) => $rule->where('tenant_id', tenant()?->id)),
             Select::make('parent_id')->label(__('workspace.product_categories.parent'))->native(false)->placeholder(__('salon.ui.none'))
                 ->options(fn ($record) => ProductCategory::query()->when($record, fn ($q) => $q->whereKeyNot($record->id))->get()->pluck('name', 'id')),
-            FileUpload::make('image_path')->label(__('workspace.common.image'))->image()->disk('public')->directory('catalog/product-categories')->maxSize(4096)->columnSpanFull(),
+            FileUpload::make('image_path')->label(__('workspace.common.image'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('catalog/product-categories')->maxSize(4096)->columnSpanFull(),
         ]);
     }
 

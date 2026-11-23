@@ -10,6 +10,7 @@ use App\Filament\Dashboard\Resources\Branches\Pages\ListBranches;
 use App\Filament\Dashboard\Resources\Branches\RelationManagers\HolidaysRelationManager;
 use App\Filament\Dashboard\Resources\Branches\RelationManagers\ResourcesRelationManager;
 use App\Filament\Support\Translatable;
+use App\Filament\Support\Uploads;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
@@ -96,8 +97,8 @@ class BranchResource extends Resource
                     Toggle::make('tax_inclusive')->label(__('workspace.branches.tax_inclusive'))->default(true),
                 ]),
                 Section::make(__('workspace.branches.media'))->schema([
-                    FileUpload::make('cover_path')->label(__('workspace.branches.cover'))->image()->disk('public')->directory('branches/covers')->imageEditor()->maxSize(4096),
-                    FileUpload::make('gallery')->label(__('workspace.branches.gallery'))->image()->multiple()->reorderable()->maxFiles(12)->disk('public')->directory('branches/gallery')->maxSize(4096),
+                    FileUpload::make('cover_path')->label(__('workspace.branches.cover'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('branches/covers')->imageEditor()->maxSize(4096),
+                    FileUpload::make('gallery')->label(__('workspace.branches.gallery'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->multiple()->reorderable()->maxFiles(12)->disk('public')->directory('branches/gallery')->maxSize(4096),
                 ]),
             ]),
         ]);

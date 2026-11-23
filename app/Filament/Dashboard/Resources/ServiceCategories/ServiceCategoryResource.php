@@ -6,6 +6,7 @@ use App\Domain\Catalog\Models\ServiceCategory;
 use App\Filament\Dashboard\Concerns\WorkspaceResource;
 use App\Filament\Dashboard\Resources\ServiceCategories\Pages\ManageServiceCategories;
 use App\Filament\Support\Translatable;
+use App\Filament\Support\Uploads;
 use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -57,7 +58,7 @@ class ServiceCategoryResource extends Resource
             TextInput::make('slug')->label(__('fields.slug'))->alphaDash()->maxLength(60)->default(fn () => Str::lower(Str::random(6)))->required()
                 ->unique(ignoreRecord: true, modifyRuleUsing: fn ($rule) => $rule->where('tenant_id', tenant()?->id)),
             Select::make('icon')->label(__('fields.icon'))->native(false)->options(collect(self::ICONS)->mapWithKeys(fn ($i) => [$i => Str::of($i)->after('heroicon-o-')->headline()->toString()])),
-            FileUpload::make('image_path')->label(__('workspace.common.image'))->image()->disk('public')->directory('catalog/categories')->maxSize(4096)->columnSpanFull(),
+            FileUpload::make('image_path')->label(__('workspace.common.image'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('catalog/categories')->maxSize(4096)->columnSpanFull(),
             Toggle::make('is_active')->label(__('fields.is_active'))->default(true),
         ]);
     }

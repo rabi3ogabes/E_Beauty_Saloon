@@ -18,7 +18,7 @@
             <div class="container-luxe mt-10 max-w-4xl"><x-site.picture :path="$post->cover_path" :alt="$post->title" :eager="true" class="aspect-[16/9] w-full rounded-(--radius-hero) object-cover" sizes="(min-width: 1024px) 896px, 100vw" /></div>
         @endif
         <div class="container-luxe mt-10 max-w-3xl space-y-5 text-lg leading-relaxed text-ink/85 [&_a]:text-gold-dark [&_a]:underline [&_blockquote]:border-s-2 [&_blockquote]:border-gold [&_blockquote]:ps-5 [&_blockquote]:italic [&_h2]:mt-10 [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:mt-8 [&_h3]:text-xl [&_li]:ms-5 [&_ol]:list-decimal [&_ul]:list-disc">
-            {!! strip_tags($body, '<p><br><strong><em><b><i><ul><ol><li><a><h2><h3><h4><blockquote><figure><img><figcaption>') !!}
+            {!! safe_html($body, '<p><br><strong><em><b><i><ul><ol><li><a><h2><h3><h4><blockquote><figure><img><figcaption>') !!}
         </div>
     </article>
     @if ($related->isNotEmpty())

@@ -45,12 +45,12 @@ class SkipCashGateway extends AbstractGateway
     public function parseWebhook(Request $request): WebhookEvent
     {
         $d = $request->all();
-        if ($key = $this->cred('webhook_key')) {
-            $string = collect(['PaymentId', 'Amount', 'StatusId', 'TransactionId', 'Custom1', 'VisaId'])
-                ->filter(fn ($k) => isset($d[$k]))->map(fn ($k) => "$k={$d[$k]}")->implode(',');
-            if (! hash_equals(base64_encode(hash_hmac('sha256', $string, $key, true)), (string) $request->header('Authorization'))) {
-                throw new \RuntimeException('Invalid SkipCash signature');
-            }
+        $key = $this->cred('webhook_key') ?: throw new \RuntimeException('Webhook secret is not configured');
+
+        $string = collect(['PaymentId', 'Amount', 'StatusId', 'TransactionId', 'Custom1', 'VisaId'])
+            ->filter(fn ($k) => isset($d[$k]))->map(fn ($k) => "$k={$d[$k]}")->implode(',');
+        if (! hash_equals(base64_encode(hash_hmac('sha256', $string, $key, true)), (string) $request->header('Authorization'))) {
+            throw new \RuntimeException('Invalid SkipCash signature');
         }
 
         return new WebhookEvent(

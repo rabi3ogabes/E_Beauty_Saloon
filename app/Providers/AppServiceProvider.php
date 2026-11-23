@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Domain\AIStudio\Contracts\GeneratesMarketingContent;
 use App\Domain\AIStudio\NullMarketingContentGenerator;
+use App\Domain\CRM\Models\Client;
 use App\Domain\Tenancy\Domains\CaddyOnDemandProvisioner;
 use App\Domain\Tenancy\Domains\CloudflareSaasProvisioner;
 use App\Domain\Tenancy\Domains\DomainProvisioner;
@@ -72,7 +73,16 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(Login::class, RecordLogin::class);
 
         RateLimiter::for('api', fn (Request $r) => Limit::perMinute(120)->by(($r->user()?->getAuthIdentifier() ?? $r->ip()).'|'.tenant()?->id));
-        RateLimiter::for('otp', fn (Request $r) => [Limit::perMinute(3)->by('otp:'.$r->input('phone')), Limit::perHour(20)->by('otp-ip:'.$r->ip())]);
+        RateLimiter::for('otp', function (Request $r) {
+            // Key on the normalised phone + salon so "5555 1234" / "+97455551234" / "0097455551234" share one bucket.
+            $phone = tenant()?->id.':'.Client::normalizePhone((string) $r->input('phone'));
+
+            return [
+                Limit::perMinute(3)->by('otp:'.$phone),
+                Limit::perDay(10)->by('otp-day:'.$phone),
+                Limit::perHour(20)->by('otp-ip:'.$r->ip()),
+            ];
+        });
         RateLimiter::for('booking', fn (Request $r) => Limit::perMinute(30)->by($r->ip()));
     }
 }

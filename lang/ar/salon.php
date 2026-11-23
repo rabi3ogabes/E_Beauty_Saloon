@@ -66,6 +66,7 @@ return [
     ],
 
     'errors' => [
+        'unsafe_url' => 'هذا العنوان غير مسموح. استخدم رابط https:// عاماً.',
         'insufficient_stock' => 'المخزون غير كافٍ لـ :item (المتوفر: :available).',
         'same_branch_transfer' => 'اختر فرعين مختلفين للتحويل.',
         'insufficient_wallet' => 'رصيد المحفظة غير كافٍ (الرصيد: :balance).',

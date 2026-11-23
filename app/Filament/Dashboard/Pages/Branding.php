@@ -7,6 +7,7 @@ use App\Domain\Tenancy\Models\Tenant;
 use App\Domain\Workspace\Actions\GenerateBrandKit;
 use App\Domain\Workspace\Actions\UpdateBranding;
 use App\Filament\Dashboard\Support\SettingsPage;
+use App\Filament\Support\Uploads;
 use App\Support\Exceptions\DomainException;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -92,7 +93,7 @@ class Branding extends SettingsPage
     public function form(Schema $schema): Schema
     {
         $disk = fn () => 'branding/'.tenant()->id;
-        $upload = fn (string $name, string $label) => FileUpload::make($name)->label($label)->image()->disk('public')->directory($disk)->maxSize(4096)->live();
+        $upload = fn (string $name, string $label) => FileUpload::make($name)->label($label)->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory($disk)->maxSize(4096)->live();
 
         return $schema->columns(3)->components([
             Grid::make(1)->columnSpan(['default' => 3, 'xl' => 2])->schema([

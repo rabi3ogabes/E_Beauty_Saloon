@@ -12,6 +12,7 @@ use App\Filament\Dashboard\Resources\Services\Pages\ListServices;
 use App\Filament\Dashboard\Resources\Services\RelationManagers\BranchOverridesRelationManager;
 use App\Filament\Support\Money;
 use App\Filament\Support\Translatable;
+use App\Filament\Support\Uploads;
 use App\Support\Money\Money as MoneyValue;
 use BackedEnum;
 use Filament\Actions\EditAction;
@@ -133,7 +134,7 @@ class ServiceResource extends Resource
                         ->options(ResourcesRelationManager::typeOptions())->columns(1),
                 ]),
                 Section::make(__('workspace.services.media'))->schema([
-                    FileUpload::make('image_path')->label(__('workspace.common.image'))->image()->imageEditor()->disk('public')->directory('catalog/services')->maxSize(4096),
+                    FileUpload::make('image_path')->label(__('workspace.common.image'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->imageEditor()->disk('public')->directory('catalog/services')->maxSize(4096),
                     TextInput::make('video_url')->label(__('workspace.services.video'))->url()->placeholder('https://youtu.be/…'),
                 ]),
             ]),

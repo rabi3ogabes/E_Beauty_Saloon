@@ -38,7 +38,7 @@ class BookingLinks
 
     public static function review(Booking $booking): string
     {
-        return self::onTenant('/review/'.$booking->reference); // owned by the Marketing module
+        return self::onTenant(URL::signedRoute('marketing.review.show', ['reference' => $booking->reference], absolute: false)); // page owned by Marketing
     }
 
     public static function waitlistClaim(WaitlistEntry $entry, int $minutes = 30): string

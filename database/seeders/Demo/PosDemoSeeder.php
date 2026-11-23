@@ -12,6 +12,7 @@ use App\Domain\POS\Actions\CompleteSale;
 use App\Domain\POS\Actions\RefundSale;
 use App\Domain\POS\Models\Register;
 use App\Domain\POS\Models\Shift;
+use App\Domain\POS\Support\PosApprovals;
 use App\Domain\POS\Support\TicketCalculator;
 use App\Domain\Team\Models\CommissionRule;
 use App\Domain\Team\Models\Staff;
@@ -94,6 +95,9 @@ class PosDemoSeeder extends Seeder
                     $payload = $this->ticket($branch, $staffByBranch[$branch->id], $services, $variants, $clients, $shift, $register, $at);
                     if (! $payload) {
                         continue;
+                    }
+                    if (! empty($payload['ticket_discount']) && ! $cashier->can('pos.discount')) {
+                        $payload['discount_approval'] = PosApprovals::issue($manager, $cashier);
                     }
                     try {
                         $sale = $complete->handle($payload, $cashier);

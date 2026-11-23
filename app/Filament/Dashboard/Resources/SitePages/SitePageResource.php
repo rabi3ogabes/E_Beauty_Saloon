@@ -8,6 +8,7 @@ use App\Filament\Dashboard\Resources\SitePages\Pages\CreateSitePage;
 use App\Filament\Dashboard\Resources\SitePages\Pages\EditSitePage;
 use App\Filament\Dashboard\Resources\SitePages\Pages\ListSitePages;
 use App\Filament\Support\Translatable;
+use App\Filament\Support\Uploads;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -73,7 +74,7 @@ class SitePageResource extends Resource
             Section::make(__('website.dashboard.seo'))->columnSpan(1)->schema([
                 Translatable::make('seo_title', __('website.dashboard.seo_title'), required: false),
                 Translatable::make('seo_description', __('website.dashboard.seo_description'), required: false, textarea: true, rows: 2),
-                FileUpload::make('og_image_path')->label(__('website.dashboard.og_image'))->image()->disk('public')->directory(fn () => 'tenants/'.tenant()?->id.'/site')->maxSize(4096),
+                FileUpload::make('og_image_path')->label(__('website.dashboard.og_image'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory(fn () => 'tenants/'.tenant()?->id.'/site')->maxSize(4096),
                 Toggle::make('is_published')->label(__('website.dashboard.published'))->default(true),
                 Toggle::make('in_menu')->label(__('website.dashboard.in_menu'))->hidden(fn ($record) => (bool) $record?->is_home),
             ]),
@@ -117,12 +118,12 @@ class SitePageResource extends Resource
                 Tabs\Tab::make(__('website.dashboard.content_en'))->schema($copy('en')),
                 Tabs\Tab::make(__('website.dashboard.content_ar'))->schema($copy('ar')),
             ])->visible(fn ($get) => filled($get('type'))),
-            FileUpload::make('settings.image')->label(__('website.dashboard.hero'))->image()->disk('public')->directory(fn () => 'tenants/'.tenant()?->id.'/site')->maxSize(6144)->visible($is('hero')),
-            FileUpload::make('settings.images')->label(__('website.dashboard.images'))->image()->multiple()->reorderable()->maxFiles(12)->disk('public')
+            FileUpload::make('settings.image')->label(__('website.dashboard.hero'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory(fn () => 'tenants/'.tenant()?->id.'/site')->maxSize(6144)->visible($is('hero')),
+            FileUpload::make('settings.images')->label(__('website.dashboard.images'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->multiple()->reorderable()->maxFiles(12)->disk('public')
                 ->directory(fn () => 'tenants/'.tenant()?->id.'/gallery')->maxSize(6144)->visible($is('gallery')),
             Repeater::make('settings.before_after')->label(__('website.dashboard.before_after'))->visible($is('gallery'))->columns(2)->defaultItems(0)->schema([
-                FileUpload::make('before')->label(__('website.dashboard.before'))->image()->disk('public')->directory(fn () => 'tenants/'.tenant()?->id.'/gallery'),
-                FileUpload::make('after')->label(__('website.dashboard.after'))->image()->disk('public')->directory(fn () => 'tenants/'.tenant()?->id.'/gallery'),
+                FileUpload::make('before')->label(__('website.dashboard.before'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory(fn () => 'tenants/'.tenant()?->id.'/gallery'),
+                FileUpload::make('after')->label(__('website.dashboard.after'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory(fn () => 'tenants/'.tenant()?->id.'/gallery'),
             ]),
             TextInput::make('settings.limit')->label(__('website.dashboard.limit'))->numeric()->minValue(1)->maxValue(24)->visible($is('services', 'team', 'shop')),
             TextInput::make('settings.handle')->label(__('website.dashboard.instagram_handle'))->prefix('@')->visible($is('instagram')),

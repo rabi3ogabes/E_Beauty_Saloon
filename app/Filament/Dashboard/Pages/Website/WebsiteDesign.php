@@ -4,6 +4,7 @@ namespace App\Filament\Dashboard\Pages\Website;
 
 use App\Domain\Websites\Actions\UpdateSiteDesign;
 use App\Domain\Websites\Support\ThemeRegistry;
+use App\Filament\Support\Uploads;
 use App\Support\Exceptions\DomainException;
 use BackedEnum;
 use Filament\Forms\Components\ColorPicker;
@@ -90,10 +91,10 @@ class WebsiteDesign extends Page
                     ->options(['pill' => __('website.dashboard.pill'), 'rounded' => __('website.dashboard.rounded'), 'square' => __('website.dashboard.square')]),
             ]),
             Section::make(__('website.dashboard.images'))->columns(2)->schema([
-                FileUpload::make('logo_path')->label(__('website.dashboard.logo'))->image()->disk('public')->directory($dir)->maxSize(2048),
-                FileUpload::make('logo_dark_path')->label(__('website.dashboard.logo_dark'))->image()->disk('public')->directory($dir)->maxSize(2048),
-                FileUpload::make('hero_path')->label(__('website.dashboard.hero'))->image()->imageEditor()->disk('public')->directory($dir)->maxSize(8192),
-                FileUpload::make('favicon_path')->label(__('website.dashboard.favicon'))->image()->disk('public')->directory($dir)->maxSize(512),
+                FileUpload::make('logo_path')->label(__('website.dashboard.logo'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory($dir)->maxSize(2048),
+                FileUpload::make('logo_dark_path')->label(__('website.dashboard.logo_dark'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory($dir)->maxSize(2048),
+                FileUpload::make('hero_path')->label(__('website.dashboard.hero'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->imageEditor()->disk('public')->directory($dir)->maxSize(8192),
+                FileUpload::make('favicon_path')->label(__('website.dashboard.favicon'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory($dir)->maxSize(512),
                 Textarea::make('about')->label(__('website.dashboard.about'))->rows(3)->maxLength(600)->columnSpanFull(),
                 KeyValue::make('social')->label(__('website.dashboard.social'))->keyLabel('Network')->valueLabel('URL')->columnSpanFull(),
             ]),

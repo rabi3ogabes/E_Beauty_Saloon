@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Marketing;
 
 use App\Domain\Booking\Models\Booking;
+use App\Domain\Booking\Support\BookingLinks;
 use App\Domain\Marketing\Actions\SubmitReview;
 use App\Domain\Marketing\Models\Review;
 use App\Http\Controllers\Controller;
@@ -32,6 +33,6 @@ class ReviewController extends Controller
             $submit->handle($booking, (int) $data['rating'], $data['comment'] ?? null);
         }
 
-        return redirect()->route('marketing.review.show', $booking->reference);
+        return redirect()->to(BookingLinks::review($booking));
     }
 }

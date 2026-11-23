@@ -86,3 +86,11 @@ Append-only log. Newest last.
     authorised dashboard media route. Client sharing between branches is a tenant setting enforced by a global Client scope that
     only affects branch-restricted team members. Owner alerts are database notifications (+ optional WhatsApp) de-duplicated by
     fingerprint in `owner_alerts`; bad reviews only add the WhatsApp ping because Marketing already notifies low ratings.
+30. **Security hardening (review pass)**: platform webhooks accept only configured real gateways, require the payment's
+    own gateway, a matching amount and provider confirmation; gateway webhook secrets are mandatory (fail closed); the fake
+    gateway only exists in local/testing. POS manager approvals are single-use server tokens (`PosApprovals`), never
+    client-supplied user ids. Image uploads are raster-only (no SVG) and `/storage` is served with a sandbox CSP.
+    WhatsApp webhooks are processed only for the salon whose secret signed them, and a number belongs to one salon.
+    Tenant-configured outbound URLs pass `SafeUrl` (https + public IPs, no redirects). OTP limits key on the normalised
+    phone + salon with a daily cap; proxies are trusted only from `TRUSTED_PROXIES`. Review links are signed. CMS rich
+    text goes through `safe_html()`. POS idempotency lookups are tenant-scoped.

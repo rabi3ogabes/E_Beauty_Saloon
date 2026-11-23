@@ -8,10 +8,12 @@
 | production | live | Docker stack (`docker-compose.yml`) or Forge/Ploi; zero-downtime deploys |
 
 ## Environment checklist (production)
-- `APP_ENV=production`, `APP_DEBUG=false`, unique `APP_KEY` (never rotate without re-encrypting gateway credentials)
+- `APP_ENV=production`, `APP_DEBUG=false` (**never** deploy `.env.example` as-is: `local` enables the sandbox payment page and on-screen dev OTP codes), unique `APP_KEY` (never rotate without re-encrypting gateway credentials)
 - `PLATFORM_BASE_DOMAIN=yourbrand.com`, `PLATFORM_CENTRAL_DOMAINS=yourbrand.com,www.yourbrand.com,admin.yourbrand.com`
 - Wildcard DNS `*.yourbrand.com` → load balancer; `DOMAIN_PROVISIONER=caddy` (or `cloudflare` + zone/token)
 - MySQL 8 (`DB_*`), Redis (`CACHE_STORE=redis`, `QUEUE_CONNECTION=redis`, `SESSION_DRIVER=redis`)
+- `TRUSTED_PROXIES` = your load balancer / Caddy addresses only (rate limits rely on the real client IP)
+- Payment webhook secrets are **required** for Stripe / MyFatoorah / SkipCash — webhooks without them are rejected
 - Mail (`MAIL_*`, SES recommended), platform gateways (`SADAD_*`, `SKIPCASH_*`, `MYFATOORAH_*`, `STRIPE_*`)
 - `BACKUP_DISKS=s3` + `AWS_*` for off-site backups
 - Queue worker(s) + scheduler running (see compose services `queue`, `scheduler`)

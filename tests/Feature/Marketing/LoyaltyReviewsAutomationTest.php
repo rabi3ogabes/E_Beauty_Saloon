@@ -17,6 +17,7 @@ use App\Domain\Messaging\Channels\FakeChannel;
 use App\Domain\Messaging\MessagingManager;
 use App\Domain\Team\Models\Staff;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\URL;
 use Tests\Feature\Marketing\MarketingFixtures as F;
 
 beforeEach(function () {
@@ -77,9 +78,10 @@ it('routes low ratings privately to the owner and publishes good ones', function
         return [$make('Unhappy Client'), $make('Delighted Client'), $staff];
     });
 
-    $this->get(tenantUrl($this->tenant, 'review/'.strtolower($low->reference)))->assertOk()->assertSee(__('marketing.reviews.submit'));
-    $this->post(tenantUrl($this->tenant, 'review/'.$low->reference), ['rating' => 2, 'comment' => 'Waited 40 minutes'])->assertRedirect();
-    $this->post(tenantUrl($this->tenant, 'review/'.$high->reference), ['rating' => 5, 'comment' => 'Absolutely perfect balayage'])->assertRedirect();
+    $this->get(tenantUrl($this->tenant, 'review/'.$low->reference))->assertForbidden(); // unsigned links are refused
+    $this->get(tenantUrl($this->tenant, ltrim(URL::signedRoute('marketing.review.show', ['reference' => $low->reference], absolute: false), '/')))->assertOk()->assertSee(__('marketing.reviews.submit'));
+    $this->post(tenantUrl($this->tenant, ltrim(URL::signedRoute('marketing.review.store', ['reference' => $low->reference], absolute: false), '/')), ['rating' => 2, 'comment' => 'Waited 40 minutes'])->assertRedirect();
+    $this->post(tenantUrl($this->tenant, ltrim(URL::signedRoute('marketing.review.store', ['reference' => $high->reference], absolute: false), '/')), ['rating' => 5, 'comment' => 'Absolutely perfect balayage'])->assertRedirect();
 
     asTenant($this->tenant, function () use ($low, $high, $staff) {
         expect(Review::where('booking_id', $low->id)->value('status'))->toBe('private')
@@ -93,7 +95,7 @@ it('routes low ratings privately to the owner and publishes good ones', function
         expect($html)->toContain('Absolutely perfect balayage')->not->toContain('Waited 40 minutes');
     });
 
-    $this->get(tenantUrl($this->tenant, 'review/'.$high->reference))->assertSee(__('marketing.reviews.thanks_title'));
+    $this->get(tenantUrl($this->tenant, ltrim(URL::signedRoute('marketing.review.show', ['reference' => $high->reference], absolute: false), '/')))->assertSee(__('marketing.reviews.thanks_title'));
 });
 
 it('fires the birthday recipe from the daily scan once per year', function () {

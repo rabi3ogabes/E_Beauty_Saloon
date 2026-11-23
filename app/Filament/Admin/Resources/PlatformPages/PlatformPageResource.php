@@ -8,6 +8,7 @@ use App\Filament\Admin\Resources\PlatformPages\Pages\CreatePlatformPage;
 use App\Filament\Admin\Resources\PlatformPages\Pages\EditPlatformPage;
 use App\Filament\Admin\Resources\PlatformPages\Pages\ListPlatformPages;
 use App\Filament\Support\Translatable;
+use App\Filament\Support\Uploads;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -71,7 +72,7 @@ class PlatformPageResource extends Resource
             Section::make(__('website.dashboard.seo'))->columnSpan(1)->schema([
                 Translatable::make('seo_title', __('website.dashboard.seo_title'), required: false),
                 Translatable::make('seo_description', __('website.dashboard.seo_description'), required: false, textarea: true, rows: 2),
-                FileUpload::make('og_image_path')->label(__('website.dashboard.og_image'))->image()->disk('public')->directory('platform/og')->maxSize(4096),
+                FileUpload::make('og_image_path')->label(__('website.dashboard.og_image'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('platform/og')->maxSize(4096),
                 Toggle::make('is_published')->label(__('website.dashboard.published'))->default(true),
                 Toggle::make('in_footer')->label(__('website.admin.in_footer')),
             ]),
@@ -109,7 +110,7 @@ class PlatformPageResource extends Resource
                 $copy(['eyebrow' => 'text', 'title' => 'text', 'body' => 'textarea', 'cta_label' => 'text', 'cta_url' => 'text', 'secondary_label' => 'text', 'secondary_url' => 'text']),
                 Grid::make(2)->schema([
                     TextInput::make('video_url')->label('Video URL (mp4)')->url(),
-                    FileUpload::make('image')->label('Poster image')->image()->disk('public')->directory('platform/hero'),
+                    FileUpload::make('image')->label('Poster image')->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('platform/hero'),
                 ]),
             ]),
             Builder\Block::make('logos')->label($label('logos'))->schema([$copy(['title' => 'text']), TagsInput::make('names')->label('Names')]),

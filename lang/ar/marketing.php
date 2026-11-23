@@ -27,7 +27,7 @@ return [
         'mode' => 'طريقة الإرسال', 'modes' => ['own' => 'حسابي الخاص', 'platform_shared' => 'مشترك عبر المنصة (رصيد مسبق)'],
         'provider' => 'المزوّد',
         'providers' => ['meta' => 'واتساب كلاود من ميتا', 'twilio' => 'تويليو', 'unifonic' => 'يونيفونك', 'http' => 'بوابة HTTP (Ooredoo، Vodafone…)', 'mail' => 'بريد المنصة (SMTP)', 'ses' => 'Amazon SES', 'fcm' => 'Firebase Cloud Messaging'],
-        'enabled' => 'مفعّلة', 'saved' => 'تم حفظ إعدادات القنوات.',
+        'enabled' => 'مفعّلة', 'saved' => 'تم حفظ إعدادات القنوات.', 'number_taken' => 'رقم واتساب هذا مرتبط بصالون آخر.',
         'fields' => [
             'phone_number_id' => 'معرّف رقم الهاتف', 'token' => 'رمز الوصول', 'waba_id' => 'معرّف حساب واتساب للأعمال', 'app_secret' => 'سرّ التطبيق (توقيع الويب هوك)',
             'verify_token' => 'رمز التحقق للويب هوك', 'account_sid' => 'معرّف الحساب', 'auth_token' => 'رمز المصادقة', 'from' => 'المرسِل (رقم أو اسم)',

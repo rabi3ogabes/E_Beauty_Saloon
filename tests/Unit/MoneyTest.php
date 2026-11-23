@@ -22,3 +22,9 @@ it('formats for English and Arabic', function () {
     expect(Money::of(14950)->format('en'))->toBe('QAR 149.50')
         ->and(Money::of(14950)->format('ar'))->toBe('149.50 ر.ق');
 });
+
+it('sanitises CMS html (no javascript: links or event handlers)', function () {
+    $out = safe_html('<p onclick="x()">Hi <a href="javascript:alert(1)" onmouseover="y()">bad</a> <a href="https://ok.example">ok</a><script>z()</script></p>');
+    expect($out)->not->toContain('javascript:')->not->toContain('onclick')->not->toContain('onmouseover')->not->toContain('<script')
+        ->toContain('href="https://ok.example"');
+});

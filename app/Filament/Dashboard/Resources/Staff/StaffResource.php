@@ -13,6 +13,7 @@ use App\Filament\Dashboard\Resources\Staff\RelationManagers\SchedulesRelationMan
 use App\Filament\Dashboard\Resources\Staff\RelationManagers\TimeOffRelationManager;
 use App\Filament\Support\Money;
 use App\Filament\Support\Translatable;
+use App\Filament\Support\Uploads;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
@@ -91,7 +92,7 @@ class StaffResource extends Resource
             ]),
             Grid::make(1)->columnSpan(['default' => 3, 'lg' => 1])->schema([
                 Section::make(__('workspace.staff.appearance'))->schema([
-                    FileUpload::make('photo_path')->label(__('workspace.staff.photo'))->image()->avatar()->imageEditor()->disk('public')->directory('staff')->maxSize(4096),
+                    FileUpload::make('photo_path')->label(__('workspace.staff.photo'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->avatar()->imageEditor()->disk('public')->directory('staff')->maxSize(4096),
                     ColorPicker::make('color')->label(__('workspace.staff.color'))->helperText(__('workspace.staff.color_help'))->default('#C8A96A')->required(),
                 ]),
                 Section::make(__('workspace.staff.availability'))->schema([

@@ -6,6 +6,7 @@ use App\Domain\Websites\Actions\OptimizeImage;
 use App\Domain\Websites\Models\BlogPost;
 use App\Filament\Admin\Resources\BlogPosts\Pages\ManageBlogPosts;
 use App\Filament\Support\Translatable;
+use App\Filament\Support\Uploads;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -75,7 +76,7 @@ class BlogPostResource extends Resource
                 TextInput::make('slug')->label(__('fields.slug'))->required()->alphaDash()->unique(ignoreRecord: true),
                 DateTimePicker::make('published_at')->label(__('website.admin.published_at')),
                 TextInput::make('author_name')->label(__('website.admin.author')),
-                FileUpload::make('cover_path')->label(__('website.admin.cover'))->image()->disk('public')->directory('platform/blog')->maxSize(8192)
+                FileUpload::make('cover_path')->label(__('website.admin.cover'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('platform/blog')->maxSize(8192)
                     ->saveUploadedFileUsing(function ($file) {
                         $path = $file->store('platform/blog', 'public');
 

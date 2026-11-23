@@ -19,7 +19,7 @@
                     <h1 class="mt-3 text-3xl font-semibold sm:text-4xl">{{ __('marketing.reviews.question', ['name' => $booking->client?->firstName() ?? '']) }}</h1>
                     <p class="mt-3 text-sm text-muted">{{ $services }}@if ($staff) · {{ __('marketing.reviews.with', ['staff' => $staff->getTranslation('name', $locale)]) }}@endif</p>
                 </div>
-                <form method="POST" action="{{ route('marketing.review.store', $booking->reference) }}" class="card mt-10 space-y-6 p-6 sm:p-8" x-data="{ rating: {{ (int) old('rating', 0) }}, hover: 0 }">
+                <form method="POST" action="{{ \Illuminate\Support\Facades\URL::signedRoute('marketing.review.store', ['reference' => $booking->reference], absolute: false) }}" class="card mt-10 space-y-6 p-6 sm:p-8" x-data="{ rating: {{ (int) old('rating', 0) }}, hover: 0 }">
                     @csrf
                     <fieldset>
                         <legend class="sr-only">{{ __('marketing.reviews.rating') }}</legend>

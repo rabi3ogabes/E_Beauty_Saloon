@@ -26,8 +26,9 @@ class WhatsAppWebhookController extends Controller
     public function handle(Request $request, ProcessWhatsAppWebhook $processor)
     {
         $raw = $request->getContent();
-        abort_unless($processor->verifySignature($raw, $request->header('X-Hub-Signature-256')), 401, 'Invalid signature');
+        $signer = $processor->verifiedSigner($raw, $request->header('X-Hub-Signature-256'));
+        abort_unless($signer !== null, 401, 'Invalid signature');
 
-        return response()->json($processor->handle(json_decode($raw, true) ?: []));
+        return response()->json($processor->handle(json_decode($raw, true) ?: [], $signer));
     }
 }

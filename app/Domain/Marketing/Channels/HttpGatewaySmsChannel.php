@@ -5,6 +5,7 @@ namespace App\Domain\Marketing\Channels;
 use App\Domain\Messaging\Contracts\MessageChannel;
 use App\Domain\Messaging\DTOs\OutboundMessage;
 use App\Domain\Messaging\DTOs\SendResult;
+use App\Support\Http\SafeUrl;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -29,7 +30,8 @@ class HttpGatewaySmsChannel implements MessageChannel
         $format = $this->config['format'] ?? 'form';
 
         try {
-            $request = Http::withHeaders($this->config['headers'] ?? [])->timeout(15);
+            SafeUrl::assert((string) ($this->config['url'] ?? ''));
+            $request = Http::withHeaders($this->config['headers'] ?? [])->timeout(15)->withoutRedirecting();
             $response = match (true) {
                 $method === 'get' || $format === 'query' => $request->get($this->config['url'], $params),
                 $format === 'json' => $request->asJson()->post($this->config['url'], $params),
@@ -44,6 +46,6 @@ class HttpGatewaySmsChannel implements MessageChannel
 
         return $ok
             ? new SendResult(true, isset($this->config['id_path']) ? (string) $response->json($this->config['id_path']) : null)
-            : new SendResult(false, null, 'HTTP '.$response->status().' '.mb_substr($response->body(), 0, 120));
+            : new SendResult(false, null, 'HTTP '.$response->status());
     }
 }

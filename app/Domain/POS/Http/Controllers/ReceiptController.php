@@ -2,6 +2,7 @@
 
 namespace App\Domain\POS\Http\Controllers;
 
+use App\Domain\Booking\Support\BookingLinks;
 use App\Domain\POS\Models\Sale;
 use App\Domain\POS\Support\ThermalPdf;
 use App\Http\Controllers\Controller;
@@ -49,7 +50,7 @@ class ReceiptController extends Controller
     {
         $sale->loadMissing(['items.staff', 'salePayments', 'client', 'cashier', 'branch', 'booking', 'refunds']);
         $tenant = tenant();
-        $qrUrl = $sale->booking ? url('/review/'.$sale->booking->reference) : url('/book');
+        $qrUrl = $sale->booking ? BookingLinks::review($sale->booking) : url('/book');
 
         return [
             'sale' => $sale,

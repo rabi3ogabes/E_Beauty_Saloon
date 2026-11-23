@@ -9,6 +9,7 @@ use App\Domain\Payments\Models\TenantPaymentGateway;
 use App\Domain\Workspace\Actions\CompleteOnboarding;
 use App\Domain\Workspace\Actions\SavePaymentGateway;
 use App\Filament\Dashboard\Resources\Branches\BranchResource;
+use App\Filament\Support\Uploads;
 use App\Support\Exceptions\DomainException;
 use Filament\Actions\Action;
 use Filament\Forms\Components\CheckboxList;
@@ -119,7 +120,7 @@ class Onboarding extends Page
                     ->description(__('workspace.onboarding.step_branding_help'))->schema([
                         Grid::make(['default' => 1, 'lg' => 2])->schema([
                             Grid::make(2)->schema([
-                                FileUpload::make('logo_path')->label(__('workspace.branding.logo_light'))->image()->disk('public')->directory(fn () => 'branding/'.tenant()->id)->maxSize(4096)->live()->columnSpanFull(),
+                                FileUpload::make('logo_path')->label(__('workspace.branding.logo_light'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory(fn () => 'branding/'.tenant()->id)->maxSize(4096)->live()->columnSpanFull(),
                                 ColorPicker::make('primary')->label(__('workspace.branding.primary'))->required()->live(debounce: 300),
                                 ColorPicker::make('accent')->label(__('workspace.branding.accent'))->live(debounce: 300),
                                 Select::make('font_display')->label(__('workspace.branding.font_display'))->options(array_combine(Branding::FONTS_DISPLAY, Branding::FONTS_DISPLAY))->native(false)->live(),

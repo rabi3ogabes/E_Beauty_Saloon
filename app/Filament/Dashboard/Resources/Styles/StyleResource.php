@@ -8,6 +8,7 @@ use App\Domain\Catalog\Models\ProductVariant;
 use App\Domain\Catalog\Models\Service;
 use App\Filament\Dashboard\Resources\Styles\Pages\ManageStyles;
 use App\Filament\Support\Translatable;
+use App\Filament\Support\Uploads;
 use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -91,7 +92,7 @@ class StyleResource extends Resource
                 Textarea::make('prompt')->label(__('ai_studio.dashboard.prompt'))->helperText(__('ai_studio.dashboard.prompt_help'))->required()->rows(3)->columnSpanFull(),
             ]),
             Section::make()->columnSpan(1)->schema([
-                FileUpload::make('reference_path')->label(__('ai_studio.dashboard.reference'))->image()->disk('public')->directory('ai-styles')->imageEditor()->maxSize(4096),
+                FileUpload::make('reference_path')->label(__('ai_studio.dashboard.reference'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('ai-styles')->imageEditor()->maxSize(4096),
                 ColorPicker::make('swatch')->label(__('ai_studio.dashboard.swatch')),
                 Select::make('service_id')->label(__('ai_studio.dashboard.service'))->searchable()->preload()
                     ->options(fn () => Service::query()->active()->orderBy('sort')->get()->mapWithKeys(fn ($s) => [$s->id => $s->name])->all()),

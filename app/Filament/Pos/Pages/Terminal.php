@@ -22,6 +22,7 @@ use App\Domain\POS\Models\Register;
 use App\Domain\POS\Models\Sale;
 use App\Domain\POS\Models\Shift;
 use App\Domain\POS\Support\BookingTicket;
+use App\Domain\POS\Support\PosApprovals;
 use App\Domain\POS\Support\SellableRegistry;
 use App\Domain\POS\Support\TicketCalculator;
 use App\Domain\Team\Models\Staff;
@@ -39,6 +40,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 
 /**
  * The checkout terminal (POS home). Tablet-first two-pane layout:
@@ -86,7 +88,11 @@ class Terminal extends Page
     /** @var array{type: string, value: int}|null */
     public ?array $ticketDiscount = null;
 
+    #[Locked]
     public ?int $discountApprovedBy = null;
+
+    #[Locked]
+    public ?string $discountApproval = null;
 
     /** @var array<int|string, string> staff_id => decimal */
     public array $tips = [];
@@ -528,6 +534,7 @@ class Terminal extends Page
                 Auth::guard('web')->login($user);
                 session()->put('password_hash_web', $user->getAuthPassword());
                 $this->discountApprovedBy = null;
+                $this->discountApproval = null;
                 $this->reset('pin', 'pinPurpose', 'modal');
                 Notification::make()->success()->title(__('pos.switch.done', ['name' => $user->name]))->send();
 
@@ -536,6 +543,7 @@ class Terminal extends Page
 
             $manager = $verify->handle($this->pin, 'pos.discount');
             $this->discountApprovedBy = $manager->id;
+            $this->discountApproval = PosApprovals::issue($manager, auth()->user());
             $this->pin = '';
             $this->pinPurpose = null;
             Notification::make()->success()->title(__('pos.pin.approved', ['name' => $manager->name]))->send();
@@ -786,7 +794,7 @@ class Terminal extends Page
             'booking_id' => $this->bookingId,
             'lines' => collect($this->lines)->map(fn ($l) => collect($l)->only(['type', 'id', 'qty', 'unit_price', 'discount_type', 'discount_value', 'staff_id', 'booking_item_id', 'recipient'])->all())->values()->all(),
             'ticket_discount' => $this->ticketDiscount,
-            'discount_approved_by' => $this->discountApprovedBy,
+            'discount_approval' => $this->discountApproval,
             'tips' => $this->tipsMinor(),
             'payments' => collect($this->tenders)->map(fn ($t) => match ($t['method']) {
                 'cash' => ['method' => 'cash', 'tendered' => $t['amount']],
@@ -833,7 +841,7 @@ class Terminal extends Page
 
     protected function resetTicket(): void
     {
-        $this->reset('lines', 'clientId', 'clientSearch', 'bookingId', 'deposit', 'ticketDiscount', 'discountApprovedBy', 'tips', 'notes',
+        $this->reset('lines', 'clientId', 'clientSearch', 'bookingId', 'deposit', 'ticketDiscount', 'discountApprovedBy', 'discountApproval', 'tips', 'notes',
             'tenders', 'tenderAmount', 'tenderReference', 'giftCardCode', 'pointsToUse', 'onlinePaymentId');
         $this->idempotencyKey = (string) Str::ulid();
         unset($this->client, $this->totals);

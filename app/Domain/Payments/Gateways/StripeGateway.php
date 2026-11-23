@@ -70,7 +70,7 @@ class StripeGateway extends AbstractGateway
     {
         $secret = $this->cred('webhook_secret');
         if (! $secret) {
-            return;
+            throw new \RuntimeException('Stripe webhook secret is not configured');
         }
         $parts = collect(explode(',', (string) $request->header('Stripe-Signature')))
             ->mapWithKeys(fn ($p) => [explode('=', $p, 2)[0] => explode('=', $p, 2)[1] ?? '']);

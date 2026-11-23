@@ -29,8 +29,9 @@ Route::middleware('module:marketing')->group(function () {
 Route::get('/r/{code}', ReferralController::class)->middleware('module:loyalty')->where('code', '[A-Za-z0-9]{4,16}')->name('marketing.referral');
 
 // Post-visit reviews — the Booking module links its post-visit messages to /review/{reference}
-Route::get('/review/{reference}', [ReviewController::class, 'show'])->name('marketing.review.show');
-Route::post('/review/{reference}', [ReviewController::class, 'store'])->middleware('throttle:10,1')->name('marketing.review.store');
+// Signed (relative) links only: a guessed booking reference cannot read or post someone else's review.
+Route::get('/review/{reference}', [ReviewController::class, 'show'])->middleware(['signed:relative', 'throttle:30,1'])->name('marketing.review.show');
+Route::post('/review/{reference}', [ReviewController::class, 'store'])->middleware(['signed:relative', 'throttle:10,1'])->name('marketing.review.store');
 
 // Inbound SMS (STOP keyword) from SMS gateways: /webhooks/marketing/sms/{secret}?from=...&text=...
 Route::match(['get', 'post'], '/webhooks/marketing/sms/{secret}', [CampaignLinkController::class, 'inboundSms'])->name('marketing.webhooks.sms');

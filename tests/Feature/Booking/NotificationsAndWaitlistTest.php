@@ -83,7 +83,7 @@ it('sends the post-visit thank-you with the review link and a rebook suggestion'
 
     $sent = FakeChannel::sentTo('whatsapp', $client->phone);
     expect($sent)->toHaveCount(1)
-        ->and($sent[0]['message']->buttons[0]['url'])->toEndWith('/review/'.$booking->reference)
+        ->and($sent[0]['message']->buttons[0]['url'])->toContain('/review/'.$booking->reference.'?signature=')
         ->and($sent[0]['message']->body)->toContain('/book?branch=main&service=cut')
         ->and($booking->fresh()->review_requested_at)->not->toBeNull();
 });

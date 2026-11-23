@@ -16,6 +16,7 @@ use App\Domain\Payments\Models\Payment;
 use App\Domain\POS\Enums\SaleStatus;
 use App\Domain\POS\Models\Sale;
 use App\Domain\POS\Models\Shift;
+use App\Domain\POS\Support\PosApprovals;
 use App\Domain\POS\Support\SellableRegistry;
 use App\Domain\POS\Support\TicketCalculator;
 use App\Domain\Team\Models\CommissionRule;
@@ -54,7 +55,7 @@ class CompleteSale
         abort_if(tenant()?->isReadOnly(), 423, __('salon.errors.read_only'));
         $key = (string) ($payload['idempotency_key'] ?? throw new DomainException(__('pos.errors.missing_key')));
 
-        $existing = Sale::withoutGlobalScopes()->where('idempotency_key', $key)->first();
+        $existing = Sale::withoutGlobalScopes()->where('tenant_id', tenant()->id)->where('idempotency_key', $key)->first();
         if ($existing && $existing->status !== SaleStatus::Draft) {
             return $existing; // replay: never twice
         }
@@ -63,7 +64,7 @@ class CompleteSale
         }
 
         return DB::transaction(function () use ($payload, $cashier, $offline, $key) {
-            $sale = Sale::withoutGlobalScopes()->where('idempotency_key', $key)->lockForUpdate()->first();
+            $sale = Sale::withoutGlobalScopes()->where('tenant_id', tenant()->id)->where('idempotency_key', $key)->lockForUpdate()->first();
             if ($sale && $sale->status !== SaleStatus::Draft) {
                 return $sale;
             }
@@ -93,7 +94,7 @@ class CompleteSale
             // 2. Discount authorization (pos.discount or a manager PIN approval).
             $approverId = null;
             if ($calc['discount'] > 0) {
-                $approverId = $this->authorizeDiscount($cashier, $payload['discount_approved_by'] ?? null);
+                $approverId = $this->authorizeDiscount($cashier, $payload['discount_approval'] ?? null);
             }
 
             // 3. Payments.
@@ -255,12 +256,14 @@ class CompleteSale
         ];
     }
 
-    protected function authorizeDiscount(User $cashier, mixed $approvedBy): int
+    protected function authorizeDiscount(User $cashier, ?string $approvalToken): int
     {
         if ($cashier->can('pos.discount')) {
             return $cashier->id;
         }
-        $approver = $approvedBy ? User::where('tenant_id', tenant()->id)->find((int) $approvedBy) : null;
+        // Only a server-issued, single-use approval token (from a manager PIN) is accepted.
+        $approverId = PosApprovals::consume($approvalToken, $cashier);
+        $approver = $approverId ? User::where('tenant_id', tenant()->id)->find($approverId) : null;
         if ($approver && $approver->can('pos.discount')) {
             return $approver->id;
         }

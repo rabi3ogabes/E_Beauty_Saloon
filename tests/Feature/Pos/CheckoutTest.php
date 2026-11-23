@@ -15,6 +15,7 @@ use App\Domain\POS\Enums\SaleStatus;
 use App\Domain\POS\Models\Commission;
 use App\Domain\POS\Models\Sale;
 use App\Domain\POS\Support\BookingTicket;
+use App\Domain\POS\Support\PosApprovals;
 use App\Support\Exceptions\DomainException;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Models\Activity;
@@ -201,6 +202,29 @@ it('requires pos.discount or a manager approval for discounts', function () {
 
     expect(fn () => app(CompleteSale::class)->handle($payload(), $receptionist))->toThrow(DomainException::class, __('pos.errors.discount_needs_approval'));
 
-    $sale = app(CompleteSale::class)->handle($payload(['discount_approved_by' => $manager->id]), $receptionist);
+    $sale = app(CompleteSale::class)->handle($payload(['discount_approval' => PosApprovals::issue($manager, $receptionist)]), $receptionist);
     expect($sale->discount)->toBe(1500)->and($sale->discount_meta['approved_by'])->toBe($manager->id);
+});
+
+it('rejects a client-supplied approver id and single-use approval tokens are not reusable', function () {
+    $s = posSalon(['tax_percent' => 0]);
+    $receptionist = tenantUser($s->tenant, 'receptionist', [$s->branch->id]);
+    posActingAs($s->tenant, $receptionist);
+    $payload = fn (array $extra = []) => array_merge([
+        'idempotency_key' => saleKey(), 'branch_id' => $s->branch->id,
+        'lines' => [['type' => 'service', 'id' => $s->services[0]->id, 'discount_type' => 'percent', 'discount_value' => 10000]],
+        'payments' => [['method' => 'cash', 'tendered' => 0]],
+    ], $extra);
+
+    // Old forgeable field is ignored.
+    expect(fn () => app(CompleteSale::class)->handle($payload(['discount_approved_by' => $s->owner->id]), $receptionist))
+        ->toThrow(DomainException::class, __('pos.errors.discount_needs_approval'));
+    // A token issued to another cashier doesn't work.
+    $other = tenantUser($s->tenant, 'receptionist', [$s->branch->id]);
+    $foreign = PosApprovals::issue($s->owner, $other);
+    expect(fn () => app(CompleteSale::class)->handle($payload(['discount_approval' => $foreign]), $receptionist))->toThrow(DomainException::class);
+    // A valid token works exactly once.
+    $token = PosApprovals::issue($s->owner, $receptionist);
+    app(CompleteSale::class)->handle($payload(['discount_approval' => $token]), $receptionist);
+    expect(fn () => app(CompleteSale::class)->handle($payload(['discount_approval' => $token]), $receptionist))->toThrow(DomainException::class);
 });

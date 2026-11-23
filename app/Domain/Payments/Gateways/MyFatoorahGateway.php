@@ -41,15 +41,16 @@ class MyFatoorahGateway extends AbstractGateway
 
     public function parseWebhook(Request $request): WebhookEvent
     {
-        if ($secret = $this->cred('webhook_secret')) {
-            $data = $request->input('Data', []);
-            ksort($data);
-            $string = collect($data)->map(fn ($v, $k) => $k.'='.(is_scalar($v) ? $v : ''))->implode(',');
-            $expected = base64_encode(hash_hmac('sha256', $string, $secret, true));
-            if (! hash_equals($expected, (string) $request->header('MyFatoorah-Signature'))) {
-                throw new \RuntimeException('Invalid MyFatoorah signature');
-            }
+        $secret = $this->cred('webhook_secret') ?: throw new \RuntimeException('Webhook secret is not configured');
+
+        $data = $request->input('Data', []);
+        ksort($data);
+        $string = collect($data)->map(fn ($v, $k) => $k.'='.(is_scalar($v) ? $v : ''))->implode(',');
+        $expected = base64_encode(hash_hmac('sha256', $string, $secret, true));
+        if (! hash_equals($expected, (string) $request->header('MyFatoorah-Signature'))) {
+            throw new \RuntimeException('Invalid MyFatoorah signature');
         }
+
         $d = $request->input('Data', []);
 
         return new WebhookEvent(

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Marketing\Models;
 
+use App\Support\Exceptions\DomainException;
 use App\Support\Tenancy\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 
@@ -35,6 +36,11 @@ class TenantChannelSetting extends Model
         static::saving(function (self $s) {
             if ($s->channel === 'whatsapp') {
                 $s->external_id = data_get($s->credentials, 'phone_number_id');
+                // A WhatsApp number belongs to exactly one salon.
+                if ($s->external_id && static::withoutGlobalScopes()->where('channel', 'whatsapp')->where('external_id', $s->external_id)
+                    ->where('tenant_id', '!=', $s->tenant_id ?? tenant()?->id)->exists()) {
+                    throw new DomainException(__('marketing.channel_settings.number_taken'));
+                }
             }
         });
     }

@@ -17,6 +17,10 @@ https:// {
         -Server
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
     }
+    # User uploads: never executable in the app origin (defence in depth against SVG/HTML payloads)
+    @uploads path /storage/*
+    header @uploads Content-Security-Policy "sandbox; default-src 'none'; img-src 'self'; style-src 'unsafe-inline'"
+    header @uploads X-Content-Type-Options "nosniff"
     @static path /build/* /css/* /js/* /fonts/* /storage/*
     header @static Cache-Control "public, max-age=31536000, immutable"
     php_fastcgi app:9000

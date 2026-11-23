@@ -48,7 +48,9 @@ class GatewayManager
             'tap' => new TapGateway($credentials, $mode),
             'stripe' => new StripeGateway($credentials, $mode),
             'cash', 'card_terminal', 'bank_transfer', 'cod', 'manual' => new OfflineGateway($driver, $credentials, $mode),
-            'fake' => new FakeGateway($credentials, $mode),
+            'fake' => static::$faked || app()->environment(['local', 'testing'])
+                ? new FakeGateway($credentials, $mode)
+                : throw new InvalidArgumentException('The fake gateway is disabled in this environment.'),
             default => throw new InvalidArgumentException("Unknown payment driver [$driver]"),
         };
     }

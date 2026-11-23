@@ -3,6 +3,8 @@
 use App\Domain\Billing\Actions\MarkInvoicePaid;
 use App\Domain\Billing\Models\Plan;
 use App\Domain\Branches\Models\Branch;
+use App\Domain\Messaging\MessagingManager;
+use App\Domain\Payments\Gateways\GatewayManager;
 use App\Domain\Tenancy\Actions\CreateTenant;
 use App\Domain\Tenancy\Models\Tenant;
 use App\Models\User;
@@ -25,6 +27,9 @@ pest()->extend(TestCase::class)
     ->beforeEach(function () {
         $this->seed(PlatformSeeder::class);
         app(TenantContext::class)->set(null);
+        // Static fakes must never leak between tests.
+        GatewayManager::fake(false);
+        MessagingManager::fake(false);
     })
     ->in('Feature', 'Domain');
 

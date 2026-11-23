@@ -13,6 +13,7 @@ use App\Filament\Dashboard\Resources\Products\Pages\ListProducts;
 use App\Filament\Dashboard\Resources\Products\RelationManagers\StockRelationManager;
 use App\Filament\Support\Money;
 use App\Filament\Support\Translatable;
+use App\Filament\Support\Uploads;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\ColorPicker;
@@ -121,7 +122,7 @@ class ProductResource extends Resource
                         ->placeholder(__('workspace.products.tax_default')),
                 ]),
                 Section::make(__('workspace.products.media'))->schema([
-                    FileUpload::make('images')->label(__('workspace.products.images'))->image()->multiple()->reorderable()->maxFiles(8)
+                    FileUpload::make('images')->label(__('workspace.products.images'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->multiple()->reorderable()->maxFiles(8)
                         ->disk('public')->directory('catalog/products')->maxSize(4096),
                     TextInput::make('video_url')->label(__('workspace.services.video'))->url(),
                 ]),

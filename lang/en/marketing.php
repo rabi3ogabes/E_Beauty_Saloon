@@ -28,7 +28,7 @@ return [
         'mode' => 'Sending mode', 'modes' => ['own' => 'My own account', 'platform_shared' => 'Platform shared (prepaid credits)'],
         'provider' => 'Provider',
         'providers' => ['meta' => 'Meta WhatsApp Cloud API', 'twilio' => 'Twilio', 'unifonic' => 'Unifonic', 'http' => 'HTTP gateway (Ooredoo, Vodafone…)', 'mail' => 'Platform mailer (SMTP)', 'ses' => 'Amazon SES', 'fcm' => 'Firebase Cloud Messaging'],
-        'enabled' => 'Enabled', 'saved' => 'Channel settings saved.',
+        'enabled' => 'Enabled', 'saved' => 'Channel settings saved.', 'number_taken' => 'This WhatsApp number is already connected to another salon.',
         'fields' => [
             'phone_number_id' => 'Phone number ID', 'token' => 'Access token', 'waba_id' => 'WhatsApp Business Account ID', 'app_secret' => 'App secret (webhook signature)',
             'verify_token' => 'Webhook verify token', 'account_sid' => 'Account SID', 'auth_token' => 'Auth token', 'from' => 'Sender (number or ID)',

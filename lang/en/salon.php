@@ -66,6 +66,7 @@ return [
     ],
 
     'errors' => [
+        'unsafe_url' => 'This address is not allowed. Use a public https:// URL.',
         'insufficient_stock' => 'Not enough stock for :item (available: :available).',
         'same_branch_transfer' => 'Choose two different branches for a transfer.',
         'insufficient_wallet' => 'Wallet balance is not enough (balance: :balance).',

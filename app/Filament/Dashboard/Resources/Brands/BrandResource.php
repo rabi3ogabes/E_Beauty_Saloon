@@ -6,6 +6,7 @@ use App\Domain\Catalog\Models\Brand;
 use App\Domain\Catalog\Models\Product;
 use App\Filament\Dashboard\Concerns\WorkspaceResource;
 use App\Filament\Dashboard\Resources\Brands\Pages\ManageBrands;
+use App\Filament\Support\Uploads;
 use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -54,7 +55,7 @@ class BrandResource extends Resource
                 ->afterStateUpdated(fn (Set $set, Get $get, ?string $state) => blank($get('slug')) ? $set('slug', Str::slug((string) $state)) : null),
             TextInput::make('slug')->label(__('fields.slug'))->alphaDash()->required()
                 ->unique('brands', 'slug', ignoreRecord: true, modifyRuleUsing: fn ($rule) => $rule->where('tenant_id', tenant()?->id)),
-            FileUpload::make('logo_path')->label(__('workspace.brands.logo'))->image()->disk('public')->directory('catalog/brands')->maxSize(2048),
+            FileUpload::make('logo_path')->label(__('workspace.brands.logo'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('catalog/brands')->maxSize(2048),
         ];
     }
 

@@ -10,6 +10,7 @@ use App\Domain\CRM\Models\Client;
 use App\Domain\CRM\Support\ClientTimeline;
 use App\Filament\Dashboard\Resources\Clients\ClientResource;
 use App\Filament\Support\Money;
+use App\Filament\Support\Uploads;
 use App\Support\Exceptions\DomainException;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -145,7 +146,7 @@ class ViewClient extends ViewRecord
                     })),
                 Action::make('uploadPhoto')->label(__('workspace.clients.upload_photo'))->icon(Heroicon::OutlinedCamera)->visible($manage)
                     ->schema([
-                        FileUpload::make('path')->label(__('workspace.clients.photo'))->image()->disk('local')->directory(fn () => 'client-photos/'.$this->record->tenant_id)->visibility('private')->maxSize(8192)->required(),
+                        FileUpload::make('path')->label(__('workspace.clients.photo'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('local')->directory(fn () => 'client-photos/'.$this->record->tenant_id)->visibility('private')->maxSize(8192)->required(),
                         Select::make('kind')->label(__('fields.type'))->native(false)->default('before')
                             ->options(collect(['before', 'after', 'reference'])->mapWithKeys(fn ($k) => [$k => __('workspace.clients.photo_kinds.'.$k)])),
                         TextInput::make('caption')->label(__('workspace.clients.caption'))->maxLength(160),
