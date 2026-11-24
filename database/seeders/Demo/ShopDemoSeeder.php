@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
- * Shop demo for "Maison Lumière": Doha delivery zones, drivers, coupons, stylist picks, reviews
+ * Shop demo for "E Beauty Saloon": Doha delivery zones, drivers, coupons, stylist picks, reviews
  * and ~60 orders over the last 45 days in mixed statuses — placed and progressed through the real
  * lifecycle Actions so stock, payments, history and loyalty are consistent.
  */

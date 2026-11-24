@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\EditProfile;
 use App\Filament\Concerns\ConfiguresLuxePanel;
 use App\Http\Middleware\EnsureTenantIsAccessible;
 use App\Http\Middleware\RequireTenantDomain;
@@ -23,7 +24,7 @@ class DashboardPanelProvider extends PanelProvider
             ->path('dashboard')
             ->login()
             ->passwordReset()
-            ->profile(isSimple: false)
+            ->profile(EditProfile::class, isSimple: false)
             ->brandName(fn () => tenant()?->name ?? config('salon.name'))
             ->brandLogo(fn () => tenant()?->brand('logo_path') ? asset('storage/'.tenant()->brand('logo_path')) : null)
             ->brandLogoHeight('2.25rem')

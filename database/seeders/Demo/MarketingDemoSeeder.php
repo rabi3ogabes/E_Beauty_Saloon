@@ -32,7 +32,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 /**
- * Marketing, loyalty & reviews demo data for "Maison Lumière": packages, a membership, promotions, 3 audiences,
+ * Marketing, loyalty & reviews demo data for "E Beauty Saloon": packages, a membership, promotions, 3 audiences,
  * 3 past campaigns with realistic funnels and attributed bookings, automations, ~40 reviews.
  */
 class MarketingDemoSeeder extends Seeder
@@ -100,7 +100,7 @@ class MarketingDemoSeeder extends Seeder
                 'channel' => $i % 3 ? 'pos' : 'online', 'activated_at' => now()->subDays(20 + $i * 3), 'expires_at' => now()->addDays(60 - $i * 3)]);
         }
 
-        $club = Membership::create(['name' => ['en' => 'Lumière Club', 'ar' => 'نادي لوميير'], 'monthly_price' => 59900, 'billing' => 'recurring',
+        $club = Membership::create(['name' => ['en' => 'E Beauty Club', 'ar' => 'نادي إي بيوتي'], 'monthly_price' => 59900, 'billing' => 'recurring',
             'description' => ['en' => '2 signature blow-dries every month, 10% off products and priority booking.', 'ar' => 'جلستا استشوار كل شهر، خصم 10% على المنتجات وأولوية في الحجز.'],
             'perks' => ['included' => array_values(array_filter([($services['signature-blow-dry'] ?? null) ? ['service_id' => $services['signature-blow-dry']->id, 'quantity' => 2] : null])), 'product_discount_bp' => 1000, 'service_discount_bp' => 0]]);
         foreach ($clients->random(9) as $i => $client) {
@@ -112,7 +112,7 @@ class MarketingDemoSeeder extends Seeder
         Promotion::create(['name' => ['en' => 'Glow 15', 'ar' => 'إشراقة 15'], 'type' => 'coupon', 'code' => 'GLOW15', 'discount_type' => 'percent', 'discount_value' => 1500, 'usage_limit' => 300, 'used_count' => 47, 'per_client_limit' => 1]);
         Promotion::create(['name' => ['en' => 'Morning ritual', 'ar' => 'طقوس الصباح'], 'type' => 'happy_hour', 'discount_type' => 'percent', 'discount_value' => 2000,
             'rules' => ['weekdays' => [0, 1, 2, 3], 'from' => '10:00', 'to' => '13:00', 'applies_to' => 'services']]);
-        Promotion::create(['name' => ['en' => 'Welcome to Lumière', 'ar' => 'أهلاً بكِ في لوميير'], 'type' => 'first_visit', 'discount_type' => 'percent', 'discount_value' => 1000, 'rules' => ['applies_to' => 'services']]);
+        Promotion::create(['name' => ['en' => 'Welcome to E Beauty', 'ar' => 'أهلاً بكِ في إي بيوتي'], 'type' => 'first_visit', 'discount_type' => 'percent', 'discount_value' => 1000, 'rules' => ['applies_to' => 'services']]);
         Promotion::create(['name' => ['en' => 'Birthday treat', 'ar' => 'هدية عيد الميلاد'], 'type' => 'birthday', 'discount_type' => 'percent', 'discount_value' => 2000, 'rules' => ['days_before' => 7, 'days_after' => 7]]);
         Promotion::create(['name' => ['en' => 'White Friday flash sale', 'ar' => 'تخفيضات الجمعة البيضاء'], 'type' => 'flash_sale', 'discount_type' => 'percent', 'discount_value' => 2500,
             'starts_at' => now()->subDay(), 'ends_at' => now()->addDays(3), 'show_countdown' => true, 'rules' => ['applies_to' => 'products']]);
@@ -147,7 +147,7 @@ class MarketingDemoSeeder extends Seeder
             $started = now()->subDays($daysAgo)->setTime(10, 30);
             $campaign = Campaign::create([
                 'name' => $name, 'segment_id' => $segment->id, 'channels' => $channels, 'whatsapp_template_id' => $tplId, 'banner_id' => $banner->id,
-                'content' => ['en' => ['subject' => $name, 'body' => "Hi {first_name} ✦ {$name} at Maison Lumière. Reserve: {link}"], 'ar' => ['body' => 'مرحباً {first_name} ✦ احجزي الآن: {link}']],
+                'content' => ['en' => ['subject' => $name, 'body' => "Hi {first_name} ✦ {$name} at E Beauty Saloon. Reserve: {link}"], 'ar' => ['body' => 'مرحباً {first_name} ✦ احجزي الآن: {link}']],
                 'status' => 'sent', 'started_at' => $started, 'completed_at' => $started->copy()->addMinutes(18),
             ]);
             $audience = $segment->clients()->with('consents')->get();

@@ -25,7 +25,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 /**
- * POS demo for "Maison Lumière": a register per branch, commission rules, ~150 completed sales over the
+ * POS demo for "E Beauty Saloon": a register per branch, commission rules, ~150 completed sales over the
  * last ~60 days (split payments, tips, a few discounts and refunds) with closed daily shifts, and today's
  * shift left open so the terminal is ready. Independent of the booking demo seeder.
  */

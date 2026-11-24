@@ -94,3 +94,8 @@ Append-only log. Newest last.
     Tenant-configured outbound URLs pass `SafeUrl` (https + public IPs, no redirects). OTP limits key on the normalised
     phone + salon with a daily cap; proxies are trusted only from `TRUSTED_PROXIES`. Review links are signed. CMS rich
     text goes through `safe_html()`. POS idempotency lookups are tenant-scoped.
+31. **POS PINs are self-service and unique per salon**: members with POS access set their own PIN on the profile page
+    (dashboard and POS panels, current password required); owners can set or clear it from Team logins. A PIN alone
+    identifies its holder at the till, so `SetPosPin` refuses one already used in the salon, plus repeated/sequential
+    digits. All refusals share one message and are throttled (5/hour) so the check cannot be used to find a colleague's
+    PIN. `VerifyPosPin` prefers a holder who has the required permission if older data still shares a PIN.

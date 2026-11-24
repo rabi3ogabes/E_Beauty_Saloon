@@ -11,7 +11,7 @@ use App\Domain\Websites\Support\PlatformContent;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Database\Seeder;
 
-/** Platform CMS defaults + 3 journal posts, and Maison Lumière's customized website (sections, SEO, settings). */
+/** Platform CMS defaults + 3 journal posts, and E Beauty Saloon's customized website (sections, SEO, settings). */
 class WebsiteDemoSeeder extends Seeder
 {
     public static int $order = 60;
@@ -65,7 +65,7 @@ class WebsiteDemoSeeder extends Seeder
         }
         $settings = $tenant->settings ?? [];
         $settings['website'] = array_merge($settings['website'] ?? [], [
-            'seo_description' => 'Maison Lumière — luxury hair, nails, lashes and skin rituals in West Bay and The Pearl, Doha. Book online in seconds.',
+            'seo_description' => 'E Beauty Saloon — luxury hair, nails, lashes and skin rituals in West Bay and The Pearl, Doha. Book online in seconds.',
             'gbp_booking_url' => 'https://www.google.com/maps/reserve',
         ]);
         $tenant->update(['settings' => $settings]);
@@ -78,8 +78,8 @@ class WebsiteDemoSeeder extends Seeder
             'ar' => ['eyebrow' => 'الدوحة · منذ 2014', 'title' => 'فن الجمال المدروس', 'subtitle' => 'تسريحات راقية وأظافر مثالية وطقوس للبشرة على يد فريق حائز على جوائز — في الخليج الغربي واللؤلؤة.', 'cta_label' => 'احجزي طقوسك'],
         ]]);
         $sort = (int) $home->sections()->max('sort');
-        $home->sections()->create(['type' => 'instagram', 'sort' => $sort + 1, 'settings' => ['handle' => 'maisonlumiere'],
-            'content' => ['en' => ['title' => 'Life at the Maison'], 'ar' => ['title' => 'الحياة في الميزون']]]);
+        $home->sections()->create(['type' => 'instagram', 'sort' => $sort + 1, 'settings' => ['handle' => 'ebeautysaloon'],
+            'content' => ['en' => ['title' => 'Life at E Beauty'], 'ar' => ['title' => 'الحياة في إي بيوتي']]]);
 
         $bridal = SitePage::create(['slug' => 'bridal', 'title' => ['en' => 'Bridal', 'ar' => 'العرائس'], 'is_published' => true, 'in_menu' => true, 'sort' => 1,
             'seo_title' => ['en' => 'Bridal hair & makeup in Doha', 'ar' => 'تسريحات ومكياج العرائس في الدوحة']]);
