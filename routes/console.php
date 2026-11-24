@@ -5,9 +5,12 @@ use App\Domain\Branches\Models\Branch;
 use App\Domain\Tenancy\Jobs\VerifyCustomDomain;
 use App\Domain\Tenancy\Models\Domain;
 use App\Domain\Tenancy\Models\Tenant;
+use App\Support\Monitoring\ErrorAlertMail;
+use App\Support\Monitoring\ErrorContext;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schedule;
 
 // Billing: reminders (7/3/1 days), renewal invoices, grace, suspension.
@@ -70,3 +73,17 @@ Artisan::command('app:sync-demo-domain', function () {
     Cache::forget('tenant-domain:'.$host);
     $this->info("{$host} → {$tenant->name}");
 })->purpose('Attach the hosted demo domain to the demo salon');
+
+// Send a sample error alert to ERROR_ALERT_EMAIL to check mail delivery end to end.
+Artisan::command('monitoring:test-alert', function () {
+    $to = config('monitoring.alert_to');
+    if ($to === []) {
+        $this->error('Set ERROR_ALERT_EMAIL first.');
+
+        return 1;
+    }
+    Mail::to($to)->send(new ErrorAlertMail(
+        ErrorContext::from(new RuntimeException('Test alert — error monitoring is working.'))
+    ));
+    $this->info('Test alert sent to '.implode(', ', $to).' via the "'.config('mail.default').'" mailer.');
+})->purpose('Send a test error-alert e-mail');
