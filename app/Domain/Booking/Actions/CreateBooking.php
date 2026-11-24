@@ -58,9 +58,12 @@ class CreateBooking
         }
 
         return $this->lock->run((int) $branch->tenant_id, fn () => DB::transaction(function () use ($data, $branch, $lines, $start, $client, $source, $online) {
+            // A live hold already passed the notice check when the client picked the time; minutes spent verifying
+            // their phone must not push the slot under the notice window and turn into a misleading "just taken".
+            $heldByClient = $this->holdCovers($branch, $data['hold_token'] ?? null, $start);
             $slot = $this->engine->quote($branch, $lines, $start, [
                 'online' => $online,
-                'enforce_notice' => $data['enforce_notice'] ?? $online,
+                'enforce_notice' => $heldByClient ? false : ($data['enforce_notice'] ?? $online),
                 'enforce_max_days' => $online,
                 'ignore_hold_token' => $data['hold_token'] ?? null,
             ]);
@@ -143,5 +146,17 @@ class CreateBooking
 
             return $booking;
         }));
+    }
+
+    private function holdCovers(Branch $branch, ?string $token, CarbonImmutable $start): bool
+    {
+        if (! $token) {
+            return false;
+        }
+        $holds = SlotHold::where('branch_id', $branch->id)->where('token', 'like', $token.'.%')
+            ->whereNull('booking_id')->where('expires_at', '>', now())->get(['starts_at', 'ends_at']);
+
+        return $holds->isNotEmpty()
+            && $holds->min('starts_at') <= $start && $holds->max('ends_at') > $start;
     }
 }

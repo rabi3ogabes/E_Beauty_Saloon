@@ -13,6 +13,7 @@ use App\Domain\Tenancy\Models\Tenant;
 use App\Listeners\RecordLogin;
 use App\Models\User;
 use App\Support\Account\AccountSections;
+use App\Support\Auth\PasswordLinks;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -51,6 +52,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading(! $this->app->isProduction() && ! $this->app->runningUnitTests());
         Model::preventSilentlyDiscardingAttributes(! $this->app->isProduction());
+
+        PasswordLinks::register();
 
         // Module entitlements: module:{key} resolved from the tenant's active subscription.
         foreach (array_keys(config('salon.modules')) as $key) {

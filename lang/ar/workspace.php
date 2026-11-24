@@ -108,6 +108,15 @@ return [
     ],
 
     'team' => [
+        'invite_mail' => [
+            'subject' => 'دعوة للانضمام إلى :salon', 'greeting' => 'أهلاً :name',
+            'body' => 'دعاك :salon إلى لوحة التحكم ونقطة البيع. اختر كلمة المرور للبدء.',
+            'action' => 'اختيار كلمة المرور', 'expiry' => 'تنتهي صلاحية هذا الرابط خلال :minutes دقيقة.',
+        ],
+        'reset_mail' => [
+            'subject' => 'إعادة تعيين كلمة المرور', 'body' => 'تلقينا طلبًا لإعادة تعيين كلمة مرور حسابك.',
+            'action' => 'إعادة تعيين كلمة المرور', 'ignore' => 'إن لم تطلب ذلك، يمكنك تجاهل هذه الرسالة بأمان.',
+        ],
         'label' => 'حساب دخول', 'plural' => 'حسابات الفريق', 'subheading' => 'من يمكنه الدخول إلى لوحة التحكم ونقطة البيع.',
         'invite' => 'دعوة', 'invite_heading' => 'دعوة عضو في الفريق', 'invite_body' => 'سيصله بريد لتعيين كلمة المرور.',
         'invite_sent' => 'أُرسلت الدعوة إلى :email', 'resend' => 'إعادة إرسال الدعوة',
@@ -294,7 +303,7 @@ return [
         'label' => 'عميل', 'plural' => 'العملاء', 'add' => 'إضافة عميل',
         'profile' => 'الملف', 'phone_help' => 'تُحفظ الأرقام المحلية بمفتاح ‎+974.', 'phone_invalid' => 'يرجى إدخال رقم جوال صحيح.',
         'phone_taken' => 'يوجد عميل بهذا الرقم مسبقًا.', 'birthday' => 'تاريخ الميلاد', 'tags' => 'الوسوم',
-        'sources' => ['walk_in' => 'زيارة مباشرة', 'website' => 'الموقع', 'app' => 'التطبيق', 'instagram' => 'إنستغرام', 'tiktok' => 'تيك توك', 'referral' => 'إحالة', 'whatsapp' => 'واتساب', 'google' => 'Google', 'import' => 'استيراد'],
+        'sources' => ['walk_in' => 'زيارة مباشرة', 'website' => 'الموقع', 'app' => 'التطبيق', 'instagram' => 'إنستغرام', 'tiktok' => 'تيك توك', 'referral' => 'إحالة', 'whatsapp' => 'واتساب', 'google' => 'Google', 'import' => 'استيراد', 'shop' => 'المتجر الإلكتروني', 'ai_studio' => 'الاستوديو الذكي', 'pos' => 'نقطة البيع', 'dashboard' => 'أضافه الفريق', 'whatsapp_ai' => 'مساعد واتساب', 'marketing' => 'التسويق', 'signup' => 'التسجيل'],
         'notes_section' => 'الملاحظات', 'notes_help' => 'مرئية للفريق.',
         'allergies' => 'الحساسية والتحسس', 'allergies_help' => 'خاصة — لا يطّلع عليها إلا الموظفون المصرح لهم برؤية الملاحظات الخاصة.',
         'no_allergies' => 'لا شيء مسجل',
@@ -393,6 +402,7 @@ return [
         'duration' => ':minutes دقيقة', 'ongoing' => 'جارٍ الآن',
         'event' => 'الحدث', 'subject' => 'العنصر', 'details' => 'التفاصيل', 'empty' => 'لا يوجد نشاط بعد',
         'events' => [
+            'auth.login' => 'تسجيل دخول', 'team.pos_pin_set' => 'تعيين رمز نقطة البيع', 'team.pos_pin_cleared' => 'حذف رمز نقطة البيع', 'pos.sale.completed' => 'إتمام عملية بيع', 'pos.shift.opened' => 'فتح وردية', 'pos.shift.closed' => 'إغلاق وردية', 'pos.receipt.sent' => 'إرسال إيصال', 'payment.refunded' => 'استرجاع دفعة', 'invoice.paid' => 'دفع فاتورة', 'gift_card.issued' => 'إصدار بطاقة هدية', 'order.placed' => 'طلب من المتجر', 'consultation.signed' => 'توقيع نموذج الاستشارة', 'consultation.sent' => 'إرسال نموذج الاستشارة', 'client.data_exported' => 'تصدير بيانات عميل', 'client.anonymized' => 'مسح بيانات عميل', 'impersonation.started' => 'بدء وصول الدعم', 'impersonation.ended' => 'انتهاء وصول الدعم', 'campaign.launched' => 'إطلاق حملة', 'tenant.suspended' => 'تعليق الصالون', 'tenant.reactivated' => 'إعادة تفعيل الصالون',
             'branch.created' => 'إنشاء فرع', 'branding.updated' => 'تحديث الهوية', 'branding.branch_updated' => 'تحديث هوية فرع',
             'team.invited' => 'دعوة عضو فريق', 'team.updated' => 'تعديل صلاحيات عضو', 'roles.permission_changed' => 'تغيير صلاحية',
             'time_off.approved' => 'الموافقة على إجازة', 'time_off.rejected' => 'رفض إجازة',

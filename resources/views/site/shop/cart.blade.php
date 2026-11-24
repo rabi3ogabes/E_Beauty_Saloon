@@ -13,7 +13,7 @@
                 <a href="{{ route('shop.index') }}" class="btn-primary mt-6">{{ __('shop.cart.empty_cta') }}</a>
             </div>
         @else
-            <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
+            <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
                 <ul class="card divide-y hairline px-6">
                     @foreach ($cart['items'] as $item)
                         <li class="flex gap-4 py-5">

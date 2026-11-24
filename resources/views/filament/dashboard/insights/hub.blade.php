@@ -37,7 +37,7 @@
                 @if (empty($this->churn))
                     <p class="py-8 text-center text-sm text-gray-500">{{ __('insights.churn.empty') }}</p>
                 @else
-                    <div class="overflow-x-auto">
+                    <div class="relative overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
                                 <tr class="border-b border-gray-200 text-xs uppercase tracking-wide text-gray-500 dark:border-white/10">
@@ -187,7 +187,7 @@
                         @if ($answer['plan'])
                             <details class="mt-3 text-xs text-gray-500">
                                 <summary class="cursor-pointer">{{ __('insights.ask.query_used', ['source' => $answer['source'] === 'ai' ? 'AI' : __('insights.cards.rules')]) }}</summary>
-                                <pre class="mt-2 overflow-x-auto rounded-lg bg-gray-50 p-3 dark:bg-white/5" dir="ltr">{{ json_encode($answer['plan'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                                <pre class="relative mt-2 overflow-x-auto rounded-lg bg-gray-50 p-3 dark:bg-white/5" dir="ltr">{{ json_encode($answer['plan'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
                             </details>
                         @endif
                     </div>

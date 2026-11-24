@@ -11,6 +11,7 @@ use App\Filament\Dashboard\Resources\Staff\Pages\ListStaff;
 use App\Filament\Dashboard\Resources\Staff\RelationManagers\CommissionRulesRelationManager;
 use App\Filament\Dashboard\Resources\Staff\RelationManagers\SchedulesRelationManager;
 use App\Filament\Dashboard\Resources\Staff\RelationManagers\TimeOffRelationManager;
+use App\Filament\Support\InitialsAvatarProvider;
 use App\Filament\Support\Money;
 use App\Filament\Support\Translatable;
 use App\Filament\Support\Uploads;
@@ -112,7 +113,7 @@ class StaffResource extends Resource
             ->defaultSort('sort')
             ->reorderable('sort', fn () => static::canManage())
             ->columns([
-                ImageColumn::make('photo_path')->label('')->disk('public')->circular()->defaultImageUrl(fn (Staff $r) => 'https://ui-avatars.com/api/?background=E9D6CF&color=1C1A17&name='.urlencode((string) $r->name))->width(40),
+                ImageColumn::make('photo_path')->label('')->disk('public')->circular()->defaultImageUrl(fn (Staff $r) => InitialsAvatarProvider::forName((string) $r->name))->width(40),
                 TextColumn::make('name')->label(__('fields.name'))->weight('semibold')->searchable(query: fn (Builder $query, string $search) => $query->where('name', 'like', "%{$search}%"))
                     ->description(fn (Staff $r) => $r->title),
                 ColorColumn::make('color')->label(__('workspace.staff.color')),

@@ -108,6 +108,15 @@ return [
     ],
 
     'team' => [
+        'invite_mail' => [
+            'subject' => 'You’re invited to join :salon', 'greeting' => 'Welcome, :name',
+            'body' => ':salon has invited you to its dashboard and point of sale. Choose your password to get started.',
+            'action' => 'Choose my password', 'expiry' => 'This link expires in :minutes minutes.',
+        ],
+        'reset_mail' => [
+            'subject' => 'Reset your password', 'body' => 'We received a request to reset the password for your account.',
+            'action' => 'Reset password', 'ignore' => 'If you didn’t ask for this, you can safely ignore this e-mail.',
+        ],
         'label' => 'Team login', 'plural' => 'Team logins', 'subheading' => 'Who can sign in to your dashboard and point of sale.',
         'invite' => 'Invite', 'invite_heading' => 'Invite a team member', 'invite_body' => 'They will receive an email to set their password.',
         'invite_sent' => 'Invitation sent to :email', 'resend' => 'Resend invite',
@@ -294,7 +303,7 @@ return [
         'label' => 'Client', 'plural' => 'Clients', 'add' => 'Add client',
         'profile' => 'Profile', 'phone_help' => 'Local numbers are saved with +974.', 'phone_invalid' => 'Please enter a valid mobile number.',
         'phone_taken' => 'A client with this phone number already exists.', 'birthday' => 'Birthday', 'tags' => 'Tags',
-        'sources' => ['walk_in' => 'Walk-in', 'website' => 'Website', 'app' => 'App', 'instagram' => 'Instagram', 'tiktok' => 'TikTok', 'referral' => 'Referral', 'whatsapp' => 'WhatsApp', 'google' => 'Google', 'import' => 'Import'],
+        'sources' => ['walk_in' => 'Walk-in', 'website' => 'Website', 'app' => 'App', 'instagram' => 'Instagram', 'tiktok' => 'TikTok', 'referral' => 'Referral', 'whatsapp' => 'WhatsApp', 'google' => 'Google', 'import' => 'Import', 'shop' => 'Online shop', 'ai_studio' => 'AI Studio', 'pos' => 'Point of sale', 'dashboard' => 'Added by the team', 'whatsapp_ai' => 'WhatsApp assistant', 'marketing' => 'Marketing', 'signup' => 'Sign-up'],
         'notes_section' => 'Notes', 'notes_help' => 'Visible to the team.',
         'allergies' => 'Allergies & sensitivities', 'allergies_help' => 'Private — only staff allowed to see private notes can read this.',
         'no_allergies' => 'None recorded',
@@ -393,6 +402,7 @@ return [
         'duration' => ':minutes min', 'ongoing' => 'In progress',
         'event' => 'Event', 'subject' => 'Item', 'details' => 'Details', 'empty' => 'No activity yet',
         'events' => [
+            'auth.login' => 'Signed in', 'team.pos_pin_set' => 'POS PIN set', 'team.pos_pin_cleared' => 'POS PIN removed', 'pos.sale.completed' => 'Sale completed', 'pos.shift.opened' => 'Shift opened', 'pos.shift.closed' => 'Shift closed', 'pos.receipt.sent' => 'Receipt sent', 'payment.refunded' => 'Payment refunded', 'invoice.paid' => 'Invoice paid', 'gift_card.issued' => 'Gift card issued', 'order.placed' => 'Shop order placed', 'consultation.signed' => 'Consultation form signed', 'consultation.sent' => 'Consultation form sent', 'client.data_exported' => 'Client data exported', 'client.anonymized' => 'Client data erased', 'impersonation.started' => 'Support access started', 'impersonation.ended' => 'Support access ended', 'campaign.launched' => 'Campaign launched', 'tenant.suspended' => 'Salon suspended', 'tenant.reactivated' => 'Salon reactivated',
             'branch.created' => 'Branch created', 'branding.updated' => 'Branding updated', 'branding.branch_updated' => 'Branch branding updated',
             'team.invited' => 'Team member invited', 'team.updated' => 'Team access changed', 'roles.permission_changed' => 'Permission changed',
             'time_off.approved' => 'Time off approved', 'time_off.rejected' => 'Time off rejected',

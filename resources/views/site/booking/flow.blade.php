@@ -19,8 +19,8 @@
             </template>
         </ol>
 
-        <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_340px]">
-            <div>
+        <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+            <div class="min-w-0">
                 {{-- Toast --}}
                 <div aria-live="assertive" class="mb-4">
                     <p x-show="error" x-transition.opacity class="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger" x-text="error"></p>
@@ -55,7 +55,7 @@
                     <div x-show="!loadingCatalog && catalog">
                         <label class="sr-only" for="svc-search">{{ __('salon.ui.search') }}</label>
                         <input id="svc-search" type="search" class="input" x-model.debounce.150ms="search" placeholder="{{ __('booking.flow.search_placeholder') }}">
-                        <div class="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]" role="tablist">
+                        <div class="relative -mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]" role="tablist">
                             <button type="button" class="chip shrink-0" :class="activeCategory === null && 'chip-active'" @click="activeCategory = null" role="tab" :aria-selected="activeCategory === null">{{ __('booking.flow.all') }}</button>
                             <template x-for="c in (catalog?.categories || [])" :key="c.id">
                                 <button type="button" class="chip shrink-0" :class="activeCategory === c.id && 'chip-active'" @click="activeCategory = c.id" role="tab" :aria-selected="activeCategory === c.id" x-text="c.name"></button>
@@ -134,7 +134,7 @@
                 {{-- 4. Date & time --}}
                 <div x-show="step === 'time'" x-transition.opacity.duration.200ms>
                     <div class="relative">
-                        <div class="-mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none]" x-ref="strip" role="listbox" aria-label="{{ __('booking.flow.choose_date') }}">
+                        <div class="relative -mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none]" x-ref="strip" role="listbox" aria-label="{{ __('booking.flow.choose_date') }}">
                             <template x-for="d in (catalog?.dates || [])" :key="d.date">
                                 <button type="button" role="option" class="flex w-16 shrink-0 snap-start flex-col items-center rounded-2xl border py-3 transition"
                                         :class="date === d.date ? 'border-ink bg-ink text-ivory' : (d.closed ? 'border-line bg-transparent text-muted/60' : 'border-line bg-white hover:border-gold')"

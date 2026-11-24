@@ -16,7 +16,7 @@
         </div>
 
         <x-filament::section :heading="__('insights.reports.performance.heatmap')" :description="__('insights.reports.performance.heatmap_hint')" compact>
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
                 <table class="w-full border-separate border-spacing-1 text-center text-[11px]" dir="ltr">
                     <thead>
                         <tr>

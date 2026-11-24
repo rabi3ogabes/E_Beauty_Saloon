@@ -1,7 +1,7 @@
 @php($items = collect($section->list('items'))->filter(fn ($i) => filled($i['q'] ?? null) && filled($i['a'] ?? null))->values())
 @if ($items->isNotEmpty())
 <section class="site-section">
-    <div class="container-luxe grid gap-10 md:grid-cols-[1fr_1.6fr]">
+    <div class="container-luxe grid gap-10 md:grid-cols-[minmax(0,1fr)_1.6fr]">
         <div data-reveal>
             <p class="eyebrow">FAQ</p>
             <h2 class="mt-3 text-3xl font-semibold sm:text-5xl">{{ $section->t('title', __('website.sections.faq')) }}</h2>

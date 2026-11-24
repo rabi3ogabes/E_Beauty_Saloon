@@ -5,6 +5,7 @@ namespace App\Filament\Dashboard\Pages;
 use App\Domain\Tenancy\Models\ImpersonationLog;
 use App\Domain\Tenancy\Models\Tenant;
 use App\Models\User;
+use App\Support\ActivityLabel;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
@@ -79,7 +80,7 @@ class SecurityLog extends Page implements HasTable
             ->columns([
                 TextColumn::make('created_at')->label(__('workspace.common.date'))->dateTime('d M Y, H:i')->sortable(),
                 TextColumn::make('description')->label(__('workspace.security.event'))->badge()->color('gray')->searchable()
-                    ->formatStateUsing(fn ($state) => app('translator')->has('workspace.security.events.'.$state) ? __('workspace.security.events.'.$state) : $state),
+                    ->formatStateUsing(fn ($state) => ActivityLabel::for($state)),
                 TextColumn::make('causer.name')->label(__('workspace.common.by'))->placeholder(__('workspace.common.system')),
                 TextColumn::make('subject_type')->label(__('workspace.security.subject'))->formatStateUsing(fn ($state, $record) => $state ? class_basename((string) $state).' #'.$record->subject_id : '—')->toggleable(),
                 TextColumn::make('properties')->label(__('workspace.security.details'))->color('gray')->wrap()->toggleable()
@@ -87,7 +88,7 @@ class SecurityLog extends Page implements HasTable
             ])
             ->filters([
                 SelectFilter::make('description')->label(__('workspace.security.event'))
-                    ->options(fn () => static::activityQuery()->distinct()->limit(100)->pluck('description', 'description')->all()),
+                    ->options(fn () => static::activityQuery()->distinct()->limit(100)->pluck('description', 'description')->map(fn ($e) => ActivityLabel::for($e))->all()),
             ])
             ->emptyStateHeading(__('workspace.security.empty'));
     }

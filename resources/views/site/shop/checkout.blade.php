@@ -63,8 +63,11 @@
                             gateway_id: this.gatewayId, use_wallet: this.useWallet, gift_card_code: this.giftCard, gift_message: this.giftMessage, notes: this.notes,
                         };
                     },
+                    needsArea() { return this.fulfilment !== 'pickup' && !this.addressId && !this.zoneId && !(this.lat && this.lng); },
                     refresh() {
                         clearTimeout(this._q);
+                        // Delivery with no area yet: wait quietly for the client to pick one instead of showing an error.
+                        if (this.needsArea()) { this.quote = null; this.quoteError = null; return; }
                         this._q = setTimeout(async () => {
                             this.quoting = true;
                             try { this.quote = await window.luxeShopApi(this.cfg.routes.quote, 'POST', this.payload()); this.quoteError = null; if (this.quote.slots?.length && !this.quote.slots.includes(this.slot)) this.slot = this.quote.slots[0]; }
@@ -104,7 +107,7 @@
         <a href="{{ route('shop.index') }}" class="text-sm text-muted hover:text-ink">← {{ __('shop.cart.continue') }}</a>
         <h1 class="mt-3 text-3xl font-semibold sm:text-4xl">{{ __('shop.checkout.title') }}</h1>
 
-        <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_380px]">
+        <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
             <div class="space-y-6">
                 {{-- 1. Contact (inline phone OTP for guests) --}}
                 <section class="card p-6 sm:p-8">
@@ -278,6 +281,7 @@
                         <p class="mt-3 rounded-xl bg-gold/10 px-3 py-2 text-xs text-gold-dark" x-show="quote?.free_shipping_gap > 0" x-text="@js(__('shop.checkout.free_shipping_gap', ['amount' => '__A__'])).replace('__A__', luxe.money(quote?.free_shipping_gap || 0))"></p>
                         <p class="mt-3 text-xs text-muted" x-show="quote?.ready_estimate && quote?.fulfilment !== 'same_day'" x-text="(quote?.fulfilment === 'pickup' ? @js(__('shop.checkout.ready_by', ['time' => '__T__'])) : @js(__('shop.checkout.eta', ['time' => '__T__']))).replace('__T__', quote?.ready_estimate)"></p>
                         <p class="mt-3 rounded-xl bg-danger/10 px-3 py-2 text-sm text-danger" x-show="quoteError" x-text="quoteError" role="alert"></p>
+                        <p class="mt-3 rounded-xl bg-gold/10 px-3 py-2 text-sm text-gold-dark" x-show="!quoteError && needsArea()" x-cloak>{{ __('shop.checkout.choose_area') }}</p>
                     </div>
                     <p class="mt-4 rounded-xl bg-danger/10 px-3 py-2 text-sm text-danger" x-show="error" x-text="error" role="alert"></p>
                     <button type="button" class="btn-primary mt-5 h-12 w-full" @click="place()" :disabled="placing || !!quoteError || !quote">

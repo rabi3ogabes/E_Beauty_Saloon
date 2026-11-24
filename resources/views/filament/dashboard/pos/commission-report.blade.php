@@ -31,7 +31,7 @@
         <div wire:loading.delay wire:target="from,until,branchId,setPeriod" class="space-y-2">
             @for ($i = 0; $i < 4; $i++)<div class="h-10 animate-pulse rounded-lg bg-gray-100 dark:bg-white/5"></div>@endfor
         </div>
-        <div wire:loading.remove wire:target="from,until,branchId,setPeriod" class="overflow-x-auto">
+        <div wire:loading.remove wire:target="from,until,branchId,setPeriod" class="relative overflow-x-auto">
             @if (empty($rows))
                 <div class="py-10 text-center text-gray-500">
                     <x-filament::icon icon="heroicon-o-currency-dollar" class="mx-auto mb-2 h-8 w-8 text-primary-500" />

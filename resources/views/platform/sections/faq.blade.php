@@ -1,6 +1,6 @@
 @php($items = collect($block->list('items'))->filter(fn ($i) => filled($i['q'] ?? null))->values())
 <section class="site-section">
-    <div class="container-luxe grid gap-10 md:grid-cols-[1fr_1.6fr]">
+    <div class="container-luxe grid gap-10 md:grid-cols-[minmax(0,1fr)_1.6fr]">
         <div><p class="eyebrow">FAQ</p><h2 class="mt-3 text-3xl font-semibold sm:text-4xl">{{ $block->t('title') }}</h2></div>
         <div class="divide-y hairline border-y hairline">
             @foreach ($items as $item)

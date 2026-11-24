@@ -12,7 +12,7 @@
             <h2 class="mt-3 text-3xl font-semibold sm:text-5xl">{{ $section->t('title', __('site.home.branches_title')) }}</h2>
             @if ($section->t('subtitle'))<p class="mt-4 text-muted">{{ $section->t('subtitle') }}</p>@endif
         </div>
-        <div class="mt-10 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
+        <div class="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_1.4fr]">
             <div class="flex flex-col gap-4">
                 @foreach ($branches as $branch)
                     <a href="{{ url('/branches/'.$branch->slug) }}" class="card-hover block p-6" data-reveal>

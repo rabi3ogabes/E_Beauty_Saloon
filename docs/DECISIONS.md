@@ -99,3 +99,10 @@ Append-only log. Newest last.
     identifies its holder at the till, so `SetPosPin` refuses one already used in the salon, plus repeated/sequential
     digits. All refusals share one message and are throttled (5/hour) so the check cannot be used to find a colleague's
     PIN. `VerifyPosPin` prefers a holder who has the required permission if older data still shares a PIN.
+32. **Password and invite links go to the person's own panel**: `PasswordLinks` replaces Laravel's default
+    `password.reset` URL (a route this app never had, so invites and resets crashed) with the signed Filament reset
+    URL of the dashboard on the salon's own domain, or of the admin panel for platform staff. A team member who has
+    never signed in gets an invitation e-mail, everyone else a reset e-mail.
+33. **A live booking hold skips the notice re-check at checkout**: the notice window was enforced when the slot was
+    held; minutes spent verifying a phone code must not turn the earliest slot into a misleading "just taken".
+    Expired holds, and bookings without a hold, are still checked.

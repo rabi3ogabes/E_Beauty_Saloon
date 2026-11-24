@@ -75,7 +75,7 @@
 
                     {{-- Step 2: style --}}
                     <div x-show="mode === 'tryon'" class="mt-8">
-                        <div class="flex gap-2 overflow-x-auto pb-2">
+                        <div class="relative flex gap-2 overflow-x-auto pb-2">
                             <template x-for="cat in visibleCategories" :key="cat">
                                 <button type="button" class="chip min-h-11 whitespace-nowrap" :class="category === cat && 'chip-active'" @click="category = cat" x-text="labels[cat]"></button>
                             </template>

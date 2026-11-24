@@ -111,7 +111,7 @@ it('prices a cart with promotions (ApplyPromotions contract)', function () {
             ->and($r['total'])->toBe(29000 - 8350)
             ->and($r['coupon_error'])->toBeNull();
 
-        $bad = $apply->handle($lines, null, 'NOPE');
+        $bad = $apply->handle($lines, null, 'NOPE', now()->setTime(18, 0)->utc()); // outside the 10–12 happy hour
         expect($bad['coupon_error'])->not->toBeNull()->and(collect($bad['applied'])->pluck('type')->all())->toBe(['bogo']);
 
         // happy hour 10:00–12:00 Doha

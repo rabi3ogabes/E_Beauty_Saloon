@@ -3,7 +3,7 @@
     @php($roles = array_keys($matrix))
     @php($editable = $this->canEdit())
 
-    <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-white/10 dark:bg-gray-900">
+    <div class="relative overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-white/10 dark:bg-gray-900">
         <table class="w-full min-w-[760px] text-sm">
             <thead class="sticky top-0 z-10 bg-white/95 backdrop-blur dark:bg-gray-900/95">
                 <tr class="border-b border-gray-200 dark:border-white/10">
@@ -30,14 +30,13 @@
                         <tr class="border-b border-gray-100 last:border-0 dark:border-white/5" wire:key="row-{{ $perm }}">
                             <td class="px-5 py-3">
                                 <span class="text-gray-900 dark:text-gray-100">{{ __('workspace.permissions.'.$area.'_'.$ability) }}</span>
-                                <span class="block font-mono text-[11px] text-gray-400">{{ $perm }}</span>
                             </td>
                             @foreach ($roles as $role)
                                 @php($on = $role === 'owner' || in_array($perm, $matrix[$role], true))
                                 <td class="px-3 py-3 text-center">
                                     <button type="button"
                                         role="switch" aria-checked="{{ $on ? 'true' : 'false' }}"
-                                        aria-label="{{ __('workspace.roles.names.'.$role) }} — {{ $perm }}"
+                                        aria-label="{{ __('workspace.roles.names.'.$role) }} — {{ __('workspace.permissions.'.$area.'_'.$ability) }}"
                                         @if ($role !== 'owner' && $editable) wire:click="toggle('{{ $role }}', '{{ $perm }}')" @else disabled @endif
                                         @class([
                                             'relative inline-flex h-6 w-11 items-center rounded-full transition duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500',

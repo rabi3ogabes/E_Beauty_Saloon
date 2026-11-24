@@ -88,7 +88,7 @@ class TeamMemberResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['roles', 'branches']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['roles', 'branches', 'tenant']))
             ->defaultSort('name')
             ->columns([
                 TextColumn::make('name')->label(__('fields.name'))->weight('semibold')->searchable()->description(fn (User $r) => $r->email),

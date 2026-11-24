@@ -5,8 +5,9 @@ import Alpine from 'alpinejs';
  * so we only boot ours when it is not already present.
  */
 window.luxe = {
+    // Latin digits in Arabic too, matching the server-side money() helper and Qatari receipts.
     money(minor, currency = 'QAR', locale = document.documentElement.lang || 'en') {
-        const value = (minor / 100).toLocaleString(locale === 'ar' ? 'ar-QA' : 'en-QA', {
+        const value = (minor / 100).toLocaleString(locale === 'ar' ? 'ar-QA-u-nu-latn' : 'en-QA', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         });
