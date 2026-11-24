@@ -8,6 +8,7 @@ use App\Http\Middleware\ResolveTenant;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use App\Support\Exceptions\DomainException;
+use App\Support\Monitoring\ErrorAlerter;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -39,6 +40,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: env('TRUSTED_PROXIES', '10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.1'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Business rules ("this time was just taken") are answers for the user, not failures.
+        $exceptions->dontReport(DomainException::class);
+        // E-mail the platform owner about unexpected errors (deduplicated, throttled; never throws).
+        $exceptions->report(function (Throwable $e): void {
+            app(ErrorAlerter::class)->report($e);
+        });
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );

@@ -106,3 +106,8 @@ Append-only log. Newest last.
 33. **A live booking hold skips the notice re-check at checkout**: the notice window was enforced when the slot was
     held; minutes spent verifying a phone code must not turn the earliest slot into a misleading "just taken".
     Expired holds, and bookings without a hold, are still checked.
+34. **Error monitoring by e-mail, no third party**: `ErrorAlerter` hooks Laravel's exception reporting and e-mails
+    `ERROR_ALERT_EMAIL` (production only) with the error, code location, URL/route, salon and user. The same error
+    (class + file + line) is sent once per `ERROR_ALERT_THROTTLE` minutes with a repeat count, at most
+    `ERROR_ALERT_MAX_PER_HOUR` alerts an hour, and alerting can never throw. Business-rule `DomainException`s are no
+    longer reported at all. `php artisan monitoring:test-alert` checks delivery.
