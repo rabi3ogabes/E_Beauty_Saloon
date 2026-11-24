@@ -27,6 +27,7 @@ use App\Support\Exceptions\DomainException;
 use App\Support\Tenancy\TenantContext;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Password;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
 
@@ -181,4 +182,33 @@ it('stylist only sees own branch(es) and a manager cannot see other branches rev
     $this->flushSession();
     $this->actingAs($manager)->get(tenantUrl($tenant, 'dashboard/branches'))->assertOk()->assertSee('Pearl')->assertDontSee('الرئيسي');
     $this->actingAs($manager)->get(tenantUrl($tenant, 'dashboard/stock'))->assertOk();
+});
+
+it('sends an invitation e-mail that links to the salon dashboard to choose a password', function () {
+    Notification::fake();
+    $tenant = createTenant(branches: 1);
+    ws_owner_session($this, $tenant);
+
+    $user = app(InviteTeamMember::class)->handle('Hessa', 'hessa@example.com', 'receptionist', [ws_main_branch()->id]);
+
+    Notification::assertSentTo($user, ResetPassword::class, function (ResetPassword $n) use ($user, $tenant) {
+        $mail = $n->toMail($user);
+        expect($mail->subject)->toContain($tenant->name)
+            ->and($mail->actionUrl)->toStartWith(rtrim($tenant->url(), '/').'/dashboard/password-reset/reset')
+            ->and($mail->actionUrl)->toContain('signature=');
+
+        return true;
+    });
+});
+
+it('sends platform staff to the admin panel to reset their password', function () {
+    Notification::fake();
+    $admin = platformAdmin();
+    Password::broker()->sendResetLink(['email' => $admin->email]);
+
+    Notification::assertSentTo($admin, ResetPassword::class, function (ResetPassword $n) use ($admin) {
+        expect($n->toMail($admin)->actionUrl)->toContain('/admin/password-reset/reset');
+
+        return true;
+    });
 });

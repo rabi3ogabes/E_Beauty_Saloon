@@ -108,6 +108,15 @@ return [
     ],
 
     'team' => [
+        'invite_mail' => [
+            'subject' => 'You’re invited to join :salon', 'greeting' => 'Welcome, :name',
+            'body' => ':salon has invited you to its dashboard and point of sale. Choose your password to get started.',
+            'action' => 'Choose my password', 'expiry' => 'This link expires in :minutes minutes.',
+        ],
+        'reset_mail' => [
+            'subject' => 'Reset your password', 'body' => 'We received a request to reset the password for your account.',
+            'action' => 'Reset password', 'ignore' => 'If you didn’t ask for this, you can safely ignore this e-mail.',
+        ],
         'label' => 'Team login', 'plural' => 'Team logins', 'subheading' => 'Who can sign in to your dashboard and point of sale.',
         'invite' => 'Invite', 'invite_heading' => 'Invite a team member', 'invite_body' => 'They will receive an email to set their password.',
         'invite_sent' => 'Invitation sent to :email', 'resend' => 'Resend invite',
@@ -294,7 +303,7 @@ return [
         'label' => 'Client', 'plural' => 'Clients', 'add' => 'Add client',
         'profile' => 'Profile', 'phone_help' => 'Local numbers are saved with +974.', 'phone_invalid' => 'Please enter a valid mobile number.',
         'phone_taken' => 'A client with this phone number already exists.', 'birthday' => 'Birthday', 'tags' => 'Tags',
-        'sources' => ['walk_in' => 'Walk-in', 'website' => 'Website', 'app' => 'App', 'instagram' => 'Instagram', 'tiktok' => 'TikTok', 'referral' => 'Referral', 'whatsapp' => 'WhatsApp', 'google' => 'Google', 'import' => 'Import'],
+        'sources' => ['walk_in' => 'Walk-in', 'website' => 'Website', 'app' => 'App', 'instagram' => 'Instagram', 'tiktok' => 'TikTok', 'referral' => 'Referral', 'whatsapp' => 'WhatsApp', 'google' => 'Google', 'import' => 'Import', 'shop' => 'Online shop', 'ai_studio' => 'AI Studio', 'pos' => 'Point of sale', 'dashboard' => 'Added by the team', 'whatsapp_ai' => 'WhatsApp assistant', 'marketing' => 'Marketing', 'signup' => 'Sign-up'],
         'notes_section' => 'Notes', 'notes_help' => 'Visible to the team.',
         'allergies' => 'Allergies & sensitivities', 'allergies_help' => 'Private — only staff allowed to see private notes can read this.',
         'no_allergies' => 'None recorded',

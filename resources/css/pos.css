@@ -11,6 +11,7 @@
     --pos-gap: 16px;
     color: var(--luxe-ink, #1c1a17);
     font-variant-numeric: tabular-nums;
+    padding-block-start: 12px; /* breathing room under the top bar */
 }
 
 .pos-grid {

@@ -29,6 +29,7 @@ use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /** Client profile: key figures, contact & consents, private allergies, and the activity timeline. */
 class ViewClient extends ViewRecord
@@ -64,7 +65,7 @@ class ViewClient extends ViewRecord
                     TextEntry::make('tags.name')->label(__('workspace.clients.tags'))->badge()->placeholder('—'),
                     TextEntry::make('preferredBranch.name')->label(__('workspace.clients.preferred_branch'))->placeholder('—'),
                     TextEntry::make('preferredStaff.name')->label(__('workspace.clients.preferred_staff'))->placeholder('—'),
-                    TextEntry::make('source')->label(__('fields.source'))->formatStateUsing(fn ($state) => __('workspace.clients.sources.'.$state))->placeholder('—'),
+                    TextEntry::make('source')->label(__('fields.source'))->formatStateUsing(fn ($state) => app('translator')->has('workspace.clients.sources.'.$state) ? __('workspace.clients.sources.'.$state) : Str::headline((string) $state))->placeholder('—'),
                 ]),
                 Section::make(__('workspace.clients.allergies'))->icon(Heroicon::OutlinedExclamationTriangle)->iconColor('danger')
                     ->visible(fn () => ClientResource::canSeePrivate())
