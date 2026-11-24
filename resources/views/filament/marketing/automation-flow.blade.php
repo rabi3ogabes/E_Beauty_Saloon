@@ -14,7 +14,7 @@
 
         {{-- Header --}}
         <x-filament::section>
-            <div class="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
+            <div class="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
                 <label class="block">
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ __('marketing.common.name') }}</span>
                     <x-filament::input.wrapper class="mt-1"><x-filament::input type="text" wire:model="name" /></x-filament::input.wrapper>

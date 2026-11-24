@@ -38,7 +38,7 @@
                 </button>
             </div>
             @if ($shopCategories->isNotEmpty())
-                <nav class="container-luxe -mt-1 flex gap-2 overflow-x-auto pb-3 [scrollbar-width:none]" aria-label="{{ __('shop.nav.collections') }}">
+                <nav class="relative container-luxe -mt-1 flex gap-2 overflow-x-auto pb-3 [scrollbar-width:none]" aria-label="{{ __('shop.nav.collections') }}">
                     <a href="{{ route('shop.index') }}" @class(['chip whitespace-nowrap', 'chip-active' => request()->routeIs('shop.index') && ! request('category')])>{{ __('shop.nav.all') }}</a>
                     @foreach ($shopCategories as $c)
                         <a href="{{ route('shop.category', $c->slug) }}" @class(['chip whitespace-nowrap', 'chip-active' => request()->route('slug') === $c->slug || request('category') === $c->slug])>{{ $c->name }}</a>

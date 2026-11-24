@@ -39,7 +39,7 @@
                 </div>
 
                 @if ($domain->type === 'custom' && ! $domain->isVerified())
-                    <div class="mt-5 overflow-x-auto rounded-xl border border-gray-200 dark:border-white/10">
+                    <div class="relative mt-5 overflow-x-auto rounded-xl border border-gray-200 dark:border-white/10">
                         <table class="w-full min-w-[560px] text-sm">
                             <thead class="bg-gray-50 text-xs uppercase tracking-wider text-gray-500 dark:bg-white/5">
                                 <tr>

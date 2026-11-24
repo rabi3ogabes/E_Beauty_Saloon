@@ -393,6 +393,7 @@ return [
         'duration' => ':minutes دقيقة', 'ongoing' => 'جارٍ الآن',
         'event' => 'الحدث', 'subject' => 'العنصر', 'details' => 'التفاصيل', 'empty' => 'لا يوجد نشاط بعد',
         'events' => [
+            'auth.login' => 'تسجيل دخول', 'team.pos_pin_set' => 'تعيين رمز نقطة البيع', 'team.pos_pin_cleared' => 'حذف رمز نقطة البيع', 'pos.sale.completed' => 'إتمام عملية بيع', 'pos.shift.opened' => 'فتح وردية', 'pos.shift.closed' => 'إغلاق وردية', 'pos.receipt.sent' => 'إرسال إيصال', 'payment.refunded' => 'استرجاع دفعة', 'invoice.paid' => 'دفع فاتورة', 'gift_card.issued' => 'إصدار بطاقة هدية', 'order.placed' => 'طلب من المتجر', 'consultation.signed' => 'توقيع نموذج الاستشارة', 'consultation.sent' => 'إرسال نموذج الاستشارة', 'client.data_exported' => 'تصدير بيانات عميل', 'client.anonymized' => 'مسح بيانات عميل', 'impersonation.started' => 'بدء وصول الدعم', 'impersonation.ended' => 'انتهاء وصول الدعم', 'campaign.launched' => 'إطلاق حملة', 'tenant.suspended' => 'تعليق الصالون', 'tenant.reactivated' => 'إعادة تفعيل الصالون',
             'branch.created' => 'إنشاء فرع', 'branding.updated' => 'تحديث الهوية', 'branding.branch_updated' => 'تحديث هوية فرع',
             'team.invited' => 'دعوة عضو فريق', 'team.updated' => 'تعديل صلاحيات عضو', 'roles.permission_changed' => 'تغيير صلاحية',
             'time_off.approved' => 'الموافقة على إجازة', 'time_off.rejected' => 'رفض إجازة',

@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\ActivityLogs;
 
 use App\Filament\Admin\Resources\ActivityLogs\Pages\ManageActivityLogs;
+use App\Support\ActivityLabel;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -49,12 +50,12 @@ class ActivityLogResource extends Resource
     {
         return $table->defaultSort('id', 'desc')->columns([
             Columns\TextColumn::make('created_at')->label(__('salon.ui.created'))->dateTime()->sortable(),
-            Columns\TextColumn::make('description')->label(__('admin.activity.event'))->badge()->color('gray')->searchable(),
+            Columns\TextColumn::make('description')->label(__('admin.activity.event'))->badge()->color('gray')->searchable()->formatStateUsing(fn ($state) => ActivityLabel::for($state)),
             Columns\TextColumn::make('causer.name')->label(__('admin.activity.by'))->placeholder(__('admin.activity.system')),
             Columns\TextColumn::make('subject_type')->label(__('admin.activity.subject'))->formatStateUsing(fn ($state, $record) => class_basename((string) $state).' #'.$record->subject_id),
             Columns\TextColumn::make('properties')->label(__('admin.activity.details'))->formatStateUsing(fn ($state) => Str::limit(json_encode($state, JSON_UNESCAPED_UNICODE), 120))->wrap()->color('gray'),
         ])->filters([
-            Filters\SelectFilter::make('description')->label(__('admin.activity.event'))->options(fn () => Activity::query()->distinct()->limit(100)->pluck('description', 'description')),
+            Filters\SelectFilter::make('description')->label(__('admin.activity.event'))->options(fn () => Activity::query()->distinct()->limit(100)->pluck('description', 'description')->map(fn ($e) => ActivityLabel::for($e))),
         ]);
     }
 

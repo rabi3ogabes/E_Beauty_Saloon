@@ -18,7 +18,7 @@
         <p class="text-xs text-gray-500">{{ __('shop.admin.board.older_hidden') }}</p>
     </div>
 
-    <div x-data="{ dragging: null, over: null }" class="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4" wire:loading.class="opacity-70">
+    <div x-data="{ dragging: null, over: null }" class="relative -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4" wire:loading.class="opacity-70">
         @foreach ($columns as $status => $orders)
             @php $enum = \App\Domain\Shop\Enums\OrderStatus::from($status); @endphp
             <section class="flex w-72 shrink-0 snap-start flex-col rounded-2xl bg-gray-50 p-3 ring-1 ring-gray-950/5 transition dark:bg-white/5 dark:ring-white/10"

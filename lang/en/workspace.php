@@ -393,6 +393,7 @@ return [
         'duration' => ':minutes min', 'ongoing' => 'In progress',
         'event' => 'Event', 'subject' => 'Item', 'details' => 'Details', 'empty' => 'No activity yet',
         'events' => [
+            'auth.login' => 'Signed in', 'team.pos_pin_set' => 'POS PIN set', 'team.pos_pin_cleared' => 'POS PIN removed', 'pos.sale.completed' => 'Sale completed', 'pos.shift.opened' => 'Shift opened', 'pos.shift.closed' => 'Shift closed', 'pos.receipt.sent' => 'Receipt sent', 'payment.refunded' => 'Payment refunded', 'invoice.paid' => 'Invoice paid', 'gift_card.issued' => 'Gift card issued', 'order.placed' => 'Shop order placed', 'consultation.signed' => 'Consultation form signed', 'consultation.sent' => 'Consultation form sent', 'client.data_exported' => 'Client data exported', 'client.anonymized' => 'Client data erased', 'impersonation.started' => 'Support access started', 'impersonation.ended' => 'Support access ended', 'campaign.launched' => 'Campaign launched', 'tenant.suspended' => 'Salon suspended', 'tenant.reactivated' => 'Salon reactivated',
             'branch.created' => 'Branch created', 'branding.updated' => 'Branding updated', 'branding.branch_updated' => 'Branch branding updated',
             'team.invited' => 'Team member invited', 'team.updated' => 'Team access changed', 'roles.permission_changed' => 'Permission changed',
             'time_off.approved' => 'Time off approved', 'time_off.rejected' => 'Time off rejected',

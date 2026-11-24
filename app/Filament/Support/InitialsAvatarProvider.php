@@ -11,7 +11,12 @@ class InitialsAvatarProvider implements AvatarProvider
 {
     public function get(Model $record): string
     {
-        $name = trim((string) Filament::getNameForDefaultAvatar($record));
+        return static::forName((string) Filament::getNameForDefaultAvatar($record));
+    }
+
+    public static function forName(string $name): string
+    {
+        $name = trim($name);
         $initials = collect(preg_split('/\s+/u', $name))->filter()->take(2)
             ->map(fn ($part) => mb_strtoupper(mb_substr($part, 0, 1)))->implode('') ?: '•';
 

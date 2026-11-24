@@ -276,3 +276,35 @@ it('keeps bookings isolated per tenant', function () {
     expect(asTenant($b->tenant, fn () => Booking::count()))->toBe(0)
         ->and(slotTimes($b, ['cut'], '2026-12-01'))->toContain('11:00');
 });
+
+it('keeps a held slot bookable while the client verifies, even as it crosses the notice window', function () {
+    $salon = bookingSalon(['staff' => ['Layla']]);
+    $client = bookingClient($salon->tenant);
+    $start = atLocal($salon, '2026-12-01 11:00');
+    $items = [['service_id' => $salon->services['cut']->id, 'staff_id' => $salon->staff[0]->id]];
+
+    // Picked 61 minutes ahead (notice is 60), then 3 minutes spent on the phone code.
+    $this->travelTo($start->subMinutes(61));
+    $hold = asTenant($salon->tenant, fn () => app(HoldSlot::class)->handle($salon->branch, $items, $start));
+    $this->travelTo($start->subMinutes(58));
+
+    // Without the hold the notice rule still applies...
+    expect(fn () => book($salon, ['items' => $items, 'starts_at' => $start, 'client' => bookingClient($salon->tenant, '+97455550009', 'Other')]))
+        ->toThrow(DomainException::class);
+    // ...but the client who holds it can still book.
+    expect(book($salon, ['items' => $items, 'starts_at' => $start, 'client' => $client, 'hold_token' => $hold['token']])->status)
+        ->toBe(BookingStatus::Confirmed);
+});
+
+it('does not let an expired hold skip the notice window', function () {
+    $salon = bookingSalon(['staff' => ['Layla']]);
+    $start = atLocal($salon, '2026-12-01 11:00');
+    $items = [['service_id' => $salon->services['cut']->id, 'staff_id' => $salon->staff[0]->id]];
+
+    $this->travelTo($start->subMinutes(75));
+    $hold = asTenant($salon->tenant, fn () => app(HoldSlot::class)->handle($salon->branch, $items, $start));
+    $this->travelTo($start->subMinutes(30)); // hold (10 min) long expired, and inside the notice window
+
+    expect(fn () => book($salon, ['items' => $items, 'starts_at' => $start, 'client' => bookingClient($salon->tenant), 'hold_token' => $hold['token']]))
+        ->toThrow(DomainException::class);
+});

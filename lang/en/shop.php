@@ -124,6 +124,7 @@ return [
     ],
 
     'checkout' => [
+        'choose_area' => 'Choose your delivery area to see the delivery fee.',
         'title' => 'Checkout',
         'contact' => 'Your details',
         'phone' => 'Mobile number',

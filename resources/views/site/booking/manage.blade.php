@@ -28,7 +28,7 @@
             <div class="card mt-8 p-6 sm:p-8">
                 <h2 class="text-xl font-semibold">{{ __('booking.manage.reschedule') }}</h2>
                 <p class="mt-1 text-sm text-muted">{{ trans_choice('booking.manage.reschedules_left', $policy['reschedules_left'], ['count' => $policy['reschedules_left']]) }}</p>
-                <div class="-mx-2 mt-5 flex gap-2 overflow-x-auto px-2 pb-2 [scrollbar-width:none]">
+                <div class="relative -mx-2 mt-5 flex gap-2 overflow-x-auto px-2 pb-2 [scrollbar-width:none]">
                     @foreach ($dates as $d)
                         <button type="button" class="flex w-16 shrink-0 flex-col items-center rounded-2xl border py-3 transition" @disabled($d['closed'])
                                 :class="date === '{{ $d['date'] }}' ? 'border-ink bg-ink text-ivory' : '{{ $d['closed'] ? 'border-line text-muted/60' : 'border-line bg-white hover:border-gold' }}'"

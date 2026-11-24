@@ -67,7 +67,7 @@
                     </span>
                 </div>
                 @if ($images->count() > 1)
-                    <div class="mt-3 flex gap-3 overflow-x-auto">
+                    <div class="relative mt-3 flex gap-3 overflow-x-auto">
                         @foreach ($images as $i => $src)
                             <button type="button" class="h-20 w-16 shrink-0 overflow-hidden rounded-xl ring-2 transition" :class="image === {{ $i }} ? 'ring-gold' : 'ring-transparent'" @click="image = {{ $i }}" aria-label="{{ __('shop.product.gallery') }} {{ $i + 1 }}">
                                 <img src="{{ $src }}" alt="" class="h-full w-full object-cover" loading="lazy">

@@ -14,7 +14,7 @@
             <div class="card mt-10 p-10 text-center text-muted">{{ __('website.empty.services') }}</div>
         @else
             <div x-data="{ tab: {{ $categories->first()->id }} }" class="mt-10">
-                <div class="flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="{{ __('website.labels.categories') }}">
+                <div class="relative flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="{{ __('website.labels.categories') }}">
                     @foreach ($categories as $category)
                         <button type="button" role="tab" class="chip min-h-11 whitespace-nowrap" :class="tab === {{ $category->id }} && 'chip-active'"
                                 @click="tab = {{ $category->id }}" :aria-selected="tab === {{ $category->id }}">{{ $category->name }}</button>

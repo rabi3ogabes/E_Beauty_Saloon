@@ -1,5 +1,5 @@
 <x-layouts.platform :title="__('platform.signup.title')" :description="__('platform.signup.meta')">
-    <section class="container-luxe grid gap-12 py-16 md:grid-cols-[1fr_1.15fr] md:py-24">
+    <section class="container-luxe grid gap-12 py-16 md:grid-cols-[minmax(0,1fr)_1.15fr] md:py-24">
         <div>
             <p class="eyebrow">{{ __('platform.cta.start_trial') }}</p>
             <h1 class="mt-4 text-[clamp(2.2rem,5vw,4rem)] leading-[1.05] font-semibold">{{ __('platform.signup.title') }}</h1>

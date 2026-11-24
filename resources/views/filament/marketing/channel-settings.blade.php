@@ -1,5 +1,5 @@
 <x-filament-panels::page>
-    <div class="grid gap-6 xl:grid-cols-[1fr_20rem]">
+    <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
         <form wire:submit="save" class="space-y-6">
             {{ $this->form }}
             <div><x-filament::button type="submit" icon="heroicon-o-check">{{ __('marketing.common.save') }}</x-filament::button></div>

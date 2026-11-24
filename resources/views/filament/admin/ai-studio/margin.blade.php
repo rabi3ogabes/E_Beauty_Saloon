@@ -10,7 +10,7 @@
         @if (empty($rows))
             <p class="text-sm text-gray-500">{{ __('ai_studio.admin.empty_margin') }}</p>
         @else
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="border-b border-gray-200 text-start text-xs uppercase tracking-wide text-gray-500 dark:border-white/10">

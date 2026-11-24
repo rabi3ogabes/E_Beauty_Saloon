@@ -17,7 +17,7 @@
         </div>
 
         <div class="mt-10 grid gap-8 lg:grid-cols-[240px_1fr]">
-            <nav class="flex gap-2 overflow-x-auto lg:flex-col" aria-label="{{ __('account.title') }}">
+            <nav class="relative flex gap-2 overflow-x-auto lg:flex-col" aria-label="{{ __('account.title') }}">
                 <a href="{{ route('client.account') }}" @class(['chip whitespace-nowrap', 'chip-active' => ! $currentKey])>{{ __('account.profile') }}</a>
                 @foreach ($sections as $key => $section)
                     <a href="{{ route('client.account', $key) }}" @class(['chip whitespace-nowrap', 'chip-active' => $currentKey === $key])>{{ ($section['label'])() }}</a>
