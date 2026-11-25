@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Throwable;
 
 /** Async execution of an AI job inside its tenant context. Provider fallback happens inside one attempt. */
 class RunAIJob implements ShouldQueue
@@ -37,6 +38,28 @@ class RunAIJob implements ShouldQueue
             $job = AIJob::find($this->jobId);
             if ($job && ! $job->isFinished()) {
                 $process->handle($job);
+            }
+        });
+    }
+
+    /** The worker crashed or timed out: never leave a client watching a spinner — fail (and refund) the look. */
+    public function failed(?Throwable $e = null): void
+    {
+        $tenant = Tenant::find($this->tenantId);
+        if (! $tenant) {
+            return;
+        }
+
+        app(TenantContext::class)->run($tenant, function () {
+            $job = AIJob::find($this->jobId);
+            if (! $job || $job->isFinished()) {
+                return;
+            }
+            $message = __('ai_studio.errors.all_providers_failed');
+            if ((int) $job->charged_credits > 0) {
+                app(ProcessAIJob::class)->refund($job, $message);
+            } else {
+                $job->update(['status' => 'failed', 'error' => $message, 'finished_at' => now()]);
             }
         });
     }

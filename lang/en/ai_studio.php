@@ -15,6 +15,7 @@ return [
         'shape' => 'Shape', 'art' => 'Nail art', 'day' => 'Day', 'soiree' => 'Soirée', 'glam' => 'Glam', 'classic' => 'Classic', 'modern' => 'Modern', 'arabic' => 'Arabic',
     ],
     'lookbook' => [
+        'subtitle_book' => 'Tap any look to see it up close, then book it with our artists.',
         'title' => 'Browse the looks', 'subtitle' => 'Tap any look to see it up close, then try it on yourself or book it.',
         'photos' => '{1} 1 photo|[2,*] :count photos', 'view' => 'View look', 'close' => 'Close', 'prev' => 'Previous photo', 'next' => 'Next photo',
         'photo_n' => 'Photo :n of :total', 'try_on' => 'Try it on me', 'book' => 'Book this look', 'from' => 'From :price',
@@ -123,6 +124,7 @@ return [
         'adjustment' => 'Manual adjustment',
     ],
     'errors' => [
+        'tryon_unavailable' => 'Virtual try-on is resting right now — no credits were used. Browse the looks and book with our artists, or try again later.',
         'all_providers_failed' => 'Our AI artists are busy right now. No credits were used — please try again in a moment.',
         'no_provider' => 'AI Studio is not configured yet.',
         'insufficient_credits' => 'Not enough AI credits.',

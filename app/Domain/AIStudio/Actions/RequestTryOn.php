@@ -9,6 +9,7 @@ use App\Domain\AIStudio\Models\AITaskPrice;
 use App\Domain\AIStudio\Models\AIWallet;
 use App\Domain\AIStudio\Models\ClientLook;
 use App\Domain\AIStudio\Models\Style;
+use App\Domain\AIStudio\Support\AIRouter;
 use App\Domain\AIStudio\Support\PhotoVault;
 use App\Domain\CRM\Models\Client;
 use App\Domain\Tenancy\Models\Tenant;
@@ -38,11 +39,15 @@ class RequestTryOn
         if (! $style->is_active) {
             throw new DomainException(__('ai_studio.errors.style_unavailable'));
         }
+        $price = AITaskPrice::for($style->task ?: (Style::CATEGORIES[$style->category]['task'] ?? 'hair_tryon'));
+        // No image AI configured (or every provider is down): say so now instead of queueing a look that can't run.
+        if (app(AIRouter::class)->candidates($price->task, $price->capability ?: 'image', $tenant->id)->isEmpty()) {
+            throw new DomainException(__('ai_studio.errors.tryon_unavailable'));
+        }
         if ($reason = $this->moderation->check($photo, 'input')) {
             throw new DomainException($reason);
         }
 
-        $price = AITaskPrice::for($style->task ?: (Style::CATEGORIES[$style->category]['task'] ?? 'hair_tryon'));
         self::assertWalletCovers($tenant, (int) $price->credits);
 
         $subject = ClientQuota::subject($client, $device);

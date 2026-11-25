@@ -12,6 +12,7 @@ use App\Domain\AIStudio\Models\AIJob;
 use App\Domain\AIStudio\Models\AILookPurchase;
 use App\Domain\AIStudio\Models\ClientLook;
 use App\Domain\AIStudio\Models\Style;
+use App\Domain\AIStudio\Support\AIRouter;
 use App\Domain\AIStudio\Support\LookPresenter;
 use App\Domain\AIStudio\Support\PhotoVault;
 use App\Domain\Payments\Actions\CreateOnlinePayment;
@@ -87,6 +88,7 @@ class StudioController extends Controller
             ])->values(),
             'quota' => app(ClientQuota::class)->status($tenant, $subject, $client),
             'pricePerLook' => (int) $tenant->setting('ai.price_per_look', 0),
+            'tryOnAvailable' => app(AIRouter::class)->candidates('hair_tryon', 'image', $tenant->id)->isNotEmpty(),
         ]);
     }
 

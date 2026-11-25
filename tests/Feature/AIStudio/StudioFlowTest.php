@@ -4,6 +4,7 @@ use App\Domain\AIStudio\Actions\AIMarginReport;
 use App\Domain\AIStudio\Actions\CreditLedger;
 use App\Domain\AIStudio\Actions\PurgeExpiredLooks;
 use App\Domain\AIStudio\Contracts\ModeratesContent;
+use App\Domain\AIStudio\Jobs\RunAIJob;
 use App\Domain\AIStudio\Models\AIJob;
 use App\Domain\AIStudio\Models\AIProvider;
 use App\Domain\AIStudio\Models\AIWallet;
@@ -286,4 +287,57 @@ it('ledger is idempotent and blocks overdrafts', function () {
         expect($ledger->balance($this->tenant))->toBe(10);
         expect(fn () => $ledger->debit($this->tenant, 11, 'charge', 'k2'))->toThrow(DomainException::class);
     });
+});
+
+it('moves on to the next provider when one answers 401 (bad or missing key)', function () {
+    aiCredits($this->tenant);
+    aiConsent($this->tenant, $this->client);
+    Http::fake([
+        'generativelanguage.googleapis.com/*' => Http::response(['error' => ['message' => 'API key not valid']], 401),
+        'api.openai.com/v1/images/edits' => Http::response(openaiImageResponse()),
+    ]);
+
+    $res = tryOn($this)->assertStatus(202);
+
+    $job = asTenant($this->tenant, fn () => AIJob::findOrFail($res->json('id')));
+    expect($job->status)->toBe('succeeded')->and($job->provider_driver)->toBe('openai')
+        ->and($job->attempt_log[0])->toMatchArray(['driver' => 'gemini', 'ok' => false]);
+});
+
+it('never routes to a provider without an API key', function () {
+    $this->providers['gemini']->update(['api_key' => null]);
+    config(['ai.providers.gemini.api_key' => null]);
+
+    $drivers = app(AIRouter::class)->candidates('hair_tryon', 'image', $this->tenant->id)->pluck('driver')->all();
+
+    expect($drivers)->not->toContain('gemini')->toContain('openai');
+});
+
+it('refuses a try-on straight away when no image AI is configured, and hides the try-on button', function () {
+    aiCredits($this->tenant);
+    aiConsent($this->tenant, $this->client);
+    AIProvider::query()->whereIn('driver', ['gemini', 'openai', 'higgsfield'])->update(['api_key' => null]);
+    foreach (['gemini', 'openai', 'higgsfield'] as $d) {
+        config(["ai.providers.{$d}.api_key" => null]);
+    }
+    Http::fake();
+
+    tryOn($this)->assertStatus(422)->assertJsonPath('message', __('ai_studio.errors.tryon_unavailable'));
+    Http::assertNothingSent();
+    expect(asTenant($this->tenant, fn () => AIJob::count()))->toBe(0);
+
+    $page = $this->get(tenantUrl($this->tenant, 'studio'))->assertOk();
+    expect($page->viewData('tryOnAvailable'))->toBeFalse();
+});
+
+it('fails the look (instead of spinning forever) when its background worker crashes', function () {
+    $job = asTenant($this->tenant, fn () => AIJob::create([
+        'client_id' => $this->client->id, 'task' => 'hair_tryon', 'source' => 'studio', 'style_id' => $this->style->id,
+        'input_refs' => [], 'prompt' => 'x', 'cost_credits' => 4, 'status' => 'running',
+    ]));
+
+    (new RunAIJob($this->tenant->id, $job->id))->failed(new RuntimeException('worker died'));
+
+    $job = asTenant($this->tenant, fn () => $job->fresh());
+    expect($job->status)->toBe('failed')->and($job->error)->toBe(__('ai_studio.errors.all_providers_failed'));
 });
