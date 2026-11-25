@@ -111,3 +111,10 @@ Append-only log. Newest last.
     (class + file + line) is sent once per `ERROR_ALERT_THROTTLE` minutes with a repeat count, at most
     `ERROR_ALERT_MAX_PER_HOUR` alerts an hour, and alerting can never throw. Business-rule `DomainException`s are no
     longer reported at all. `php artisan monitoring:test-alert` checks delivery.
+35. **Studio lookbook first, consent only for try-on**: anyone can browse looks and open the look viewer
+    (swipeable photos, price/duration, Try it on / Book this look, `/studio?look={id}` deep links); camera consent is
+    asked only when the client taps "Try it on me". Each look has a cover (`reference_path`) plus a `gallery` of up to
+    8 photos the salon uploads; `illustrative` shows a small note when photos are not the salon's own work.
+    Bundled example looks (`resources/studio-examples`, AI-generated photoreal illustrations for nails, pedicure and
+    the new `extensions` category) install via `studio:install-examples`, matched by category + English name, never
+    replacing a salon's own photos. Extension try-ons edit only the hair, colour-matched.

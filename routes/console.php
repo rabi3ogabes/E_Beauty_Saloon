@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\AIStudio\Actions\InstallExampleLooks;
 use App\Domain\Billing\Jobs\ProcessSubscriptionLifecycle;
 use App\Domain\Branches\Models\Branch;
 use App\Domain\Tenancy\Jobs\VerifyCustomDomain;
@@ -87,3 +88,16 @@ Artisan::command('monitoring:test-alert', function () {
     ));
     $this->info('Test alert sent to '.implode(', ', $to).' via the "'.config('mail.default').'" mailer.');
 })->purpose('Send a test error-alert e-mail');
+
+// Bundled example looks (nails, pedicure, hair extensions) with photos — for the demo salon or any salon by slug.
+Artisan::command('studio:install-examples {--tenant= : salon slug (default: the demo salon)} {--force : replace existing photos too}', function () {
+    $slug = $this->option('tenant') ?: env('DEMO_TENANT_SLUG', 'lumiere');
+    $tenant = Tenant::where('slug', $slug)->first();
+    if (! $tenant) {
+        $this->warn("No salon '{$slug}' — nothing to install.");
+
+        return;
+    }
+    $stats = app(InstallExampleLooks::class)->handle($tenant, (bool) $this->option('force'));
+    $this->info("{$tenant->name}: {$stats['created']} looks added, {$stats['photographed']} given photos, {$stats['services']} services added.");
+})->purpose('Install the bundled example looks and photos into a salon');

@@ -20,7 +20,6 @@ use App\Http\Controllers\Controller;
 use App\Support\Exceptions\DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /** Public AI Beauty Studio (/studio) and in-salon kiosk (/studio/kiosk). */
@@ -76,7 +75,11 @@ class StudioController extends Controller
                 'name' => $s->name,
                 'description' => $s->description,
                 'swatch' => $s->swatch,
-                'image' => $s->reference_path ? Storage::disk('public')->url($s->reference_path) : null,
+                'image' => $s->imageUrls()[0] ?? null,
+                'images' => $s->imageUrls(),
+                'thumb' => $s->thumbUrl(),
+                'illustrative' => $s->illustrative,
+                'book' => $s->service && $tenant->hasModule('booking') ? url('/book').'?'.http_build_query(['service' => $s->service->slug, 'look' => 'style-'.$s->id]) : null,
                 'framing' => $s->framing(),
                 'face' => $s->isFaceFeature(),
                 'price' => $s->service ? money($s->service->sale_price ?? $s->service->price) : null,

@@ -7,12 +7,21 @@ return [
     'headline' => 'See your next look before you book it.',
     'subhead' => 'Choose a style from our menu, take a photo and preview it in seconds. Every look maps to a real service with a real price.',
 
-    'categories' => ['hair' => 'Hair', 'eyes' => 'Eyes & brows', 'lips' => 'Lips', 'nails' => 'Nails', 'pedicure' => 'Pedicure', 'makeup' => 'Full makeup', 'bridal' => 'Bridal'],
+    'categories' => ['hair' => 'Hair', 'eyes' => 'Eyes & brows', 'lips' => 'Lips', 'nails' => 'Nails', 'pedicure' => 'Pedicure', 'extensions' => 'Hair extensions', 'makeup' => 'Full makeup', 'bridal' => 'Bridal'],
     'options' => [
+        'volume' => 'Volume', 'ponytail' => 'Ponytail',
         'cut' => 'Cut', 'length' => 'Length', 'color' => 'Colour', 'highlights' => 'Highlights', 'balayage' => 'Balayage', 'curls' => 'Curls',
         'lashes' => 'Lashes', 'brows' => 'Brows', 'eyeshadow' => 'Eyeshadow', 'liner' => 'Liner', 'shade' => 'Shade', 'finish' => 'Gloss / matte',
         'shape' => 'Shape', 'art' => 'Nail art', 'day' => 'Day', 'soiree' => 'Soirée', 'glam' => 'Glam', 'classic' => 'Classic', 'modern' => 'Modern', 'arabic' => 'Arabic',
     ],
+    'lookbook' => [
+        'title' => 'Browse the looks', 'subtitle' => 'Tap any look to see it up close, then try it on yourself or book it.',
+        'photos' => '{1} 1 photo|[2,*] :count photos', 'view' => 'View look', 'close' => 'Close', 'prev' => 'Previous photo', 'next' => 'Next photo',
+        'photo_n' => 'Photo :n of :total', 'try_on' => 'Try it on me', 'book' => 'Book this look', 'from' => 'From :price',
+        'minutes' => ':n min', 'illustrative' => 'Illustrative example — your result is tailored to you.',
+        'consent_first' => 'One quick step before your first try-on:', 'no_photo' => 'Photo coming soon',
+    ],
+
     'modes' => ['tryon' => 'Try a look', 'consult' => 'AI consultant', 'consult_cta' => 'Analyse my features'],
 
     'quota' => [
@@ -148,6 +157,8 @@ return [
         'byok' => 'Bring your own key', 'platform' => 'Platform',
     ],
     'dashboard' => [
+        'reference_help' => 'The cover photo clients see first.', 'gallery' => 'More example photos', 'gallery_help' => 'Up to 8 photos of this look — your own work converts best. Drag to reorder.',
+        'illustrative' => 'Illustrative photos', 'illustrative_help' => 'Turn on if these are not photos of your own work; clients see a small note.', 'photos' => 'Photos',
         'styles' => 'Style library', 'style' => 'Style', 'wallet' => 'Credits', 'settings' => 'Studio settings', 'usage' => 'Usage',
         'category' => 'Category', 'option' => 'Option', 'prompt' => 'AI prompt', 'prompt_help' => 'Describe the look precisely (colour, length, finish). We add identity-preserving instructions automatically.',
         'reference' => 'Reference image', 'swatch' => 'Swatch colour', 'service' => 'Linked service', 'shades' => 'Shop shades', 'task' => 'Credit cost (task)',

@@ -4,6 +4,7 @@ namespace Database\Seeders\Demo;
 
 use App\Domain\AIStudio\Actions\CreditLedger;
 use App\Domain\AIStudio\Actions\GrantMonthlyCredits;
+use App\Domain\AIStudio\Actions\InstallExampleLooks;
 use App\Domain\AIStudio\Models\AICreditPack;
 use App\Domain\AIStudio\Models\AIJob;
 use App\Domain\AIStudio\Models\AIProvider;
@@ -101,6 +102,9 @@ class AIStudioDemoSeeder extends Seeder
                 'sort' => $i,
             ]);
         }
+
+        // Example photos for the lookbook + the hair-extension looks and services.
+        app(InstallExampleLooks::class)->handle($tenant);
 
         // Wallet: monthly included credits + one paid pack.
         app(GrantMonthlyCredits::class)->handle($tenant->fresh());
