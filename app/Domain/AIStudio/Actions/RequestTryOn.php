@@ -88,9 +88,10 @@ class RequestTryOn
 
     public static function prompt(Style $style): string
     {
-        $framing = match ($style->framing()) {
-            'hand' => 'the hands and nails',
-            'foot' => 'the feet and toenails',
+        $framing = match (true) {
+            $style->category === 'extensions' => 'the hair only (add the length, volume or ponytail described, blended seamlessly and matched to the person\'s natural hair colour)',
+            $style->framing() === 'hand' => 'the hands and nails',
+            $style->framing() === 'foot' => 'the feet and toenails',
             default => 'the face and hair',
         };
 

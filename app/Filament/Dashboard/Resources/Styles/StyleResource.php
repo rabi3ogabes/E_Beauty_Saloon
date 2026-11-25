@@ -92,7 +92,10 @@ class StyleResource extends Resource
                 Textarea::make('prompt')->label(__('ai_studio.dashboard.prompt'))->helperText(__('ai_studio.dashboard.prompt_help'))->required()->rows(3)->columnSpanFull(),
             ]),
             Section::make()->columnSpan(1)->schema([
-                FileUpload::make('reference_path')->label(__('ai_studio.dashboard.reference'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('ai-styles')->imageEditor()->maxSize(4096),
+                FileUpload::make('reference_path')->label(__('ai_studio.dashboard.reference'))->helperText(__('ai_studio.dashboard.reference_help'))->image()->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('ai-styles')->imageEditor()->maxSize(4096),
+                FileUpload::make('gallery')->label(__('ai_studio.dashboard.gallery'))->helperText(__('ai_studio.dashboard.gallery_help'))->image()->multiple()->reorderable()->appendFiles()->maxFiles(8)
+                    ->acceptedFileTypes(Uploads::IMAGE_TYPES)->disk('public')->directory('ai-styles')->imageEditor()->maxSize(4096)->panelLayout('grid'),
+                Toggle::make('illustrative')->label(__('ai_studio.dashboard.illustrative'))->helperText(__('ai_studio.dashboard.illustrative_help')),
                 ColorPicker::make('swatch')->label(__('ai_studio.dashboard.swatch')),
                 Select::make('service_id')->label(__('ai_studio.dashboard.service'))->searchable()->preload()
                     ->options(fn () => Service::query()->active()->orderBy('sort')->get()->mapWithKeys(fn ($s) => [$s->id => $s->name])->all()),
@@ -110,7 +113,8 @@ class StyleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->defaultSort('sort')->reorderable('sort')->columns([
-            ImageColumn::make('reference_path')->disk('public')->label('')->square()->size(48),
+            ImageColumn::make('cover')->label('')->square()->size(48)->state(fn (Style $record) => $record->imageUrls()[0] ?? null),
+            TextColumn::make('photos')->label(__('ai_studio.dashboard.photos'))->state(fn (Style $record) => count($record->imagePaths()))->badge()->color('gray')->alignCenter(),
             TextColumn::make('name')->label(__('fields.name'))->weight('semibold')->searchable()
                 ->description(fn ($record) => $record->option ? __('ai_studio.options.'.$record->option) : null),
             TextColumn::make('category')->label(__('ai_studio.dashboard.category'))->badge()->formatStateUsing(fn ($state) => __('ai_studio.categories.'.$state)),
