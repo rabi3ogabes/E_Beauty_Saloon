@@ -52,7 +52,8 @@ class PwaController extends Controller
         $t = tenant();
         $key = 'pwa-icon:'.$t->id.':'.$size.':'.md5(json_encode([$t->brand('logo_path'), $t->brand('primary'), $t->brand('background'), $t->brand('theme')]));
 
-        $png = cache()->remember($key, 86400, function () use ($t, $size) {
+        // Cached base64-encoded: binary PNG bytes are rejected by text-based cache stores (e.g. MySQL utf8mb4).
+        $png = base64_decode((string) cache()->remember($key, 86400, function () use ($t, $size) {
             $theme = ThemeRegistry::for($t);
             $img = imagecreatetruecolor($size, $size);
             $bg = $this->rgb($img, $theme['dark'] ? $theme['background'] : SiteSeo::cssColor($t->brand('background'), $theme['background']));
@@ -76,8 +77,8 @@ class PwaController extends Controller
             ob_start();
             imagepng($img);
 
-            return (string) ob_get_clean();
-        });
+            return base64_encode((string) ob_get_clean());
+        }));
 
         return response($png, 200, ['Content-Type' => 'image/png', 'Cache-Control' => 'public, max-age=86400']);
     }

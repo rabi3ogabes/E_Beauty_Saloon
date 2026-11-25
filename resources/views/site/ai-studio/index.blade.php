@@ -6,6 +6,7 @@
         'categories' => $categories,
         'quota' => $quota,
         'kiosk' => $kiosk,
+        'tryOn' => $tryOnAvailable,
         'urls' => ['consent' => route('studio.consent'), 'tryOn' => route('studio.try-on'), 'consultant' => route('studio.consultant'), 'reset' => route('studio.kiosk', ['reset' => 1])],
         'i18n' => [
             'tooDark' => __('ai_studio.capture.too_dark'),
@@ -54,7 +55,7 @@
                 <div x-show="mode === 'tryon'" class="mt-8">
                     <div class="max-w-2xl">
                         <h2 class="text-2xl font-semibold sm:text-3xl">{{ __('ai_studio.lookbook.title') }}</h2>
-                        <p class="mt-1 text-sm text-muted">{{ __('ai_studio.lookbook.subtitle') }}</p>
+                        <p class="mt-1 text-sm text-muted" x-text="tryOn ? @js(__('ai_studio.lookbook.subtitle')) : @js(__('ai_studio.lookbook.subtitle_book'))"></p>
                     </div>
                     <div class="relative -mx-4 mt-5 flex gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none]" role="tablist">
                         <template x-for="cat in visibleCategories" :key="cat">
@@ -234,9 +235,9 @@
                             </div>
 
                             <div class="sticky bottom-0 -mx-6 mt-auto border-t border-line/60 bg-ivory/95 px-6 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur sm:-mx-8 sm:px-8 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:px-0 lg:pt-8 lg:pb-0 lg:backdrop-blur-none">
-                                <div class="grid grid-cols-2 gap-3 lg:grid-cols-1" :class="!viewer.book && 'grid-cols-1'">
-                                    <button type="button" class="btn-primary h-12" @click="tryFromViewer()">{{ __('ai_studio.lookbook.try_on') }}</button>
-                                    <a x-show="viewer.book" :href="viewer.book" class="btn-ghost h-12">{{ __('ai_studio.lookbook.book') }}</a>
+                                <div class="grid grid-cols-2 gap-3 lg:grid-cols-1" :class="(!viewer.book || !tryOn) && 'grid-cols-1'">
+                                    <button type="button" class="btn-primary h-12" x-show="tryOn" @click="tryFromViewer()">{{ __('ai_studio.lookbook.try_on') }}</button>
+                                    <a x-show="viewer.book" :href="viewer.book" class="h-12" :class="tryOn ? 'btn-ghost' : 'btn-primary'">{{ __('ai_studio.lookbook.book') }}</a>
                                 </div>
                                 <p class="mt-3 text-center text-[11px] text-muted lg:text-start" x-show="viewer.illustrative">{{ __('ai_studio.lookbook.illustrative') }}</p>
                             </div>

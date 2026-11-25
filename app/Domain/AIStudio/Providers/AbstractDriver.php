@@ -11,6 +11,7 @@ use App\Domain\AIStudio\Exceptions\ProviderTimeoutException;
 use App\Domain\AIStudio\Models\AIProvider;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
@@ -48,6 +49,9 @@ abstract class AbstractDriver implements AIImageProvider, AITextProvider
             $response = $call($this->http());
         } catch (ConnectionException $e) {
             throw new ProviderTimeoutException($this->provider->driver.': '.$e->getMessage(), 0, $e);
+        } catch (RequestException $e) {
+            // e.g. 401 bad key, 429 quota: a provider failure, so the router moves on to the next provider.
+            $response = $e->response;
         }
         if ($response->status() === 408 || $response->status() === 504) {
             throw new ProviderTimeoutException($this->provider->driver.': upstream timeout ('.$response->status().')');

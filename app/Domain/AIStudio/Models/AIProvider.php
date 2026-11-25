@@ -108,6 +108,11 @@ class AIProvider extends Model
     /** A "down" provider gets a retry window every 5 minutes (circuit breaker half-open). */
     public function isRoutable(): bool
     {
+        // A provider without credentials can never succeed: skip it instead of failing a client's look on it.
+        if (blank($this->key())) {
+            return false;
+        }
+
         return $this->health_status !== 'down' || ! $this->last_failure_at || $this->last_failure_at->lt(now()->subMinutes(5));
     }
 }

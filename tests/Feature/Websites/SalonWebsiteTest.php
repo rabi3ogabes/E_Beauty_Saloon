@@ -16,6 +16,7 @@ use App\Filament\Dashboard\Pages\Website\WebsiteSettings;
 use App\Support\Exceptions\DomainException;
 use App\Support\Tenancy\TenantContext;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
@@ -197,4 +198,13 @@ it('renders the website dashboard pages and saves settings', function () {
 it('blocks the website builder for staff without permission', function () {
     $stylist = tenantUser($this->tenant, 'stylist');
     $this->actingAs($stylist)->get(tenantUrl($this->tenant, 'dashboard/website/design'))->assertForbidden();
+});
+
+it('caches the app icon as text so database cache stores accept it', function () {
+    $this->get(tenantUrl($this->tenant, 'pwa/icon-192.png'))->assertOk()->assertHeader('Content-Type', 'image/png');
+    $key = collect(array_keys((fn () => $this->storage)->call(Cache::getStore())))->first(fn ($k) => str_contains($k, 'pwa-icon:'));
+    $cached = Cache::get($key);
+
+    expect($cached)->toBeString()->and(mb_check_encoding($cached, 'ASCII'))->toBeTrue()
+        ->and(getimagesizefromstring(base64_decode($cached))[0])->toBe(192);
 });
