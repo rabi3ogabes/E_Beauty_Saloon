@@ -118,3 +118,10 @@ Append-only log. Newest last.
     Bundled example looks (`resources/studio-examples`, AI-generated photoreal illustrations for nails, pedicure and
     the new `extensions` category) install via `studio:install-examples`, matched by category + English name, never
     replacing a salon's own photos. Extension try-ons edit only the hair, colour-matched.
+
+## 2026-11-25 — OpenRouter as an AI provider
+- New `openrouter` driver: photo edits through OpenRouter's Images API (`POST /images`, client photo + look reference
+  as `input_references`, default model `google/gemini-3.1-flash-image`), text/vision through its chat completions.
+- A provider row may narrow its driver's capabilities, never widen them: a text-only driver (Claude) is never sent pixels.
+- Providers without a key are never routed; with no image AI at all, the Studio hides "Try it on me" and refuses
+  try-ons up front (no credits, no job).
