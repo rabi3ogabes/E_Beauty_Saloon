@@ -27,6 +27,7 @@ class ProviderFactory
             'openai' => new OpenAIDriver($provider),
             'higgsfield' => new HiggsfieldDriver($provider),
             'anthropic' => new AnthropicDriver($provider),
+            'openrouter' => new OpenRouterDriver($provider),
             'http' => new GenericHttpDriver($provider),
             default => throw new InvalidArgumentException("Unknown AI driver [{$provider->driver}]"),
         };

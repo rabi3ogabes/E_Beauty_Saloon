@@ -4,6 +4,7 @@ use App\Domain\AIStudio\Actions\AIMarginReport;
 use App\Domain\AIStudio\Actions\CreditLedger;
 use App\Domain\AIStudio\Actions\PurgeExpiredLooks;
 use App\Domain\AIStudio\Contracts\ModeratesContent;
+use App\Domain\AIStudio\DTOs\ImageRequest;
 use App\Domain\AIStudio\Jobs\RunAIJob;
 use App\Domain\AIStudio\Models\AIJob;
 use App\Domain\AIStudio\Models\AIProvider;
@@ -11,6 +12,7 @@ use App\Domain\AIStudio\Models\AIWallet;
 use App\Domain\AIStudio\Models\AIWalletTransaction;
 use App\Domain\AIStudio\Models\ClientLook;
 use App\Domain\AIStudio\Models\Style;
+use App\Domain\AIStudio\Providers\ProviderFactory;
 use App\Domain\AIStudio\Support\AIRouter;
 use App\Domain\AIStudio\Support\LookPresenter;
 use App\Domain\AIStudio\Support\PhotoVault;
@@ -318,6 +320,42 @@ it('never sends photo edits to a text-only driver, even when its row is ticked f
 
     expect($claude->supports('image'))->toBeFalse()->and($claude->supports('text'))->toBeTrue()
         ->and(app(AIRouter::class)->candidates('hair_tryon', 'image', $this->tenant->id)->pluck('id'))->not->toContain($claude->id);
+});
+
+it('applies a look through OpenRouter when it is the only image AI configured', function () {
+    aiCredits($this->tenant);
+    aiConsent($this->tenant, $this->client);
+    AIProvider::query()->whereIn('driver', ['gemini', 'openai'])->update(['api_key' => null]);
+    config(['ai.providers.gemini.api_key' => null, 'ai.providers.openai.api_key' => null]);
+    AIProvider::create(['driver' => 'openrouter', 'name' => 'OpenRouter', 'api_key' => 'or-key', 'priority' => 2, 'timeout_seconds' => 5]);
+    Http::fake(['openrouter.ai/api/v1/images' => Http::response(['data' => [['b64_json' => base64_encode(aiPng(200, 260, '5B1A26')), 'media_type' => 'image/png']]])]);
+
+    expect($this->get(tenantUrl($this->tenant, 'studio'))->viewData('tryOnAvailable'))->toBeTrue();
+
+    $res = tryOn($this)->assertStatus(202);
+
+    $job = asTenant($this->tenant, fn () => AIJob::findOrFail($res->json('id')));
+    expect($job->status)->toBe('succeeded')->and($job->provider_driver)->toBe('openrouter')
+        ->and($job->model)->toBe('google/gemini-3.1-flash-image')
+        ->and(asTenant($this->tenant, fn () => ClientLook::where('ai_job_id', $job->id)->value('after_path')))->not->toBeNull();
+
+    Http::assertSent(fn ($r) => $r->url() === 'https://openrouter.ai/api/v1/images'
+        && $r->hasHeader('Authorization', 'Bearer or-key')
+        && $r['model'] === 'google/gemini-3.1-flash-image'
+        && str_starts_with((string) data_get($r->data(), 'input_references.0.image_url.url'), 'data:image/'));
+});
+
+it('downloads the OpenRouter image when it answers with a signed URL', function () {
+    $row = AIProvider::create(['driver' => 'openrouter', 'name' => 'OpenRouter', 'api_key' => 'or-key']);
+    Http::fake([
+        'openrouter.ai/api/v1/images' => Http::response(['data' => [['url' => 'https://storage.googleapis.com/or/x.png', 'media_type' => 'image/png']]]),
+        'storage.googleapis.com/*' => Http::response(aiPng(), 200, ['Content-Type' => 'image/png']),
+    ]);
+
+    $result = app(ProviderFactory::class)->make($row)
+        ->editImage(new ImageRequest('apply look', aiPng(), 'image/png'));
+
+    expect($result->image)->toBe(aiPng())->and($result->mime)->toBe('image/png');
 });
 
 it('refuses a try-on straight away when no image AI is configured, and hides the try-on button', function () {

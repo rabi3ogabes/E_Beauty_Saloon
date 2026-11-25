@@ -17,13 +17,14 @@ class AIProvider extends Model
 
     protected $hidden = ['api_key'];
 
-    public const DRIVERS = ['gemini', 'openai', 'higgsfield', 'anthropic', 'http'];
+    public const DRIVERS = ['gemini', 'openai', 'higgsfield', 'anthropic', 'openrouter', 'http'];
 
     public const DRIVER_CAPABILITIES = [
         'gemini' => ['image', 'text'],
         'openai' => ['image', 'text'],
         'higgsfield' => ['image', 'video'],
         'anthropic' => ['text'],
+        'openrouter' => ['image', 'text'],
         'http' => ['image', 'text'],
     ];
 

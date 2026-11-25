@@ -33,6 +33,7 @@ class AIStudioDemoSeeder extends Seeder
             ['openai', 'OpenAI Images', 2, ['image', 'text'], ['image' => 6, 'text' => 2]],
             ['higgsfield', 'Higgsfield', 3, ['image', 'video'], ['image' => 5]],
             ['anthropic', 'Anthropic Claude', 1, ['text'], ['text' => 2]],
+            ['openrouter', 'OpenRouter (Gemini images)', 2, ['image', 'text'], ['image' => 4, 'text' => 1]],
         ];
         foreach ($providers as [$driver, $name, $priority, $caps, $costs]) {
             AIProvider::query()->firstOrCreate(['driver' => $driver, 'tenant_id' => null], [

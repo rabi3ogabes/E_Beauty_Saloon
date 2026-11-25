@@ -17,15 +17,15 @@ class AITaskPrice extends Model
 
     /** Built-in tasks with default credit costs (the super admin can change them). */
     public const DEFAULTS = [
-        'hair_tryon' => ['Hair try-on', 'تجربة الشعر', 'image', 4, ['gemini', 'openai', 'higgsfield']],
-        'eyes_tryon' => ['Eyes & brows try-on', 'تجربة العيون والحواجب', 'image', 3, ['gemini', 'openai']],
-        'lips_tryon' => ['Lips try-on', 'تجربة الشفاه', 'image', 2, ['gemini', 'openai']],
-        'nails_tryon' => ['Nails try-on', 'تجربة الأظافر', 'image', 2, ['gemini', 'openai']],
-        'pedicure_tryon' => ['Pedicure try-on', 'تجربة الباديكير', 'image', 2, ['gemini', 'openai']],
-        'full_look' => ['Full makeup look', 'إطلالة مكياج كاملة', 'image', 8, ['gemini', 'openai', 'higgsfield']],
-        'bridal_look' => ['Bridal look', 'إطلالة عروس', 'image', 8, ['gemini', 'openai', 'higgsfield']],
+        'hair_tryon' => ['Hair try-on', 'تجربة الشعر', 'image', 4, ['gemini', 'openrouter', 'openai', 'higgsfield']],
+        'eyes_tryon' => ['Eyes & brows try-on', 'تجربة العيون والحواجب', 'image', 3, ['gemini', 'openrouter', 'openai']],
+        'lips_tryon' => ['Lips try-on', 'تجربة الشفاه', 'image', 2, ['gemini', 'openrouter', 'openai']],
+        'nails_tryon' => ['Nails try-on', 'تجربة الأظافر', 'image', 2, ['gemini', 'openrouter', 'openai']],
+        'pedicure_tryon' => ['Pedicure try-on', 'تجربة الباديكير', 'image', 2, ['gemini', 'openrouter', 'openai']],
+        'full_look' => ['Full makeup look', 'إطلالة مكياج كاملة', 'image', 8, ['gemini', 'openrouter', 'openai', 'higgsfield']],
+        'bridal_look' => ['Bridal look', 'إطلالة عروس', 'image', 8, ['gemini', 'openrouter', 'openai', 'higgsfield']],
         'consultant' => ['AI consultant', 'المستشارة الذكية', 'text', 1, ['anthropic', 'gemini', 'openai']],
-        'marketing_banner' => ['Marketing banner', 'بانر تسويقي', 'image', 6, ['gemini', 'openai']],
+        'marketing_banner' => ['Marketing banner', 'بانر تسويقي', 'image', 6, ['gemini', 'openrouter', 'openai']],
         'marketing_copy' => ['Marketing copy', 'نص تسويقي', 'text', 1, ['anthropic', 'openai', 'gemini']],
     ];
 

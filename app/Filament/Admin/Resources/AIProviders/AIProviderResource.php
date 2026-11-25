@@ -67,7 +67,7 @@ class AIProviderResource extends Resource
         return $schema->columns(2)->components([
             Section::make()->columnSpanFull()->columns(2)->schema([
                 Select::make('driver')->label(__('ai_studio.admin.driver'))->required()->live()
-                    ->options(array_combine(AIProvider::DRIVERS, ['Google Gemini', 'OpenAI', 'Higgsfield', 'Anthropic Claude', 'Generic HTTP'])),
+                    ->options(array_combine(AIProvider::DRIVERS, ['Google Gemini', 'OpenAI', 'Higgsfield', 'Anthropic Claude', 'OpenRouter', 'Generic HTTP'])),
                 TextInput::make('name')->label(__('fields.name'))->required()->maxLength(80),
                 TextInput::make('api_key')->label(__('ai_studio.admin.api_key'))->password()->revealable(false)
                     ->helperText(__('ai_studio.admin.api_key_help'))
