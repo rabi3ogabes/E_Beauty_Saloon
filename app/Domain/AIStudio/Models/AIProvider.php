@@ -43,7 +43,11 @@ class AIProvider extends Model
 
     public function supports(string $capability): bool
     {
-        return in_array($capability, $this->capabilities ?: (self::DRIVER_CAPABILITIES[$this->driver] ?? []), true);
+        // A row may narrow what its driver does, never widen it (e.g. Claude ticked 'image' still can't edit photos).
+        $driver = self::DRIVER_CAPABILITIES[$this->driver] ?? null;
+        $row = $this->capabilities ?: ($driver ?? []);
+
+        return in_array($capability, $row, true) && ($driver === null || in_array($capability, $driver, true));
     }
 
     public function model(string $capability): ?string
