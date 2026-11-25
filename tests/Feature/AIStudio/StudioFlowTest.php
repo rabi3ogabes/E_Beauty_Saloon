@@ -313,6 +313,13 @@ it('never routes to a provider without an API key', function () {
     expect($drivers)->not->toContain('gemini')->toContain('openai');
 });
 
+it('never sends photo edits to a text-only driver, even when its row is ticked for images', function () {
+    $claude = AIProvider::create(['driver' => 'anthropic', 'name' => 'Claude', 'api_key' => 'sk-test', 'capabilities' => ['image', 'text']]);
+
+    expect($claude->supports('image'))->toBeFalse()->and($claude->supports('text'))->toBeTrue()
+        ->and(app(AIRouter::class)->candidates('hair_tryon', 'image', $this->tenant->id)->pluck('id'))->not->toContain($claude->id);
+});
+
 it('refuses a try-on straight away when no image AI is configured, and hides the try-on button', function () {
     aiCredits($this->tenant);
     aiConsent($this->tenant, $this->client);
