@@ -121,7 +121,8 @@ Append-only log. Newest last.
 
 ## 2026-11-25 — OpenRouter as an AI provider
 - New `openrouter` driver: photo edits through OpenRouter's Images API (`POST /images`, client photo + look reference
-  as `input_references`, default model `google/gemini-3.1-flash-image`), text/vision through its chat completions.
+  as `input_references`, default `google/gemini-3-pro-image` with `openai/gpt-5-image-mini` as same-key backup: the image model may be a comma-separated list tried in order; 401/402/403 stop the chain), text/vision through its chat completions.
 - A provider row may narrow its driver's capabilities, never widen them: a text-only driver (Claude) is never sent pixels.
 - Providers without a key are never routed; with no image AI at all, the Studio hides "Try it on me" and refuses
   try-ons up front (no credits, no job).
+- Queue `retry_after` defaults to 660s (> RunAIJob's 600s timeout) so a slow image edit is never picked up twice.

@@ -55,7 +55,7 @@ return [
         'openrouter' => [
             'base_url' => env('AI_OPENROUTER_BASE_URL', 'https://openrouter.ai/api/v1'),
             'api_key' => env('AI_OPENROUTER_API_KEY'),
-            'models' => ['image' => env('AI_OPENROUTER_IMAGE_MODEL', 'google/gemini-3.1-flash-image'), 'text' => env('AI_OPENROUTER_TEXT_MODEL', 'google/gemini-2.5-pro')],
+            'models' => ['image' => env('AI_OPENROUTER_IMAGE_MODEL', 'google/gemini-3-pro-image,openai/gpt-5-image-mini'), 'text' => env('AI_OPENROUTER_TEXT_MODEL', 'google/gemini-2.5-pro')],
         ],
         'higgsfield' => [
             'base_url' => env('AI_HIGGSFIELD_BASE_URL', 'https://platform.higgsfield.ai/v1'),

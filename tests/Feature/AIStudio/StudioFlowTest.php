@@ -5,6 +5,7 @@ use App\Domain\AIStudio\Actions\CreditLedger;
 use App\Domain\AIStudio\Actions\PurgeExpiredLooks;
 use App\Domain\AIStudio\Contracts\ModeratesContent;
 use App\Domain\AIStudio\DTOs\ImageRequest;
+use App\Domain\AIStudio\Exceptions\ProviderException;
 use App\Domain\AIStudio\Jobs\RunAIJob;
 use App\Domain\AIStudio\Models\AIJob;
 use App\Domain\AIStudio\Models\AIProvider;
@@ -336,13 +337,36 @@ it('applies a look through OpenRouter when it is the only image AI configured', 
 
     $job = asTenant($this->tenant, fn () => AIJob::findOrFail($res->json('id')));
     expect($job->status)->toBe('succeeded')->and($job->provider_driver)->toBe('openrouter')
-        ->and($job->model)->toBe('google/gemini-3.1-flash-image')
+        ->and($job->model)->toBe('google/gemini-3-pro-image')
         ->and(asTenant($this->tenant, fn () => ClientLook::where('ai_job_id', $job->id)->value('after_path')))->not->toBeNull();
 
     Http::assertSent(fn ($r) => $r->url() === 'https://openrouter.ai/api/v1/images'
         && $r->hasHeader('Authorization', 'Bearer or-key')
-        && $r['model'] === 'google/gemini-3.1-flash-image'
+        && $r['model'] === 'google/gemini-3-pro-image'
         && str_starts_with((string) data_get($r->data(), 'input_references.0.image_url.url'), 'data:image/'));
+});
+
+it('hands the photo to the backup OpenRouter model when the first one fails, on the same key', function () {
+    $row = AIProvider::create(['driver' => 'openrouter', 'name' => 'OpenRouter', 'api_key' => 'or-key', 'models' => ['image' => 'google/gemini-3-pro-image, openai/gpt-5-image-mini']]);
+    Http::fake(['openrouter.ai/api/v1/images' => fn ($r) => $r['model'] === 'google/gemini-3-pro-image'
+        ? Http::response(['error' => ['message' => 'upstream error']], 502)
+        : Http::response(['data' => [['b64_json' => base64_encode(aiPng()), 'media_type' => 'image/png']]])]);
+
+    $result = app(ProviderFactory::class)->make($row)
+        ->editImage(new ImageRequest('apply look', aiPng(), 'image/png'));
+
+    expect($result->model)->toBe('openai/gpt-5-image-mini');
+    Http::assertSentCount(2);
+});
+
+it('does not retry other OpenRouter models when the key has no credits', function () {
+    $row = AIProvider::create(['driver' => 'openrouter', 'name' => 'OpenRouter', 'api_key' => 'or-key', 'models' => ['image' => 'google/gemini-3-pro-image,openai/gpt-5-image-mini']]);
+    Http::fake(['openrouter.ai/api/v1/images' => Http::response(['error' => ['message' => 'Insufficient credits']], 402)]);
+
+    expect(fn () => app(ProviderFactory::class)->make($row)
+        ->editImage(new ImageRequest('apply look', aiPng(), 'image/png')))
+        ->toThrow(ProviderException::class);
+    Http::assertSentCount(1);
 });
 
 it('downloads the OpenRouter image when it answers with a signed URL', function () {

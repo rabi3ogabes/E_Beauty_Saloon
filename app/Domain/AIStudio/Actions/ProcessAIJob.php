@@ -56,7 +56,7 @@ class ProcessAIJob
         $job->update([
             'ai_provider_id' => $route->provider->id,
             'provider_driver' => $route->provider->driver,
-            'model' => $route->provider->model($capability),
+            'model' => ($route->result instanceof ImageResult && $route->result->model) ? $route->result->model : $route->provider->model($capability),
             'charged_credits' => $job->cost_credits,
             'provider_cost' => $route->provider->unitCost($capability) * ($job->task === 'consultant' ? 2 : 1),
             'latency_ms' => $route->latencyMs,
