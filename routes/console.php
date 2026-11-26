@@ -6,13 +6,16 @@ use App\Domain\Branches\Models\Branch;
 use App\Domain\Tenancy\Jobs\VerifyCustomDomain;
 use App\Domain\Tenancy\Models\Domain;
 use App\Domain\Tenancy\Models\Tenant;
+use App\Http\Controllers\Site\AtelierController;
 use App\Support\Monitoring\ErrorAlertMail;
 use App\Support\Monitoring\ErrorContext;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schedule;
+use Illuminate\Support\Facades\Storage;
 
 // Billing: reminders (7/3/1 days), renewal invoices, grace, suspension.
 Schedule::job(new ProcessSubscriptionLifecycle)->dailyAt('06:00')->onOneServer()->name('billing:lifecycle');
@@ -101,3 +104,37 @@ Artisan::command('studio:install-examples {--tenant= : salon slug (default: the 
     $stats = app(InstallExampleLooks::class)->handle($tenant, (bool) $this->option('force'));
     $this->info("{$tenant->name}: {$stats['created']} looks added, {$stats['photographed']} given photos, {$stats['services']} services added.");
 })->purpose('Install the bundled example looks and photos into a salon');
+
+// Live Atelier: self-host the on-device face/hand tracking runtime and models (public disk, kept across deploys).
+// Idempotent and never fails a deploy: without them the Atelier loads the same files from Google's and jsDelivr's CDNs.
+Artisan::command('studio:install-atelier {--force : download again}', function () {
+    $version = AtelierController::MEDIAPIPE_VERSION;
+    $dir = 'vendor/mediapipe/'.$version;
+    $files = [
+        'face_landmarker.task' => 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+        'hand_landmarker.task' => 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',
+        'wasm/vision_wasm_internal.js' => "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@{$version}/wasm/vision_wasm_internal.js",
+        'wasm/vision_wasm_internal.wasm' => "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@{$version}/wasm/vision_wasm_internal.wasm",
+    ];
+    $disk = Storage::disk('public');
+    foreach ($files as $name => $url) {
+        $path = $dir.'/'.$name;
+        if ($disk->exists($path) && $disk->size($path) > 1000 && ! $this->option('force')) {
+            $this->line("✓ {$name}");
+
+            continue;
+        }
+        try {
+            $res = Http::timeout(120)->retry(2, 1000)->get($url);
+            if (! $res->successful() || strlen($res->body()) < 1000) {
+                $this->warn("Could not download {$name} (HTTP {$res->status()}); the Atelier will use the CDN.");
+
+                continue;
+            }
+            $disk->put($path, $res->body());
+            $this->info("↓ {$name} (".number_format(strlen($res->body()) / 1048576, 1).' MB)');
+        } catch (Throwable $e) {
+            $this->warn("Could not download {$name}: {$e->getMessage()}; the Atelier will use the CDN.");
+        }
+    }
+})->purpose('Self-host the Live Atelier face/hand tracking models');

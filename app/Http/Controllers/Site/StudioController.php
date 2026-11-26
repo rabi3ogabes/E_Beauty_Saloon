@@ -13,8 +13,10 @@ use App\Domain\AIStudio\Models\AILookPurchase;
 use App\Domain\AIStudio\Models\ClientLook;
 use App\Domain\AIStudio\Models\Style;
 use App\Domain\AIStudio\Support\AIRouter;
+use App\Domain\AIStudio\Support\AtelierCatalog;
 use App\Domain\AIStudio\Support\LookPresenter;
 use App\Domain\AIStudio\Support\PhotoVault;
+use App\Domain\Catalog\Models\Service;
 use App\Domain\Payments\Actions\CreateOnlinePayment;
 use App\Domain\Payments\Models\TenantPaymentGateway;
 use App\Http\Controllers\Controller;
@@ -151,7 +153,8 @@ class StudioController extends Controller
     {
         $this->authorizeOwner($request, $look->client_id, $look->device_fingerprint);
         $look->load('style.service', 'job', 'client');
-        $service = $look->style?->service;
+        // Live Atelier renders have no lookbook style: their design picks the service.
+        $service = $look->style?->service ?? (($id = data_get($look->atelier, 'service_id')) ? Service::find($id) : null);
         $branch = $service ? LookPresenter::branchFor($service, $look) : null;
 
         return view('site.ai-studio.look', [
@@ -163,7 +166,12 @@ class StudioController extends Controller
             'price' => $service ? $service->priceAt($branch) : null,
             'duration' => $service ? $service->durationAt($branch) : null,
             'stylist' => LookPresenter::stylist($service),
-            'bookUrl' => tenant()->hasModule('booking') ? LookPresenter::bookUrl($look->style, $look, $branch) : null,
+            'bookUrl' => tenant()->hasModule('booking') ? ($look->style
+                ? LookPresenter::bookUrl($look->style, $look, $branch)
+                : url('/book').'?'.http_build_query(array_filter(['branch' => $branch?->slug, 'service' => $service?->slug, 'look' => $look->reference]))) : null,
+            'atelierSummary' => $look->atelier && AtelierCatalog::has((string) data_get($look->atelier, 'category'))
+                ? AtelierCatalog::summary($look->atelier['category'], AtelierCatalog::normalize($look->atelier['category'], (array) data_get($look->atelier, 'params')))
+                : null,
             'shades' => $look->style?->shades() ?? collect(),
             'before' => $look->before_path ? LookPresenter::mediaUrl($look, 'before') : null,
             'after' => $look->after_path ? LookPresenter::mediaUrl($look, 'after') : null,
@@ -273,9 +281,11 @@ class StudioController extends Controller
             'status' => $job->status,
             'error' => in_array($job->status, ['failed', 'refunded'], true) ? __('ai_studio.errors.try_again') : null,
             'status_url' => route('studio.status', $job),
-            'redirect' => $job->status === 'succeeded'
+            'redirect' => $job->status === 'succeeded' && $job->task !== 'atelier_advice'
                 ? ($job->task === 'consultant' ? route('studio.consultation', $job) : ($job->look ? route('studio.look', $job->look) : null))
                 : null,
+            // Live Atelier "Ask our AI artist": the recommendation comes back in the status payload.
+            'advice' => $job->task === 'atelier_advice' && $job->status === 'succeeded' ? $job->output_refs : null,
         ];
     }
 

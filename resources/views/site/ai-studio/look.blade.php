@@ -27,8 +27,9 @@
             {{-- Details --}}
             <div class="flex flex-col gap-6" data-reveal>
                 <div>
-                    <p class="eyebrow">{{ __('ai_studio.categories.'.($look->category ?? 'hair')) }}</p>
-                    <h1 class="mt-2 text-4xl font-semibold">{{ $style?->name ?? __('ai_studio.look.title') }}</h1>
+                    <p class="eyebrow">{{ $atelierSummary ? __('ai_studio.atelier.categories.'.$look->category) : __('ai_studio.categories.'.($look->category ?? 'hair')) }}</p>
+                    <h1 class="mt-2 text-4xl font-semibold">{{ $style?->name ?? ($atelierSummary ? __('ai_studio.atelier.look_title') : __('ai_studio.look.title')) }}</h1>
+                    @if ($atelierSummary)<p class="mt-3 text-muted" data-atelier-summary>{{ $atelierSummary }}</p>@endif
                     @if ($style?->description)<p class="mt-3 text-muted">{{ $style->description }}</p>@endif
                 </div>
 

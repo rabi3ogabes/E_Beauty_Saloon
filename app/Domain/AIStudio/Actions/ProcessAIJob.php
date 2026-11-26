@@ -101,6 +101,7 @@ class ProcessAIJob
 
         return match ($job->task) {
             'consultant' => $this->consult($job, $driver, (string) $photo, $mime),
+            'atelier_advice' => $driver->adviseAtelier((string) $photo, $mime, (string) data_get($job->input_refs, 'category'), $job->locale),
             'marketing_copy' => ['en' => $driver->writeCaption((string) $job->prompt, data_get($job->input_refs, 'tone', 'luxury'), 'en'),
                 'ar' => $driver->writeCaption((string) $job->prompt, data_get($job->input_refs, 'tone', 'luxury'), 'ar')],
             'marketing_banner' => $driver->generateImage(new ImageRequest((string) $job->prompt, null, aspect: data_get($job->input_refs, 'aspect', '1:1'))),
@@ -119,6 +120,10 @@ class ProcessAIJob
 
     protected function reference(AIJob $job): ?string
     {
+        // Live Atelier: the client's photo with the design drawn on it guides placement.
+        if ($guide = data_get($job->input_refs, 'guide')) {
+            return $this->vault->get($guide);
+        }
         $path = $job->style?->reference_path;
 
         return $path && Storage::disk('public')->exists($path) ? Storage::disk('public')->get($path) : null;

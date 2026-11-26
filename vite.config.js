@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/js/shop.js',
                 'resources/css/pos.css',
                 'resources/js/pos-offline.js',
+                'resources/js/atelier-engine.js',
             ],
             refresh: true,
         }),

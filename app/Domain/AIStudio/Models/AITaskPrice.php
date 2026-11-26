@@ -25,6 +25,7 @@ class AITaskPrice extends Model
         'full_look' => ['Full makeup look', 'إطلالة مكياج كاملة', 'image', 8, ['gemini', 'openrouter', 'openai', 'higgsfield']],
         'bridal_look' => ['Bridal look', 'إطلالة عروس', 'image', 8, ['gemini', 'openrouter', 'openai', 'higgsfield']],
         'consultant' => ['AI consultant', 'المستشارة الذكية', 'text', 1, ['anthropic', 'gemini', 'openai']],
+        'atelier_advice' => ['Atelier AI artist advice', 'نصيحة الفنانة الذكية في الأتيليه', 'text', 1, ['anthropic', 'openrouter', 'gemini', 'openai']],
         'marketing_banner' => ['Marketing banner', 'بانر تسويقي', 'image', 6, ['gemini', 'openrouter', 'openai']],
         'marketing_copy' => ['Marketing copy', 'نص تسويقي', 'text', 1, ['anthropic', 'openai', 'gemini']],
     ];

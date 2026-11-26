@@ -2,6 +2,7 @@
 
 namespace App\Filament\Dashboard\Resources\Bookings;
 
+use App\Domain\AIStudio\Support\AtelierCatalog;
 use App\Domain\Booking\Enums\BookingStatus;
 use App\Domain\Booking\Models\Booking;
 use App\Domain\Branches\Models\Branch;
@@ -156,7 +157,9 @@ class BookingResource extends Resource
                 TextEntry::make('source')->label(__('booking.admin.source'))->formatStateUsing(fn ($state) => __('booking.sources.'.$state)),
                 TextEntry::make('client_notes')->label(__('booking.flow.notes'))->placeholder('—')->columnSpanFull(),
                 TextEntry::make('internal_notes')->label(__('booking.admin.internal_notes'))->placeholder('—')->columnSpanFull(),
-                TextEntry::make('look_reference')->label(__('booking.admin.look'))->placeholder('—'),
+                TextEntry::make('look_reference')->label(__('booking.admin.look'))->placeholder('—')
+                    // Live Atelier designs read as the design itself, so the artist knows exactly what was chosen.
+                    ->formatStateUsing(fn (?string $state) => ($summary = AtelierCatalog::describeReference($state)) ? $summary.' · '.$state : $state),
                 TextEntry::make('utm_source')->label(__('booking.admin.attribution'))->placeholder('—')
                     ->formatStateUsing(fn (Booking $record) => trim(($record->utm_source ?? '').($record->campaign_id ? ' · #'.$record->campaign_id : ''))),
             ]),
