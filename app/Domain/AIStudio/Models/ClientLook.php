@@ -19,7 +19,7 @@ class ClientLook extends Model
 
     protected function casts(): array
     {
-        return ['saved' => 'boolean', 'shared_at' => 'datetime', 'expires_at' => 'datetime'];
+        return ['saved' => 'boolean', 'shared_at' => 'datetime', 'expires_at' => 'datetime', 'atelier' => 'array'];
     }
 
     protected static function booted(): void

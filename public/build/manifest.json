@@ -42,7 +42,7 @@
     "src": "node_modules/leaflet/dist/images/marker-icon.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BviWPaNX.css",
+    "file": "assets/app-D4i1H138.css",
     "name": "app",
     "names": [
       "app.css"
@@ -72,6 +72,12 @@
     "file": "assets/app-CibhNXfw.js",
     "name": "app",
     "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/atelier-engine.js": {
+    "file": "assets/atelier-engine-Bx7lHH8f.js",
+    "name": "atelier-engine",
+    "src": "resources/js/atelier-engine.js",
     "isEntry": true
   },
   "resources/js/map.js": {

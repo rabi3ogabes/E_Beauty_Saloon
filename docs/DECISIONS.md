@@ -126,3 +126,18 @@ Append-only log. Newest last.
 - Providers without a key are never routed; with no image AI at all, the Studio hides "Try it on me" and refuses
   try-ons up front (no credits, no job).
 - Queue `retry_after` defaults to 660s (> RunAIJob's 600s timeout) so a slow image edit is never picked up twice.
+
+## 2026-11-26 — Live Atelier (/studio/atelier)
+- Lashes, brows, lips and nails are previewed live on the client's device: MediaPipe Tasks Vision (face + hand
+  landmarks) + canvas renderers in `resources/js/atelier-engine.js`. The live preview never uploads anything; only
+  "Make it real" (image AI) and "Ask our AI artist" (vision LLM) send the photo, after the usual AI Studio consent.
+- `AtelierCatalog` is the single source of truth for options, en/ar labels, renderer settings, the AI prompt and the
+  booking summary. Client params are whitelisted/clamped (`normalize`) — the prompt never contains client text.
+- "Make it real" sends the photo plus a *placement guide* (the same photo with the design drawn on) as the AI
+  reference image; it runs through the normal AIJob pipeline (consent, minors, quota, wallet, charge on success).
+  The guide is purged with the look.
+- Saved designs (`atelier_designs`, settings only, max 12 per client/device) book via `/book?service=…&look=AT…`;
+  the dashboard shows the design summary for AT… and Atelier LK… references.
+- Tracking runtime/models are self-hosted on the public disk by `studio:install-atelier` (deploy hook, idempotent,
+  never fails a deploy) and referenced with same-origin paths (salons run on their own domains); CDN fallback.
+- Vite entry chunks drop exports, so the engine publishes `window.LuxeAtelier`.

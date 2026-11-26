@@ -20,8 +20,10 @@ class PurgeExpiredLooks
         ClientLook::withoutGlobalScopes()->where('saved', false)->whereNotNull('expires_at')->where('expires_at', '<=', now())
             ->chunkById(200, function ($looks) use (&$count) {
                 foreach ($looks as $look) {
-                    $this->vault->delete($look->before_path, $look->after_path);
-                    AIJob::withoutGlobalScopes()->whereKey($look->ai_job_id)->update(['input_refs' => null, 'output_refs' => null]);
+                    $job = AIJob::withoutGlobalScopes()->find($look->ai_job_id);
+                    // The Atelier placement guide is a copy of the client's photo too.
+                    $this->vault->delete($look->before_path, $look->after_path, data_get($job?->input_refs, 'guide'));
+                    $job?->forceFill(['input_refs' => null, 'output_refs' => null])->save();
                     $look->delete();
                     $count++;
                 }
@@ -32,8 +34,8 @@ class PurgeExpiredLooks
             ->whereDoesntHave('look', fn ($q) => $q->withoutGlobalScopes()->where('saved', true))
             ->chunkById(200, function ($jobs) use (&$count) {
                 foreach ($jobs as $job) {
-                    $this->vault->delete(data_get($job->input_refs, 'photo'), data_get($job->output_refs, 'photo'));
-                    $job->forceFill(['input_refs' => null, 'output_refs' => $job->task === 'consultant' ? $job->output_refs : null])->save();
+                    $this->vault->delete(data_get($job->input_refs, 'photo'), data_get($job->input_refs, 'guide'), data_get($job->output_refs, 'photo'));
+                    $job->forceFill(['input_refs' => null, 'output_refs' => in_array($job->task, ['consultant', 'atelier_advice'], true) ? $job->output_refs : null])->save();
                     $count++;
                 }
             });

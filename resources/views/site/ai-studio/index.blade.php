@@ -33,6 +33,20 @@
                 @endif
             </header>
 
+            @unless ($kiosk)
+                {{-- Live Atelier: live, on-device design for lashes, brows, lips and nails. --}}
+                <a href="{{ route('studio.atelier') }}" data-atelier-card data-reveal
+                   class="group mt-8 flex items-center gap-5 overflow-hidden rounded-(--radius-hero) bg-[#1c1a17] p-5 text-ivory shadow-soft transition hover:shadow-lift sm:p-6">
+                    <span class="grid size-14 shrink-0 place-items-center rounded-full border border-gold/40 font-display text-2xl text-gold" aria-hidden="true">✦</span>
+                    <span class="min-w-0 flex-1">
+                        <span class="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold">{{ __('ai_studio.atelier.studio_card.badge') }} · {{ __('ai_studio.atelier.studio_card.title') }}</span>
+                        <span class="mt-1 block text-sm text-ivory/80 sm:text-base">{{ __('ai_studio.atelier.studio_card.body') }}</span>
+                    </span>
+                    <span class="hidden shrink-0 rounded-full bg-gold px-5 py-2.5 text-sm font-medium text-ink transition group-hover:brightness-105 sm:inline-flex">{{ __('ai_studio.atelier.studio_card.cta') }}</span>
+                    <span class="shrink-0 text-gold sm:hidden rtl:rotate-180" aria-hidden="true">→</span>
+                </a>
+            @endunless
+
             @if (session('status'))<p class="mt-6 rounded-xl bg-success/10 px-4 py-3 text-sm text-success">{{ session('status') }}</p>@endif
             @if ($errors->any())<p class="mt-6 rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger">{{ $errors->first() }}</p>@endif
 

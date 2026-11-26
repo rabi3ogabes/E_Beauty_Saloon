@@ -9,6 +9,7 @@ use App\Domain\AIStudio\DTOs\ImageResult;
 use App\Domain\AIStudio\Exceptions\ProviderException;
 use App\Domain\AIStudio\Exceptions\ProviderTimeoutException;
 use App\Domain\AIStudio\Models\AIProvider;
+use App\Domain\AIStudio\Support\AtelierCatalog;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
@@ -122,6 +123,43 @@ abstract class AbstractDriver implements AIImageProvider, AITextProvider
             ->filter(fn ($r) => is_array($r) && in_array((int) ($r['style_id'] ?? 0), $valid, true))
             ->map(fn ($r) => ['style_id' => (int) $r['style_id'], 'reason' => (string) ($r['reason'] ?? '')])
             ->unique('style_id')->take(3)->values()->all();
+    }
+
+    /**
+     * Live Atelier: recommend one design for a category from the catalog only, with a short reason.
+     * Returns ['category', 'params' (normalized), 'reason', 'features'].
+     */
+    public function adviseAtelier(string $image, string $mime, string $category, string $locale): array
+    {
+        $language = $locale === 'ar' ? 'Arabic' : 'English';
+        $d = AtelierCatalog::definition()[$category];
+        $options = match ($category) {
+            'lashes' => ['style' => array_keys($d['styles']), 'length' => "integer {$d['length']['min']}-{$d['length']['max']} (mm)", 'curl' => array_keys($d['curls']), 'fullness' => "integer {$d['fullness']['min']}-{$d['fullness']['max']} (%)"],
+            'brows' => ['shape' => array_keys($d['shapes']), 'shade' => array_keys($d['shades']), 'intensity' => 'integer 20-100 (%)'],
+            'lips' => ['shade' => array_keys($d['shades']), 'finish' => array_keys($d['finishes']), 'intensity' => 'integer 20-100 (%)'],
+            'nails' => ['shape' => array_keys($d['shapes']), 'length' => array_keys($d['lengths']), 'color' => array_keys($d['colors']), 'finish' => array_keys($d['finishes'])],
+        };
+        $focus = match ($category) {
+            'lashes' => 'eye shape (almond, round, hooded, monolid, downturned, upturned), eye spacing and lid space',
+            'brows' => 'face shape, brow bone, natural brow shape, hair colour and skin tone',
+            'lips' => 'lip shape, natural lip colour, skin tone and undertone',
+            'nails' => 'hand and finger proportions, nail bed shape, skin tone and undertone',
+        };
+        $text = $this->complete(
+            "You are a senior beauty artist in a luxury salon. Look at this photo and recommend the single most flattering {$category} design for this client, "
+            ."considering their {$focus}. Do not guess identity, age, ethnicity or health. Choose ONLY from these options: ".json_encode($options)
+            .'. Reply ONLY with a JSON object: {"params": {...the chosen option for every key...}, "features": "a few words describing the relevant features", '
+            ."\"reason\": \"one warm, specific sentence explaining why\"}. features and reason in {$language}.",
+            $image, $mime,
+        );
+        $json = self::extractJson($text);
+
+        return [
+            'category' => $category,
+            'params' => AtelierCatalog::normalize($category, (array) ($json['params'] ?? [])),
+            'features' => mb_substr(strip_tags((string) ($json['features'] ?? '')), 0, 160),
+            'reason' => mb_substr(strip_tags((string) ($json['reason'] ?? '')), 0, 400),
+        ];
     }
 
     public function writePrompt(array $context): string

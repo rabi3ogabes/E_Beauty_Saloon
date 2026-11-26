@@ -42,7 +42,7 @@ class ClientAIData
             $deleted = ClientLook::where('client_id', $client->id)->delete();
 
             AIJob::where('client_id', $client->id)->get()->each(function (AIJob $job) {
-                $this->vault->delete(data_get($job->input_refs, 'photo'), data_get($job->output_refs, 'photo'));
+                $this->vault->delete(data_get($job->input_refs, 'photo'), data_get($job->input_refs, 'guide'), data_get($job->output_refs, 'photo'));
                 // Keep the anonymized row for billing/margin integrity.
                 $job->forceFill(['client_id' => null, 'input_refs' => null, 'output_refs' => null, 'prompt' => null, 'device_fingerprint' => null])->save();
             });
